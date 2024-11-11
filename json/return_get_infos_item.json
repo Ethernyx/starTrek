@@ -1,0 +1,52 @@
+{
+    "statut": "Success", 
+    "code": 0,
+    "return" : {
+        "entity_type" : 5,
+        "entities" : [
+            {
+				"id":	1,
+				"name":	"Escaliburne",
+				"stat":	90,
+				"effect":	1,
+				"id_owner":	0,
+				"type_owner":	-1
+			}, {
+				"id":	2,
+				"name":	"sabre laser",
+				"stat":	190,
+				"effect":	1,
+				"id_owner":	0,
+				"type_owner":	-1
+			}, {
+				"id":	3,
+				"name":	"potion de santé",
+				"stat":	90,
+				"effect":	2,
+				"id_owner":	1,
+				"type_owner":	2
+			}, {
+				"id":	4,
+				"name":	"côte de maille",
+				"stat":	75,
+				"effect":	3,
+				"id_owner":	2,
+				"type_owner":	2
+			}, {
+				"id":	5,
+				"name":	"cape d'invisibilité",
+				"stat":	50,
+				"effect":	3,
+				"id_owner":	7,
+				"type_owner":	2
+			}, {
+				"id":	6,
+				"name":	"potion de poison",
+				"stat":	-90,
+				"effect":	2,
+				"id_owner":	5,
+				"type_owner":	4
+			}
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"name":	"test evil 1",
+			"ap":	80,
+			"hp":	100,
+			"dp":	98,
+			"id_planet":	0,
+			"id_ship":	0,
+			"id_grade": 0,
+			"id_planet_origin":	0
+		}
+	]
+}

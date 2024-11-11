@@ -1,0 +1,11 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 7,
+			"name": "Capitaine",
+			"level": 5
+		}
+	]
+}

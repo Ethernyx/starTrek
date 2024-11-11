@@ -1,0 +1,24 @@
+{
+    "statut": "Success", 
+    "code": 0,
+    "return" : {
+        "entity_type" : 1,
+        "entities" : [
+            {
+				"id":	1,
+				"name":	"Odyssey",
+				"description":	"Le vaissal de la mort",
+				"ap":	200,
+				"dp":	150,
+				"hp":	1000
+			}, {
+				"id":	2,
+				"name":	"Enterprise",
+				"description":	"Le vaissal des vaisseaux",
+				"ap":	200,
+				"dp":	150,
+				"hp":	1000
+			}
+        ]
+    }
+}

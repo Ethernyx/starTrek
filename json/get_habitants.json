@@ -1,0 +1,7 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "getHabitants",
+    "startrek": {
+        "id_planet" : 1
+    }
+}

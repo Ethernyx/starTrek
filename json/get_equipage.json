@@ -1,0 +1,7 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "getEquipage",
+    "startrek": {
+        "id_ship" : 1
+    }
+}

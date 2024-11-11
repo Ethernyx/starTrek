@@ -1,0 +1,13 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 1,
+			"name":	"Odyssey",
+			"ap":	200,
+			"dp":	150,
+			"hp":	1000
+		}
+	]
+}

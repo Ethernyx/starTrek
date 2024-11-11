@@ -1,0 +1,26 @@
+{
+  "statut": "Success",
+  "code": 0,
+  "return" : {
+    "entity_type" : 1,
+    "entity_id" : 1,
+    "entity_name" : "",
+    "entities" : [
+      {
+        "id":	1,
+        "name":	"Escaliburne",
+        "stat":	90,
+        "effect":	1,
+        "id_owner":	0,
+        "type_owner":	-1
+      }, {
+        "id":	2,
+        "name":	"sabre laser",
+        "stat":	190,
+        "effect":	1,
+        "id_owner":	0,
+        "type_owner":	-1
+      }
+    ]
+  }
+}

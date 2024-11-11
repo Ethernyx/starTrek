@@ -1,0 +1,15 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 6,
+			"name":	"Escaliburne",
+			"stat":	-90,
+			"effect":	2,
+			"id_owner":	0,
+			"type_owner":	-1
+		}
+	]
+}
+

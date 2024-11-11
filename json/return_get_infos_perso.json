@@ -1,0 +1,46 @@
+{
+    "statut": "Success", 
+    "code": 0,
+    "return" : {
+        "entity_type" : 2,
+        "entities" : [
+            {
+				"id":	1,
+				"name":	"Alex",
+				"ap":	80,
+				"hp":	100,
+				"dp":	25,
+				"id_planet":	0,
+				"id_ship":	1,
+				"id_planet_origin":	1
+			}, {
+				"id":	2,
+				"name":	"Jack",
+				"ap":	80,
+				"hp":	100,
+				"dp":	30,
+				"id_planet":	1,
+				"id_ship":	0,
+				"id_planet_origin":	1
+			}, {
+				"id":	3,
+				"name":	"Kirk",
+				"ap":	80,
+				"hp":	100,
+				"dp":	22,
+				"id_planet":	2,
+				"id_ship":	0,
+				"id_planet_origin":	1
+			}, {
+				"id":	7,
+				"name":	"Sylvain",
+				"ap":	80,
+				"hp":	100,
+				"dp":	50,
+				"id_planet":	0,
+				"id_ship":	1,
+				"id_planet_origin":	1
+			}
+        ]
+    }
+}

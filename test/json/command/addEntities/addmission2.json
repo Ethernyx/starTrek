@@ -1,0 +1,11 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 5,
+			"description":	"une description de mission",
+			"is_complete":	0
+		}
+	]
+}

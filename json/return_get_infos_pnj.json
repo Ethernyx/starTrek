@@ -1,0 +1,46 @@
+{
+    "statut": "Success", 
+    "code": 0,
+    "return" : {
+        "entity_type" : 4,
+        "entities" : [
+            {
+				"id":	4,
+				"name":	"John",
+				"ap":	80,
+				"hp":	100,
+				"dp":	20,
+				"id_planet":	0,
+				"id_ship":	1,
+				"id_planet_origin":	1
+			}, {
+				"id":	5,
+				"name":	"Romain",
+				"ap":	80,
+				"hp":	100,
+				"dp":	18,
+				"id_planet":	2,
+				"id_ship":	0,
+				"id_planet_origin":	1
+			}, {
+				"id":	6,
+				"name":	"Gerald",
+				"ap":	80,
+				"hp":	100,
+				"dp":	98,
+				"id_planet":	0,
+				"id_ship":	2,
+				"id_planet_origin":	1
+			}, {
+				"id":	7,
+				"name":	"Test",
+				"ap":	80,
+				"hp":	100,
+				"dp":	25,
+				"id_planet":	0,
+				"id_ship":	1,
+				"id_planet_origin":	1
+			}
+        ]
+    }
+}

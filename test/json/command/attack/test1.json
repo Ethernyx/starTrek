@@ -1,0 +1,14 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "attack",
+    "startrek" : {
+        "defenseur" : {
+            "type" : 2,
+            "id" : 1
+        },
+        "attaquant" : {
+            "type" : 4,
+            "id" : 5
+        }
+    }
+}

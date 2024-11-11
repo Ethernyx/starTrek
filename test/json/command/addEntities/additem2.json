@@ -1,0 +1,14 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 6,
+			"stat":	-90,
+			"effect":	2,
+			"id_owner":	5,
+			"type_owner":	4
+		}
+	]
+}
+

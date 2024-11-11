@@ -1,0 +1,11 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 5,
+			"name":	"Sauver Dr Landra",
+			"is_complete":	0
+		}
+	]
+}

@@ -1,0 +1,30 @@
+{
+  "statut": "Error",
+  "code": 109,
+  "return" : {
+    "ships" : [
+      {
+        "id":	1,
+				"name":	"Odyssey",
+				"description":	"Le vaissal de la mort",
+				"ap":	200,
+				"dp":	150,
+				"hp":	1000
+      }
+    ],
+    "pnjs" : [
+      {
+        "id":	1,
+				"name":	"Test pnj 1",
+				"ap":	80,
+				"hp":	100,
+				"dp":	98,
+				"id_planet":	0,
+				"id_ship":	2,
+				"id_grade": 0,
+				"id_planet_origin":	1
+      }
+    ],
+    "description" : "[ERROR] Spaceship non trouvé"
+  }
+}

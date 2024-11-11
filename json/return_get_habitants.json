@@ -1,0 +1,33 @@
+{
+    "statut": "Success",
+    "code": 0,
+    "return" :{
+        "entities": {
+            "pnjs": [
+                {
+                    "id":	5,
+                    "name":	"Romain",
+                    "ap":	80,
+                    "hp":	100,
+                    "dp":	18,
+                    "id_planet":	2,
+                    "id_ship":	0,
+                    "id_planet_origin":	1
+                }
+            ],
+            "personnages": [
+                {
+                    "id":	2,
+                    "name":	"Jack",
+                    "ap":	80,
+                    "hp":	100,
+                    "dp":	30,
+                    "id_planet":	1,
+                    "id_ship":	0,
+                    "id_planet_origin":	1
+                }
+            ] 
+        }
+    }
+        
+}

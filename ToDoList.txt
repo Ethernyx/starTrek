@@ -1,0 +1,33 @@
+X Ajout Evil 
+X Ajout Evil à la gestion des json
+X Modification Personnage en Heros
+- gestion des attaques super efficace
+- gestion d'erreur pendant les commandes
+    X kill
+        + gerer les items
+    X attack
+    X exchangeItem
+    X getInfos
+    X escape
+    X getHabitants
+    X getEquipage
+    X getInventory
+    X getHierarchy
+    X    promote
+X Ajout commande pour ajouter n'importe quel objects
+    X gestion d'erreur du json
+    X gestion d'erreur pendant la commande
+X Uniformiser les headers
+? Passer les vectors habitants, equipe, membre en map
+- ajout des test unitaire pour les commandes
+    * kill
+    * attack
+    * exchangeItem
+    * getInfos
+    * escape
+    * getHabitants
+    * getEquipage
+    * getInventory
+    * getHierarchy
+    * promote
+    X addEntities

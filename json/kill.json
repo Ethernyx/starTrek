@@ -1,0 +1,8 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "kill",
+    "startrek" : {
+        "entity_type" : 2,
+        "entity_id" : 1
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "statut": "Success", 
+    "code": 0,
+    "return" : {
+        "items" : [
+            {
+                "id":	3,
+				"name":	"potion de santé",
+				"stat":	90,
+				"effect":	2,
+				"id_owner":	0,
+				"type_owner":	-1
+            },
+            {
+                "id":	1,
+				"name":	"Escaliburne",
+				"stat":	90,
+				"effect":	2,
+				"id_owner":	0,
+				"type_owner":	-1
+            }
+        ]
+    }
+}

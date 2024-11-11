@@ -1,0 +1,18 @@
+{
+    "statut": "Success", 
+    "code": 0,
+    "return" : {
+        "entity_type" : 0,
+        "entities" : [
+            {
+				"id":	1,
+				"name":	"Fury",
+				"description":	"Seul un furien peut y vivre"
+			}, {
+				"id":	2,
+				"name":	"Earth",
+				"description":	"La seule planete bleue de l'univers"
+			}
+        ]
+    }
+}

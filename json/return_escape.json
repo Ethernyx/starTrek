@@ -1,0 +1,15 @@
+{
+  "statut": "Success",
+  "code": 0,
+  "return" :
+      {
+        "id":	1,
+        "name":	"Alex",
+        "ap":	80,
+        "hp":	100,
+        "dp":	25,
+        "id_planet":	0,
+        "id_ship":	1,
+        "id_planet_origin":	1
+      }
+}

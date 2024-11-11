@@ -1,0 +1,13 @@
+{
+    "security": "je préfère le Faucon Millenium",
+    "command" : "addEntities",
+    "startrek":	[
+		{
+			"entity_type" : 1,
+			"name":	"Odyssey",
+			"description":	"Le vaissal de la mort",
+			"ap":	200,
+			"hp":	1000
+		}
+	]
+}
