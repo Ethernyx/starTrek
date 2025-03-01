@@ -27,7 +27,8 @@ typedef enum {
     EVIL,
     MISSION,
     ITEM,
-    GRADE
+    GRADE,
+    LIVING
 } OBJETS; 
 
 typedef  enum {

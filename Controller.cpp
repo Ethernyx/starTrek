@@ -820,6 +820,24 @@ char *Controller::j_getInfos(cJSON *startrek) {
                 node = p.second->generate(node, p.first);
             }
             break;
+        case LIVING:
+            if(entity_id != NULL) {
+                for (auto living: this->_quidams) {
+                    if (living.second.find(entity_id->valueint) == living.second.end()) return List::returnJson(living.first * 100 + 12);
+                    cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
+                    node = living.second[entity_id->valueint]->generate(node, entity_id->valueint);
+                    return cJSON_Print(root);
+                }
+                
+            }
+            for(auto living: this->_quidams) {
+                for (auto l: living.second) {
+                    cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
+                    cJSON_AddNumberToObject(node, "entity_type", living.first);
+                    node = l.second->generate(node, l.first);
+                }
+            }
+            break;
         case HEROS:
         case EVIL:
         case PNJ:
@@ -860,7 +878,9 @@ char *Controller::j_getInfos(cJSON *startrek) {
             break;
         case ITEM:
             for (auto i : this->_tableDeCorrespondance) { // comme fonctionnement par unique_ptr on prend la table des corespondances
-                if (find(QUIDAMS.begin(), QUIDAMS.end(), i.first) != QUIDAMS.end()) {
+                cout << i.first << endl;
+                if (i.first == HEROS || i.first == PNJ || i.first == EVIL) {
+                    cout << "bad" << endl;
                     for (auto p : i.second) { // ceux assignés à un quidam
                         if(entity_id != NULL) {
                             if (this->_quidams[(OBJETS)i.first][p.second]->getInventory().find(entity_id->valueint) == this->_quidams[(OBJETS)i.first][p.second]->getInventory().end()) return List::returnJson(entity_type * 100 + 8);
@@ -885,7 +905,9 @@ char *Controller::j_getInfos(cJSON *startrek) {
                     }
                 }
                 if (i.first == NONE) {
+                    cout << "tutu" << endl;
                     for (auto s : i.second) { // ceux assignés à personne
+                        cout << s.first << endl;
                         if(entity_id != NULL) {
                             if (this->_items.find(entity_id->valueint) ==  this->_items.end()) return List::returnJson(entity_type * 100 + 8);
                             cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
