@@ -1,0 +1,235 @@
+.heros,
+.green {
+  color: green;
+}
+.pnjs,
+.blue {
+  color: #50ace5;
+}
+.evils {
+  color: red;
+}
+.my_popup {
+  display: none;
+}
+.popup {
+  z-index: 10!important;
+}
+/* FONTS */
+.rajdhani-light {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+.rajdhani-regular {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.rajdhani-medium {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.rajdhani-semibold {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+.rajdhani-bold {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+.lato-thin {
+  font-family: "Lato", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+.lato-light {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+.lato-regular {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.lato-bold {
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+.lato-black {
+  font-family: "Lato", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+.lato-thin-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+.lato-light-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+.lato-regular-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+.lato-bold-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+.lato-black-italic {
+  font-family: "Lato", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+:root {
+  --input-color: #50ace5;
+  --input-border: #50ace5;
+  --input-background: #fff;
+  --input-placeholder: #50ace5;
+  --input-border-focus: #50ace5;
+  --group-color: var(--group-color-focus);
+  --group-border: var(--input-border);
+  --group-background: #50ace5;
+  --group-color-focus: #fff;
+  --group-border-focus: var(--input-border-focus);
+  --group-background-focus: #186da1;
+}
+.form-field {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  line-height: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 6px;
+  -webkit-appearance: none;
+  color: var(--input-color);
+  border: 1px solid var(--input-border);
+  background: var(--input-background);
+  transition: border 0.3s ease;
+}
+.form-field::placeholder {
+  color: var(--input-placeholder);
+}
+.form-field:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+}
+.form-group {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin-left: 10px;
+  padding-right: 20px;
+  margin-bottom: 30px;
+}
+.form-group > span,
+.form-group .form-field {
+  white-space: nowrap;
+  display: block;
+}
+.form-group > span:not(:first-child):not(:last-child),
+.form-group .form-field:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+.form-group > span:first-child,
+.form-group .form-field:first-child {
+  border-radius: 6px 0 0 6px;
+}
+.form-group > span:last-child,
+.form-group .form-field:last-child {
+  border-radius: 0 6px 6px 0;
+}
+.form-group > span:not(:first-child),
+.form-group .form-field:not(:first-child) {
+  margin-left: -1px;
+}
+.form-group textarea {
+  border-radius: 6px!important;
+  position: relative;
+}
+.form-group textarea::placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: fit-content;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 25px;
+  color: var(--group-color);
+  background: var(--group-background);
+  border: 1px solid var(--group-border);
+  transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+  border-top-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.form-group .form-field {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  width: 1%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.form-group > span,
+.form-group textarea::placeholder {
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 25px;
+  color: var(--group-color);
+  background: var(--group-background);
+  border: 1px solid var(--group-border);
+  transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+}
+.form-group:focus-within > span {
+  color: var(--group-color-focus);
+  background: var(--group-background-focus);
+  border-color: var(--group-border-focus);
+}
+.form-group:not(:last-child) {
+  margin-bottom: 32px;
+}
+.popup-content {
+  background-color: #313638;
+  border-radius: 10px;
+}
+.popup-content .popup-header .popup-close {
+  color: #fff;
+  top: -15px;
+  right: 2%;
+}
+.popup-content .popup-body .my_popup_header {
+  display: none;
+}
+.popup-content .popup-body .my_popup_content .title {
+  font-size: 1.87em;
+  color: #50ace5;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+.custom-select-wrapper {
+  margin-bottom: 30px;
+  width: 100%;
+}
+.custom-select-wrapper .custom-select {
+  width: 100%;
+}
+div:where(.swal2-container) div:where(.swal2-popup) {
+  z-index: 20;
+}
+div:where(.swal2-container) div:where(.swal2-html-container) li {
+  text-align: left;
+}
