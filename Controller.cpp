@@ -568,6 +568,25 @@ void    Controller::saveJSON() {
 }
 
 void Controller::init(cJSON *node) {
+    if (!node) {
+        FILE *f;
+        long lSize;
+        if (access( BDDFILE, F_OK ) == -1) {
+            f = fopen(BDDFILE, "w");
+            fclose(f);
+        }
+        f = fopen(BDDFILE, "r");
+        fseek (f , 0 , SEEK_END);
+        lSize = ftell (f);
+        rewind (f);
+        char *buffer = (char*) malloc (sizeof(char)*lSize + 1);
+        fread (buffer,1,lSize,f);
+        string json = string(buffer, strlen(buffer));
+        if (!List::checkJson(json)) cout << "Error json incorect bdd mauvaise ?" << endl;
+        fclose(f);
+        free(buffer);
+        node = cJSON_Parse(json.c_str());
+    }
     cJSON *startrek = cJSON_GetObjectItem(node, "startrek");
 
     cJSON *items = startrek->child;

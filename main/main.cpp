@@ -40,6 +40,7 @@ void *connection_handler(void *sock_fd) {
         char *response;
       //  string strRetour;
         cJSON *startrek;
+        ctrl->init(nullptr);
         // read response continue
         while ((read_byte = recv(conn_id, buffer, BUFFER_SIZE, 0)) > 0) {
             buffer[read_byte] = '\0';
