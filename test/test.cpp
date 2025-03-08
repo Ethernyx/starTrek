@@ -95,7 +95,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: AP NOT FOUND") {
@@ -108,7 +108,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_AP_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: AD NOT FOUND") {
@@ -121,7 +121,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 6);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DP_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: HP NOT FOUND") {
@@ -134,7 +134,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_HP_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID PLANET NOT FOUND") {
@@ -147,7 +147,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 7);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_PLANET_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID SHIP NOT FOUND") {
@@ -160,7 +160,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 8);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_SHIP_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID GRADE NOT FOUND") {
@@ -173,7 +173,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 10);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_GRADE_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID PLANET ORIGIN NOT FOUND") {
@@ -186,7 +186,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PNJ * 100 + 9);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID PLANET UNKNOWN") {
@@ -199,7 +199,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_PLANET);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID SHIP UNKNOWN") {
@@ -212,7 +212,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint ==  SPACESHIP * 100 + 9);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint ==  UNKNOWN_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID GRADE UNKNOWN") {
@@ -225,7 +225,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == GRADE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_GRADE);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: ID PLANETE ORIGIN UNKNOWN") {
@@ -238,7 +238,7 @@ TEST_CASE("AJOUT D'UN PNJ") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_PLANET);
     }
 }
 
@@ -289,7 +289,7 @@ TEST_CASE("AJOUT D'UNE PLANETE") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_PLANET);
     }
 
     SECTION("AJOUT D'UNE PLANETE DEFECTUEUSE: DESCRIPTION NOT FOUND") {
@@ -302,7 +302,7 @@ TEST_CASE("AJOUT D'UNE PLANETE") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DESC_ATTRIBUT_PLANET);
     }
 }
 
@@ -363,7 +363,7 @@ TEST_CASE("AJOUT D'UN VAISSEAU") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == SPACESHIP * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: DESCRIPTION NOT FOUND") {
@@ -376,7 +376,7 @@ TEST_CASE("AJOUT D'UN VAISSEAU") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == SPACESHIP * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DESC_ATTRIBUT_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: AP NOT FOUND") {
@@ -389,7 +389,7 @@ TEST_CASE("AJOUT D'UN VAISSEAU") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == SPACESHIP * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_AP_ATTRIBUT_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: AD NOT FOUND") {
@@ -402,7 +402,7 @@ TEST_CASE("AJOUT D'UN VAISSEAU") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == SPACESHIP * 100 + 6);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DP_ATTRIBUT_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN PNJ DEFECTUEUX: HP NOT FOUND") {
@@ -415,7 +415,7 @@ TEST_CASE("AJOUT D'UN VAISSEAU") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == SPACESHIP * 100 + 7);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_HP_ATTRIBUT_SPACESHIP);
     }
 }
 
@@ -470,7 +470,7 @@ TEST_CASE("AJOUT D'UNE MISSION") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSION * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_MISSION);
     }
 
     SECTION("AJOUT D'UNE MISSION DEFECTUEUSE: DESCRIPTION NOT FOUND") {
@@ -483,7 +483,7 @@ TEST_CASE("AJOUT D'UNE MISSION") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSION * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DESC_ATTRIBUT_MISSION);
     }
 
     SECTION("AJOUT D'UNE MISSION DEFECTUEUSE: IS COMPLETE NOT FOUND") {
@@ -496,7 +496,7 @@ TEST_CASE("AJOUT D'UNE MISSION") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSION * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_IS_COMPLETE_ATTRIBUT_MISSION);
     }
 }
 
@@ -569,7 +569,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: AP NOT FOUND") {
@@ -582,7 +582,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_AP_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: AD NOT FOUND") {
@@ -595,7 +595,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 6);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DP_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: HP NOT FOUND") {
@@ -608,7 +608,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_HP_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID PLANET NOT FOUND") {
@@ -621,7 +621,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 7);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_PLANET_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID SHIP NOT FOUND") {
@@ -634,7 +634,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 8);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_SHIP_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID GRADE NOT FOUND") {
@@ -647,7 +647,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 10);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_GRADE_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID PLANET ORIGIN NOT FOUND") {
@@ -660,7 +660,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == EVIL * 100 + 9);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID PLANET UNKNOWN") {
@@ -673,7 +673,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_PLANET);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID SHIP UNKNOWN") {
@@ -686,7 +686,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint ==  SPACESHIP * 100 + 9);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint ==  UNKNOWN_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID GRADE UNKNOWN") {
@@ -699,7 +699,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == GRADE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_GRADE);
     }
 
     SECTION("AJOUT D'UN EVIL DEFECTUEUX: ID PLANETE ORIGIN UNKNOWN") {
@@ -712,7 +712,7 @@ TEST_CASE("AJOUT D'UN EVIL") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_PLANET);
     }
 }
 
@@ -785,7 +785,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: AP NOT FOUND") {
@@ -798,7 +798,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_AP_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: AD NOT FOUND") {
@@ -811,7 +811,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 6);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_DP_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: HP NOT FOUND") {
@@ -824,7 +824,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_HP_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID PLANET NOT FOUND") {
@@ -837,7 +837,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 7);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_PLANET_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID SHIP NOT FOUND") {
@@ -850,7 +850,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 8);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_SHIP_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID GRADE NOT FOUND") {
@@ -863,7 +863,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 10);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_GRADE_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID PLANET ORIGIN NOT FOUND") {
@@ -876,7 +876,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == HEROS * 100 + 9);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID PLANET UNKNOWN") {
@@ -889,7 +889,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_PLANET);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID SHIP UNKNOWN") {
@@ -902,7 +902,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint ==  SPACESHIP * 100 + 9);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint ==  UNKNOWN_SPACESHIP);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID GRADE UNKNOWN") {
@@ -915,7 +915,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == GRADE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_GRADE);
     }
 
     SECTION("AJOUT D'UN HEROS DEFECTUEUX: ID PLANETE ORIGIN UNKNOWN") {
@@ -928,7 +928,7 @@ TEST_CASE("AJOUT D'UN HEROS") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == PLANETE * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == UNKNOWN_PLANET);
     }
 }
 
@@ -979,7 +979,7 @@ TEST_CASE("AJOUT D'UN GRADE") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == GRADE * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_GRADE);
     }
 
     SECTION("AJOUT D'UN GRADE DEFECTUEUX: LEVEL NOT FOUND") {
@@ -992,7 +992,7 @@ TEST_CASE("AJOUT D'UN GRADE") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == GRADE * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_LEVEL_ATTRIBUT_GRADE);
     }
 }
 
@@ -1053,7 +1053,7 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == ITEM * 100 + 3);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_NAME_ATTRIBUT_ITEM);
     }
 
     SECTION("AJOUT D'UN ITEM DEFECTUEUX: STAT NOT FOUND") {
@@ -1066,7 +1066,7 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == ITEM * 100 + 4);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_STAT_ATTRIBUT_ITEM);
     }
 
     SECTION("AJOUT D'UN ITEM DEFECTUEUX: EFFECT NOT FOUND") {
@@ -1079,7 +1079,7 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == ITEM * 100 + 5);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_EFFECT_ATTRIBUT_ITEM);
     }
 
     SECTION("AJOUT D'UN ITEM DEFECTUEUX: ID OWNER NOT FOUND") {
@@ -1092,7 +1092,7 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == ITEM * 100 + 6);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_ID_OWNER_ATTRIBUT_ITEM);
     }
 
     SECTION("AJOUT D'UN ITEM DEFECTUEUX: TYPE OWNER NOT FOUND") {
@@ -1105,7 +1105,7 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == ITEM * 100 + 7);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_TYPE_OWNER_ATTRIBUT_ITEM);
     }
 
     SECTION("AJOUT D'UN ITEM DEFECTUEUX: ID OWNER UNKNOWN") {
@@ -1118,10 +1118,11 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == cJSON_GetObjectItem(cJSON_GetArrayItem(cJSON_GetObjectItem(json, "startrek"), 0), "type_owner")->valueint * 100 + 12);
+        OBJETS type = (OBJETS) cJSON_GetObjectItem(cJSON_GetArrayItem(cJSON_GetObjectItem(json, "startrek"), 0), "type_owner")->valueint;
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == (type == HEROS ? UNKNOWN_HEROS : (type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
     }
 
-     SECTION("AJOUT D'UN ITEM DEFECTUEUX: TYPE OWNER UNKNOWN") {
+     SECTION("AJOUT D'UN ITEM DEFECTUEUX: TYPE OWNER INCORRECT") {
         Controller *dieu = new Controller();
         char *retour;
         int code = 0;
@@ -1131,6 +1132,6 @@ TEST_CASE("AJOUT D'UN ITEM") {
         REQUIRE(json != NULL);
         retour = (code = List::isCorrectToGetAddEntitiesPrototype(json)) == 0 ? dieu->j_add_entities(cJSON_GetObjectItem(json, "startrek")) : List::returnJson(code);
         r = cJSON_Parse(retour);
-        CHECK(cJSON_GetObjectItem(r, "code")->valueint == NONE * 100 + 17);
+        CHECK(cJSON_GetObjectItem(r, "code")->valueint == MISSING_INVENTORY);
     }
 }

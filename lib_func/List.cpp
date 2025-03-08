@@ -37,57 +37,58 @@ cJSON *List::defaultNode() {
 
 
 int    List::isCorectToObjPrototype(cJSON *node, OBJETS type_obj, bool required) {
+    
     switch (type_obj)
     {
         case HEROS:
         case PNJ:
         case EVIL:
-            //if (List::size(node) < 8) return HEROS * 100 + 1;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return type_obj * 100 + 2;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return type_obj * 100 + 3;
-            if (cJSON_GetObjectItem(node, "ap") == NULL) return type_obj * 100 + 4;
-            if (cJSON_GetObjectItem(node, "hp") == NULL) return type_obj * 100 + 5;
-            if (cJSON_GetObjectItem(node, "dp") == NULL) return type_obj * 100 + 6;
-            if (cJSON_GetObjectItem(node, "id_planet") == NULL) return type_obj * 100 + 7;
-            if (cJSON_GetObjectItem(node, "id_ship") == NULL) return type_obj * 100 + 8;
-            if (cJSON_GetObjectItem(node, "id_planet_origin") == NULL) return type_obj * 100 + 9;
-            if (cJSON_GetObjectItem(node, "id_grade") == NULL) return type_obj * 100 + 10;
+            //if (List::size(node) < 8) return (type_obj == HEROS ? NOT_ENOUGHT_ATTRIBUT_HEROS : (type_obj == PNJ ? NOT_ENOUGHT_ATTRIBUT_PNJ : NOT_ENOUGHT_ATTRIBUT_EVIL));
+            if (required && cJSON_GetObjectItem(node, "id") == NULL) return (type_obj == HEROS ? MISSING_ID_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_ATTRIBUT_PNJ : MISSING_ID_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "name") == NULL) return (type_obj == HEROS ? MISSING_NAME_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_NAME_ATTRIBUT_PNJ : MISSING_NAME_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "ap") == NULL) return (type_obj == HEROS ? MISSING_AP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_AP_ATTRIBUT_PNJ : MISSING_AP_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "hp") == NULL) return (type_obj == HEROS ? MISSING_HP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_HP_ATTRIBUT_PNJ : MISSING_HP_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "dp") == NULL) return (type_obj == HEROS ? MISSING_DP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_DP_ATTRIBUT_PNJ : MISSING_DP_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "id_planet") == NULL) return (type_obj == HEROS ? MISSING_ID_PLANET_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_PLANET_ATTRIBUT_PNJ : MISSING_ID_PLANET_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "id_ship") == NULL) return (type_obj == HEROS ? MISSING_ID_SHIP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_SHIP_ATTRIBUT_PNJ : MISSING_ID_SHIP_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "id_planet_origin") == NULL) return (type_obj == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL));
+            if (cJSON_GetObjectItem(node, "id_grade") == NULL) return (type_obj == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_GRADE_ATTRIBUT_PNJ : MISSING_ID_GRADE_ATTRIBUT_EVIL));
             break;
         case SPACESHIP:
-            //if (List::size(node) < 6) return SPACESHIP * 100 + 1;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return SPACESHIP * 100 + 2;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return SPACESHIP * 100 + 3;
-            if (cJSON_GetObjectItem(node, "description") == NULL) return SPACESHIP * 100 + 4;
-            if (cJSON_GetObjectItem(node, "ap") == NULL) return SPACESHIP * 100 + 5;
-            if (cJSON_GetObjectItem(node, "dp") == NULL) return SPACESHIP * 100 + 6;
-            if (cJSON_GetObjectItem(node, "hp") == NULL) return SPACESHIP * 100 + 7;
+            //if (List::size(node) < 6) return UNKNOWN_MISSION;
+            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_SPACESHIP;
+            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_SPACESHIP;
+            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSING_DESC_ATTRIBUT_SPACESHIP;
+            if (cJSON_GetObjectItem(node, "ap") == NULL) return MISSING_AP_ATTRIBUT_SPACESHIP;
+            if (cJSON_GetObjectItem(node, "dp") == NULL) return MISSING_DP_ATTRIBUT_SPACESHIP;
+            if (cJSON_GetObjectItem(node, "hp") == NULL) return MISSING_HP_ATTRIBUT_SPACESHIP;
             break;
         case MISSION:
-            //if (List::size(node) < 3) return MISSION * 100 + 1;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSION * 100 + 2;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSION * 100 + 3;
-            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSION * 100 + 4;
-            if (cJSON_GetObjectItem(node, "is_complete") == NULL) return MISSION * 100 + 5;
+            //if (List::size(node) < 3) return NOT_ENOUGHT_ATTRIBUT_MISSION;
+            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_MISSION;
+            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_MISSION;
+            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSING_DESC_ATTRIBUT_MISSION;
+            if (cJSON_GetObjectItem(node, "is_complete") == NULL) return MISSING_IS_COMPLETE_ATTRIBUT_MISSION;
             break;
         case PLANETE:
             //if (List::size(node) < 3) return 1;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return PLANETE * 100 + 2;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return PLANETE * 100 + 3;
-            if (cJSON_GetObjectItem(node, "description") == NULL) return PLANETE * 100 + 4;
+            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_PLANET;
+            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_PLANET;
+            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSING_DESC_ATTRIBUT_PLANET;
             break;
         case ITEM:
-            //if (List::size(node) < 6) return ITEM * 100 + 1;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return ITEM * 100 + 2;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return ITEM * 100 + 3;
-            if (cJSON_GetObjectItem(node, "stat") == NULL) return ITEM * 100 + 4;
-            if (cJSON_GetObjectItem(node, "effect") == NULL) return ITEM * 100 + 5;
-            if (cJSON_GetObjectItem(node, "id_owner") == NULL) return ITEM * 100 + 6;
-            if (cJSON_GetObjectItem(node, "type_owner") == NULL) return ITEM * 100 + 7;
+            //if (List::size(node) < 6) return UNKNOWN_GRADE;
+            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_ITEM;
+            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_ITEM;
+            if (cJSON_GetObjectItem(node, "stat") == NULL) return MISSING_STAT_ATTRIBUT_ITEM;
+            if (cJSON_GetObjectItem(node, "effect") == NULL) return MISSING_EFFECT_ATTRIBUT_ITEM;
+            if (cJSON_GetObjectItem(node, "id_owner") == NULL) return MISSING_ID_OWNER_ATTRIBUT_ITEM;
+            if (cJSON_GetObjectItem(node, "type_owner") == NULL) return MISSING_TYPE_OWNER_ATTRIBUT_ITEM;
             break;
         case GRADE:
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return GRADE * 100 + 2;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return GRADE * 100 + 3;
-            if (cJSON_GetObjectItem(node, "level") == NULL) return GRADE * 100 + 4;
+            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_GRADE;
+            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_GRADE;
+            if (cJSON_GetObjectItem(node, "level") == NULL) return MISSING_LEVEL_ATTRIBUT_GRADE;
         default:
             break;
     }
@@ -96,10 +97,10 @@ int    List::isCorectToObjPrototype(cJSON *node, OBJETS type_obj, bool required)
 
 int    List::isRequiredRootStructure(cJSON *root) {
     //if (List::size(root) < 3) return -1;
-    if (cJSON_GetObjectItem(root, "security") == NULL) return -2;
-    if (strcmp(cJSON_GetObjectItem(root, "security")->valuestring, MDP) != 0) return -7;
-    if (cJSON_GetObjectItem(root, "command") == NULL) return -3;
-    if (cJSON_GetObjectItem(root, "startrek") == NULL) return -4;
+    if (cJSON_GetObjectItem(root, "security") == NULL) return MISSING_SECURITY_ATTRIBUT;
+    if (strcmp(cJSON_GetObjectItem(root, "security")->valuestring, MDP) != 0) return INCORRECT_PASSWORD;
+    if (cJSON_GetObjectItem(root, "command") == NULL) return MISSING_COMMAND_ATTRIBUT;
+    if (cJSON_GetObjectItem(root, "startrek") == NULL) return MISSING_STARTREK_ATTRIBUT;
     return 0;
 }
 
@@ -119,302 +120,300 @@ string  List::codeError(int code) {
     string str = "";
     switch (code)
     {
-        case -1:
+        case NOT_ENOUGHT_ATTRIBUT /*-1*/:
             str = "[ERROR] Il manque des attributs à la racine du JSON";
             break;
-        case -2:
+        case MISSING_SECURITY_ATTRIBUT:
             str = "[ERROR] Attribut security à la racine du JSON non renseigné";
             break;
-        case -3:
+        case MISSING_COMMAND_ATTRIBUT:
             str = "[ERROR] Attribut command à la racine du JSON non renseigné";
             break;
-        case -4:
+        case MISSING_STARTREK_ATTRIBUT:
             str = "[ERROR] Attribut startrek à la racine du JSON non renseigné";
             break;
-        case -5:
+        case JSON_SYNTAXE_ERROR:
             str = "[ERROR] Syntaxe du JSON incorrecte";
             break;
-        case -6:
+        case UNKNOWN_COMMAND:
             str = "[ERROR] Commande inconnue";
             break;
-        case -7:
+        case INCORRECT_PASSWORD:
             str = "[ERROR] Mot de passe incorrect";
             break;
-        case PLANETE * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_PLANET:
             str = "[ERROR] Il manque des attributs à l'obj planète";
             break;
-        case PLANETE * 100 + 2:
+        case MISSING_ID_ATTRIBUT_PLANET:
             str = "[ERROR] Attribut id pour l'obj planète non renseigné";
             break;
-        case PLANETE * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_PLANET:
             str = "[ERROR] Attribut name pour l'obj planète non renseigné";
             break;
-        case PLANETE * 100 + 4:
+        case MISSING_DESC_ATTRIBUT_PLANET:
             str = "[ERROR] Attribut description pour l'obj planète non renseigné";
             break;
-        case PLANETE * 100 + 5:
+        case UNKNOWN_PLANET:
             str = "[ERROR] Planète non trouvée";
             break;
-        case SPACESHIP * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Il manque des attributs à l'obj spaceship";
             break;
-        case SPACESHIP * 100 + 2:
+        case MISSING_ID_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Attribut id pour l'obj spaceship non renseigné";
             break;
-        case SPACESHIP * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Attribut name pour l'obj spaceship non renseigné";
             break;
-        case SPACESHIP * 100 + 4:
+        case MISSING_DESC_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Attribut description pour l'obj spaceship non renseigné";
             break;
-        case SPACESHIP * 100 + 5:
+        case MISSING_AP_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Attribut ap pour l'obj spaceship non renseigné";
             break;
-        case SPACESHIP * 100 + 6:
+        case MISSING_DP_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Attribut dp pour l'obj spaceship non renseigné";
             break;
-        case SPACESHIP * 100 + 7:
+        case MISSING_HP_ATTRIBUT_SPACESHIP:
             str = "[ERROR] Attribut hp pour l'obj spaceship non renseigné";
             break;
-        case SPACESHIP * 100 + 8:
+        case MAX_ITEM_OVERFLOW_SPACESHIP:
             str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
             break;
-        case SPACESHIP * 100 + 9:
+        case UNKNOWN_SPACESHIP:
            str = "[ERROR] Spaceship non trouvé";
             break;
-        case SPACESHIP * 100 + 10:
+        case UNKNOWN_ITEM_SPACECHIP:
             str = "[ERROR] le Spaceship ne possède pas cet item";
             break;
-        case HEROS * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_HEROS:
             str = "[ERROR] Il manque des attributs à l'obj heros";
             break;
-        case HEROS * 100 + 2:
+        case MISSING_ID_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut id pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut name pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 4:
+        case MISSING_AP_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut ap pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 5:
+        case MISSING_HP_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut hp pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 6:
+        case MISSING_DP_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut dp pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 7:
+        case MISSING_ID_PLANET_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut id_planet pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 8:
+        case MISSING_ID_SHIP_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut id_ship pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 9:
+        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut id_planet_origin pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 10:
+        case MISSING_ID_GRADE_ATTRIBUT_HEROS:
             str = "[ERROR] Attribut id_grade pour l'obj heros non renseigné";
             break;
-        case HEROS * 100 + 11:
+        case MAX_ITEM_OVERFLOW_HEROS:
             str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
             break;
-        case HEROS * 100 + 40:
-            str = "[ERROR] Attribut id_planet_origin pour l'obj heros non renseigné";
-            break;
-        case HEROS * 100 + 12:
+        case UNKNOWN_HEROS:
             str = "[ERROR] Heros non trouvé";
             break;
-        case HEROS * 100 + 13:
+        case UNKNOWN_ITEM_HEROS:
             str = "[ERROR] le Heros ne possède pas cet item";
             break;
-        case EVIL * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_EVIL:
             str = "[ERROR] Il manque des attributs à l'obj evil";
             break;
-        case EVIL * 100 + 2:
+        case MISSING_ID_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut id pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut name pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 4:
+        case MISSING_AP_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut ap pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 5:
+        case MISSING_HP_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut hp pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 6:
+        case MISSING_DP_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut dp pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 7:
+        case MISSING_ID_PLANET_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut id_planet pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 8:
+        case MISSING_ID_SHIP_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut id_ship pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 9:
+        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut id_planet_origin pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 10:
+        case MISSING_ID_GRADE_ATTRIBUT_EVIL:
             str = "[ERROR] Attribut id_grade pour l'obj evil non renseigné";
             break;
-        case EVIL * 100 + 11:
+        case MAX_ITEM_OVERFLOW_EVIL:
             str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
             break;
-        case EVIL * 100 + 40:
-            str = "[ERROR] Attribut id_planet_origin pour l'obj evil non renseigné";
-            break;
-        case EVIL * 100 + 12:
+        case UNKNOWN_EVIL:
             str = "[ERROR] Evil non trouvé";
             break;
-        case EVIL * 100 + 13:
+        case UNKNOWN_ITEM_EVIL:
             str = "[ERROR] le Mechant ne possède pas cet item";
             break;
-        case MISSION * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_MISSION:
             str = "[ERROR] Il manque des attributs à l'obj mission";
             break;
-        case MISSION * 100 + 2:
+        case MISSING_ID_ATTRIBUT_MISSION:
             str = "[ERROR] Attribut id pour l'obj mission non renseigné";
             break;
-        case MISSION * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_MISSION:
             str = "[ERROR] Attribut name pour l'obj mission non renseigné";
             break;
-        case MISSION * 100 + 4:
+        case MISSING_DESC_ATTRIBUT_MISSION:
             str = "[ERROR] Attribut description pour l'obj mission non renseigné";
             break;
-        case MISSION * 100 + 5:
+        case MISSING_IS_COMPLETE_ATTRIBUT_MISSION:
             str = "[ERROR] Attribut is_complete pour l'obj mission non renseigné";
             break;
-        case MISSION * 100 + 6:
+        case UNKNOWN_MISSION:
             str = "[ERROR] Mission non trouvé";
             break;
-        case PNJ * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_PNJ:
             str = "[ERROR] Il manque des attributs à l'obj pnj";
             break;
-        case PNJ * 100 + 2:
+        case MISSING_ID_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut id pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut name pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 4:
+        case MISSING_AP_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut ap pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 5:
+        case MISSING_HP_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut hp pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 6:
+        case MISSING_DP_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut dp pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 7:
+        case MISSING_ID_PLANET_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut id_planet pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 8:
+        case MISSING_ID_SHIP_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut id_ship pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 9:
+        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut id_planet_origin pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 10:
+        case MISSING_ID_GRADE_ATTRIBUT_PNJ:
             str = "[ERROR] Attribut id_grade pour l'obj pnj non renseigné";
             break;
-        case PNJ * 100 + 11:
+        case MAX_ITEM_OVERFLOW_PNJ:
             str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
             break;
-        case PNJ * 100 + 12:
+        case UNKNOWN_PNJ:
             str = "[ERROR] Pnj non trouvé";
             break;
-        case PNJ * 100 + 13:
+        case UNKNOWN_ITEM_PNJ:
             str = "[ERROR] le Pnj ne possède pas cet item";
             break;
-        case ITEM * 100 + 1:
+        case NOT_ENOUGHT_ATTRIBUT_ITEM:
             str = "[ERROR] Il manque des attributs à l'obj item";
             break;
-        case ITEM * 100 + 2:
+        case MISSING_ID_ATTRIBUT_ITEM:
             str = "[ERROR] Attribut id pour l'obj item non renseigné";
             break;
-        case ITEM * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_ITEM:
             str = "[ERROR] Attribut name pour l'obj item non renseigné";
             break;
-        case ITEM * 100 + 4:
+        case MISSING_STAT_ATTRIBUT_ITEM:
             str = "[ERROR] Attribut stat pour l'obj item non renseigné";
             break;
-        case ITEM * 100 + 5:
+        case MISSING_EFFECT_ATTRIBUT_ITEM:
             str = "[ERROR] Attribut effect pour l'obj item non renseigné";
             break;
-        case ITEM * 100 + 6:
+        case MISSING_ID_OWNER_ATTRIBUT_ITEM:
             str = "[ERROR] Attribut id_owner pour l'obj item non renseigné";
             break;
-        case ITEM * 100 + 7:
+        case MISSING_TYPE_OWNER_ATTRIBUT_ITEM:
             str = "[ERROR] Attribut type_owner pour l'obj item non renseigné";
             break;
-        case ITEM * 100 + 8:
+        case UNKNOWN_ITEM:
             str = "[ERROR] Item non trouvé";
             break;
-        case GRADE * 100 + 2:
+        case MISSING_ID_ATTRIBUT_GRADE:
             str = "[ERROR] Attribut id pour l'obj grade non renseigné";
             break;
-        case GRADE * 100 + 3:
+        case MISSING_NAME_ATTRIBUT_GRADE:
             str = "[ERROR] Attribut name pour l'obj grade non renseigné";
             break;
-        case GRADE * 100 + 4:
+        case MISSING_LEVEL_ATTRIBUT_GRADE:
             str = "[ERROR] Attribut level pour l'obj grade non renseigné";
             break;
-        case GRADE * 100 + 5:
+        case UNKNOWN_GRADE:
             str = "[ERROR] Grade non trouvé";
             break;
-        case NONE * 100 + 1:
+        case MISSING_ENTITY_TYPE_ATTRIBUT:
             str = "[ERROR] Attribut entity_type non renseigné";
             break;
-        case NONE * 100 + 2:
+        case MISSING_DEFENSE_ATTRIBUT:
             str = "[ERROR] Attribut defenseur non renseigné";
             break;
-        case NONE * 100 + 3:
+        case MISSING_ATTACK_ATTRIBUT:
             str = "[ERROR] Attribut attaquant non renseigné";
             break;
-        case NONE * 100 + 4:
+        case MISSING_ENTITY_ID_ATTRIBUT:
             str = "[ERROR] Attribut entity_id non renseigné";
             break;
-        case NONE * 100 + 5:
+        case MISSING_ACTION_ATTRIBUT:
             str = "[ERROR] Attribut action non renseigné";
             break;
-        case NONE * 100 + 6:
+        case MISSING_ITEMS_ATTRIBUT:
             str = "[ERROR] Attribut items non renseigné";
             break;
-        case NONE * 100 + 7:
+        case MISSING_DEFENSE_TYPE_ATTRIBUT:
             str = "[ERROR] Attribut type du defenseur non renseigné";
             break;
-        case NONE * 100 + 8:
+        case MISSING_DEFENSE_ID_ATTRIBUT:
             str = "[ERROR] Attribut id du defenseur non renseigné";
             break;
-        case NONE * 100 + 9:
+        case MISSING_ATTACK_TYPE_ATTRIBUT:
             str = "[ERROR] Attribut type de l'attaquant non renseigné";
             break;
-        case NONE * 100 + 10:
+        case MISSING_ATTACK_ID_ATTRIBUT:
             str = "[ERROR] Attribut id de l'attaquant non renseigné";
             break;
-        case NONE * 100 + 11:
+        case UNKNOWN_DEFENSE_OR_ATTACK:
             str = "[ERROR] L'attaquant et/ou le defenseur n'existe pas";
             break;
-        case NONE * 100 + 12:
+        case UNKNOWN_ID_GRADE:
             str = "[ERROR] Attribut id_grade n'existe pas";
             break;
-        case NONE * 100 + 13:
+        case ENTITY_OUT_RANGE:
             str = "[ERROR] Les Entité ne peuvent pas s'attaquer directement";
             break;
-        case NONE * 100 + 14:
+        case UNKNOWN_ENTITY:
             str = "[ERROR] type d'entité inconnue";
             break;
-        case NONE * 100 + 15:
+        case UNKNOWN_ACTION:
             str = "[ERROR] type d'action inconnue";
             break;
-        case NONE * 100 + 16:
+        case ITEM_OCCUPY:
             str = "[ERROR] L'objet n'est pas disponible";
             break;
-        case NONE * 100 + 17:
+        case MISSING_INVENTORY:
             str = "[ERROR] L'objet ne possède pas d'inventaire";
             break;
-        case NONE * 100 + 18:
+        case MISSING_GRADE:
             str = "[ERROR] Ce type d'entité ne possède pas de grade";
+            break;
+        case UNKNOWN_ATTACK_ACTION:
+            str = "[ERROR] Ce type d'entité ne peux pas attaquer";
+            break;
         default:
             str = "[ERROR] Erreur inconnue";
             break;
@@ -435,13 +434,12 @@ char  *List::returnJson(int code) {
 
 int List::isCorrectToAttackPrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-   // if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return GRADE * 100 + 1;
-    if (cJSON_GetObjectItem(startrek, "defenseur") == NULL) return NONE * 100 + 2;
-    if (cJSON_GetObjectItem(startrek, "attaquant") == NULL) return NONE * 100 + 3;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "type") == NULL) return NONE * 100 + 7;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "id") == NULL) return NONE * 100 + 8;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "type") == NULL) return NONE * 100 + 9;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "id") == NULL) return NONE * 100 + 10;
+    if (cJSON_GetObjectItem(startrek, "defenseur") == NULL) return MISSING_DEFENSE_ATTRIBUT;
+    if (cJSON_GetObjectItem(startrek, "attaquant") == NULL) return MISSING_ATTACK_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "type") == NULL) return MISSING_DEFENSE_TYPE_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "id") == NULL) return MISSING_DEFENSE_ID_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "type") == NULL) return MISSING_ATTACK_TYPE_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "id") == NULL) return MISSING_ATTACK_ID_ATTRIBUT;
 
     return 0;
 }
@@ -451,25 +449,25 @@ int List::isCorrectToExhangeItemPrototype(cJSON *root) {
 
     for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
         auto item = cJSON_GetArrayItem(startrek, i);
-        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return NONE * 100 + 1;
-        if (cJSON_GetObjectItem(item, "entity_id") == NULL) return NONE * 100 + 4;
-        if (cJSON_GetObjectItem(item, "action") == NULL) return NONE * 100 + 5;
-        if (cJSON_GetObjectItem(item, "items") == NULL) return NONE * 100 + 6;
+        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
+        if (cJSON_GetObjectItem(item, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
+        if (cJSON_GetObjectItem(item, "action") == NULL) return MISSING_ACTION_ATTRIBUT;
+        if (cJSON_GetObjectItem(item, "items") == NULL) return MISSING_ITEMS_ATTRIBUT;
     }
     return 0;
 }
 
 int List::isCorrectToGetInfosPrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return NONE * 100 + 1;
-    // if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return GRADE * 100 + 4;
+    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
+    // if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return MISSING_LEVEL_ATTRIBUT_GRADE;
     return 0;
 }
 
 int List::isCorrectToKillPrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return NONE * 100 + 1;
-    if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return NONE * 100 + 4;
+    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
+    if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
     return 0;
 }
 
@@ -478,7 +476,7 @@ int List::isCorrectToGetAddEntitiesPrototype(cJSON *root) {
    int code = 0;
    for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
         auto item = cJSON_GetArrayItem(startrek, i);
-        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return NONE * 100 + 1;
+        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
         if ((code = isCorectToObjPrototype(item, (OBJETS)cJSON_GetObjectItem(item, "entity_type")->valueint, false)) != 0) return code;
     }
     return 0;
@@ -486,12 +484,12 @@ int List::isCorrectToGetAddEntitiesPrototype(cJSON *root) {
 
 int List::isCorrectToEscapePrototype(cJSON *root) {
    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "defenseur") == NULL) return NONE * 100 + 2;
-    if (cJSON_GetObjectItem(startrek, "attaquant") == NULL) return NONE * 100 + 3;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "type") == NULL) return NONE * 100 + 7;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "id") == NULL) return NONE * 100 + 8;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "type") == NULL) return NONE * 100 + 9;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "id") == NULL) return NONE * 100 + 10;
+    if (cJSON_GetObjectItem(startrek, "defenseur") == NULL) return MISSING_DEFENSE_ATTRIBUT;
+    if (cJSON_GetObjectItem(startrek, "attaquant") == NULL) return MISSING_ATTACK_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "type") == NULL) return MISSING_DEFENSE_TYPE_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "id") == NULL) return MISSING_DEFENSE_ID_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "type") == NULL) return MISSING_ATTACK_TYPE_ATTRIBUT;
+    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "id") == NULL) return MISSING_ATTACK_ID_ATTRIBUT;
     return 0;
 }
 
@@ -506,24 +504,24 @@ bool    List::checkJson(string json) {
 
 int     List::isCorrectToGetHabitantsPrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "id_planet") == NULL) return PLANETE * 100 + 2;
+    if (cJSON_GetObjectItem(startrek, "id_planet") == NULL) return MISSING_ID_ATTRIBUT_PLANET;
     return 0;
 }
 int     List::isCorrectToGetEquipagePrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "id_ship") == NULL) return SPACESHIP * 100 + 2;
+    if (cJSON_GetObjectItem(startrek, "id_ship") == NULL) return MISSING_ID_ATTRIBUT_SPACESHIP;
     return 0;
 }
 int     List::isCorrectToGetInventoryPrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return NONE * 100 + 1;
-    if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return NONE * 100 + 4;
+    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
+    if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
     return 0;
 }
 
 int     List::isCorrectToGetHierarchyPrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "id_grade") == NULL) return NONE * 100 + 12;
+    if (cJSON_GetObjectItem(startrek, "id_grade") == NULL) return UNKNOWN_ID_GRADE;
     return 0;
 }
 
@@ -531,9 +529,9 @@ int     List::isCorrectToPromotePrototype(cJSON *root) {
     auto startrek = cJSON_GetObjectItem(root, "startrek");
     for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
         auto item = cJSON_GetArrayItem(startrek, i);
-        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return NONE * 100 + 1;
-        if (cJSON_GetObjectItem(item, "entity_id") == NULL) return NONE * 100 + 4;
-        if (cJSON_GetObjectItem(item, "id_grade") == NULL) return NONE * 100 + 12;
+        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
+        if (cJSON_GetObjectItem(item, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
+        if (cJSON_GetObjectItem(item, "id_grade") == NULL) return UNKNOWN_ID_GRADE;
     }
     return 0;
 }

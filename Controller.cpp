@@ -536,6 +536,13 @@ void    Controller::saveJSON() {
         node = p.second->generate(node, p.first);
     }
 
+    /* gestion des grades */
+    cJSON_AddItemToObject(startrek, to_string(GRADE).c_str(), arr = cJSON_CreateArray());
+    for(auto p: this->_grades) {
+        cJSON_AddItemToArray(arr, node = cJSON_CreateObject());
+        node = p.second->generate(node, p.first);
+    }
+
     /* gestion des items */
     cJSON_AddItemToObject(startrek, to_string(ITEM).c_str(), arr = cJSON_CreateArray());
 
@@ -717,7 +724,7 @@ char *Controller::j_attack(cJSON *startrek) {
                 //dans la generation du json, on retourne le HP du perso, donc,
                 // savoir si la victime est morte ou pas, ici, n'a aucun intérêt
                 dead = this->attaqueSimple((OBJETS)typeAttaquant, cJSON_GetObjectItem(attaquant, "id")->valueint, (OBJETS)typeDefenseur,cJSON_GetObjectItem(defenseur, "id")->valueint);
-                if (dead == -1) return List::returnJson(NONE * 100 + 11); // si c'est -1 ça veut dire qu'1 des 2 n'existe pas 
+                if (dead == -1) return List::returnJson(UNKNOWN_DEFENSE_OR_ATTACK); // si c'est -1 ça veut dire qu'1 des 2 n'existe pas 
                 cJSON_AddItemToObject(val, "id", cJSON_CreateNumber(cJSON_GetObjectItem(defenseur, "id")->valueint));
                 cJSON_AddItemToObject(val, "name", cJSON_CreateString(this->_quidams[typeDefenseur][cJSON_GetObjectItem(defenseur, "id")->valueint]->getName().c_str()));
                 hp = dead ? 0 : this->_quidams[typeDefenseur][cJSON_GetObjectItem(defenseur, "id")->valueint]->getHp();
@@ -726,19 +733,26 @@ char *Controller::j_attack(cJSON *startrek) {
                 break;
             case SPACESHIP:
                 dead = this->attaqueSimple((OBJETS)typeAttaquant, cJSON_GetObjectItem(attaquant, "id")->valueint, (OBJETS)typeDefenseur,cJSON_GetObjectItem(defenseur, "id")->valueint);
-                if (dead == -1) return List::returnJson(NONE * 100 + 11);
+                if (dead == -1) return List::returnJson(UNKNOWN_DEFENSE_OR_ATTACK);
                 cJSON_AddItemToObject(val, "id", cJSON_CreateNumber(cJSON_GetObjectItem(defenseur, "id")->valueint));
                 cJSON_AddItemToObject(val, "name", cJSON_CreateString(this->_flotte[cJSON_GetObjectItem(defenseur, "id")->valueint]->getName().c_str()));
                 hp = dead ? 0 : this->_flotte[cJSON_GetObjectItem(defenseur, "id")->valueint]->getHp();
                 cJSON_AddItemToObject(val, "hp", cJSON_CreateNumber(hp));
                 retour = cJSON_Print(root);
                 break;
+            case MISSION:
+            case GRADE:
+            case PLANETE:
+            case ITEM:
+                retour = List::returnJson(UNKNOWN_ENTITY);
+                break;
             default:
-                retour = List::returnJson(HEROS * 100 + 40);
+                retour = List::returnJson(UNKNOWN_ENTITY);
                 break;
         }
-    } else retour = List::returnJson(NONE * 100 + 13);
-    cJSON_Delete(root); 
+    } else retour = List::returnJson(ENTITY_OUT_RANGE);
+    cJSON_Delete(root);
+    this->saveJSON();
     return retour;
 }
 
@@ -759,47 +773,47 @@ char *Controller::j_exchangeItem(cJSON *startrek) {
         OBJETS type = (OBJETS)cJSON_GetObjectItem(objet, "entity_type")->valueint;
         auto entity_id = cJSON_GetObjectItem(objet, "entity_id")->valueint;
         auto action = cJSON_GetObjectItem(objet, "action")->valuestring;
-
         switch (type) {
             case HEROS:
             case PNJ:
             case EVIL:
                 for (int j = 0; j < cJSON_GetArraySize(cJSON_GetObjectItem(objet, "items")); j++) {
                     auto id_item = cJSON_GetArrayItem(cJSON_GetObjectItem(objet, "items"),j)->valueint;
-                    if (this->_quidams[type].find(entity_id) == this->_quidams[type].end()) return List::returnJson(type * 100 + 12);
+                    if (this->_quidams[type].find(entity_id) == this->_quidams[type].end()) return List::returnJson((type == HEROS ? UNKNOWN_HEROS : (type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
                     if(strcmp(action,"pull") == 0) {
                         //le perso recupere les items
                         if(this->getPerso(this->_quidams[type].find(entity_id)->second->getName())->getInventory().size() <= this->getPerso(this->_quidams[type].find(entity_id)->second->getName())->getMaxItem()) {
-                            if (this->_tableDeCorrespondance[NONE].find(id_item) == this->_tableDeCorrespondance[NONE].end()) return List::returnJson(NONE * 100 + 16);
+                            if (this->_tableDeCorrespondance[NONE].find(id_item) == this->_tableDeCorrespondance[NONE].end()) return List::returnJson(ITEM_OCCUPY);
                             this->takeItem(id_item, entity_id, type);
-                        } else return List::returnJson(type * 100 + 11);
+                        } else return List::returnJson((type == HEROS ? MAX_ITEM_OVERFLOW_HEROS : (type == PNJ ? MAX_ITEM_OVERFLOW_PNJ : MAX_ITEM_OVERFLOW_EVIL)));
                     } else if (strcmp(action, "push") == 0) {
-                        if (!(this->_tableDeCorrespondance[type].find(id_item) != this->_tableDeCorrespondance[type].end() && this->_tableDeCorrespondance[type][id_item] == entity_id)) return List::returnJson(type * 100 + 13);
+                        if (!(this->_tableDeCorrespondance[type].find(id_item) != this->_tableDeCorrespondance[type].end() && this->_tableDeCorrespondance[type][id_item] == entity_id)) return List::returnJson((type == HEROS ? UNKNOWN_ITEM_HEROS : (type == PNJ ? UNKNOWN_ITEM_PNJ : UNKNOWN_ITEM_EVIL)));
                         this->removeItem(id_item, this->_quidams[type].find(entity_id)->second->getName(), type);
-                    } else return List::returnJson(NONE * 100 + 15);
+                    } else return List::returnJson(UNKNOWN_ACTION);
                 }
                 break;
             case SPACESHIP:
                 for (int j = 0; j < cJSON_GetArraySize(cJSON_GetObjectItem(objet, "items")); j++) {
                     auto id_item = cJSON_GetArrayItem(cJSON_GetObjectItem(objet, "items"),j)->valueint;
-                    if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(type * 100 + 9);
+                    if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
                     if(strcmp(action,"pull") == 0) {
                         //le Spaceship recupere les items
                         if(this->getSpaceship(this->_flotte.find(entity_id)->second->getName())->getInventory().size() <= this->getSpaceship(this->_flotte.find(entity_id)->second->getName())->getMaxItem()) {
-                            if (this->_tableDeCorrespondance[NONE].find(id_item) == this->_tableDeCorrespondance[NONE].end()) return List::returnJson(NONE * 100 + 16);
+                            if (this->_tableDeCorrespondance[NONE].find(id_item) == this->_tableDeCorrespondance[NONE].end()) return List::returnJson(ITEM_OCCUPY);
                             this->takeItem(id_item, entity_id, type);
-                        } else return List::returnJson(type * 100 + 8);
+                        } else return List::returnJson(MAX_ITEM_OVERFLOW_SPACESHIP);
                     } else if (strcmp(action, "push") == 0) {
-                        if (!(this->_tableDeCorrespondance[type].find(id_item) != this->_tableDeCorrespondance[type].end() && this->_tableDeCorrespondance[type][id_item] == entity_id)) return List::returnJson(type * 100 + 10);
+                        if (!(this->_tableDeCorrespondance[type].find(id_item) != this->_tableDeCorrespondance[type].end() && this->_tableDeCorrespondance[type][id_item] == entity_id)) return List::returnJson(UNKNOWN_ITEM_SPACECHIP);
                         this->removeItem(id_item, this->_flotte.find(entity_id)->second->getName(), type);
-                    } else return List::returnJson(NONE * 100 + 15);
+                    } else return List::returnJson(UNKNOWN_ACTION);
                 }
                 break;
             default:
-                return List::returnJson(NONE * 100 + 14);
+                return List::returnJson(UNKNOWN_ENTITY);
                 break;
         }
     }
+    this->saveJSON();
     return List::returnJson(code);
 }
 
@@ -829,7 +843,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
     switch(entity_type) {
         case PLANETE:
             if(entity_id != NULL) {
-                if (this->_planetes.find(entity_id->valueint) == this->_planetes.end()) return List::returnJson(entity_type * 100 + 5);
+                if (this->_planetes.find(entity_id->valueint) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
                 cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                 node = this->_planetes[entity_id->valueint]->generate(node, entity_id->valueint);
                 return cJSON_Print(root);
@@ -842,7 +856,8 @@ char *Controller::j_getInfos(cJSON *startrek) {
         case LIVING:
             if(entity_id != NULL) {
                 for (auto living: this->_quidams) {
-                    if (living.second.find(entity_id->valueint) == living.second.end()) return List::returnJson(living.first * 100 + 12);
+                    
+                    if (living.second.find(entity_id->valueint) == living.second.end()) return List::returnJson((living.first == HEROS ? UNKNOWN_HEROS : (living.first == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
                     cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                     node = living.second[entity_id->valueint]->generate(node, entity_id->valueint);
                     return cJSON_Print(root);
@@ -861,7 +876,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
         case EVIL:
         case PNJ:
             if(entity_id != NULL) {
-                if (this->_quidams[entity_type].find(entity_id->valueint) == this->_quidams[entity_type].end()) return List::returnJson(entity_type * 100 + 12);
+                if (this->_quidams[entity_type].find(entity_id->valueint) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
                 cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                 node = this->_quidams[entity_type][entity_id->valueint]->generate(node, entity_id->valueint);
                 return cJSON_Print(root);
@@ -873,7 +888,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
             break;
         case MISSION:
             if(entity_id != NULL) {
-                if (this->_missions.find(entity_id->valueint) == this->_missions.end()) return List::returnJson(entity_type * 100 + 5);
+                if (this->_missions.find(entity_id->valueint) == this->_missions.end()) return List::returnJson(UNKNOWN_MISSION);
                 cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                 node = this->_missions[entity_id->valueint]->generate(node, entity_id->valueint);
                 return cJSON_Print(root);
@@ -885,7 +900,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
             break;
         case SPACESHIP:
             if(entity_id != NULL) {
-                if (this->_flotte.find(entity_id->valueint) == this->_flotte.end()) return List::returnJson(entity_type * 100 + 9);
+                if (this->_flotte.find(entity_id->valueint) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
                 cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                 node = this->_flotte[entity_id->valueint]->generate(node, entity_id->valueint);
                 return cJSON_Print(root);
@@ -902,7 +917,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
                     cout << "bad" << endl;
                     for (auto p : i.second) { // ceux assignés à un quidam
                         if(entity_id != NULL) {
-                            if (this->_quidams[(OBJETS)i.first][p.second]->getInventory().find(entity_id->valueint) == this->_quidams[(OBJETS)i.first][p.second]->getInventory().end()) return List::returnJson(entity_type * 100 + 8);
+                            if (this->_quidams[(OBJETS)i.first][p.second]->getInventory().find(entity_id->valueint) == this->_quidams[(OBJETS)i.first][p.second]->getInventory().end()) return List::returnJson(UNKNOWN_ITEM);
                             cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                             node = this->_quidams[(OBJETS)i.first][p.second]->getInventory()[entity_id->valueint]->generate(node, entity_id->valueint);
                             return cJSON_Print(root);
@@ -914,7 +929,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
                 if (i.first == SPACESHIP) {
                     for (auto s : i.second) { // ceux assignés à un vaisseau
                         if(entity_id != NULL) {
-                            if (this->_flotte[s.second]->getInventory().find(entity_id->valueint) ==  this->_flotte[s.second]->getInventory().end()) return List::returnJson(entity_type * 100 + 8);
+                            if (this->_flotte[s.second]->getInventory().find(entity_id->valueint) ==  this->_flotte[s.second]->getInventory().end()) return List::returnJson(UNKNOWN_ITEM);
                             cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                             node = this->_flotte[s.second]->getInventory()[entity_id->valueint]->generate(node, entity_id->valueint);
                             return cJSON_Print(root);
@@ -928,7 +943,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
                     for (auto s : i.second) { // ceux assignés à personne
                         cout << s.first << endl;
                         if(entity_id != NULL) {
-                            if (this->_items.find(entity_id->valueint) ==  this->_items.end()) return List::returnJson(entity_type * 100 + 8);
+                            if (this->_items.find(entity_id->valueint) ==  this->_items.end()) return List::returnJson(UNKNOWN_ITEM);
                             cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                             node = this->_items[entity_id->valueint]->generate(node, entity_id->valueint);
                             return cJSON_Print(root);
@@ -941,7 +956,7 @@ char *Controller::j_getInfos(cJSON *startrek) {
             break;
         case GRADE:
             if(entity_id != NULL) {
-                if (this->_grades.find(entity_id->valueint) == this->_grades.end())  return List::returnJson(entity_type * 100 + 5);
+                if (this->_grades.find(entity_id->valueint) == this->_grades.end())  return List::returnJson(UNKNOWN_GRADE);
                 cJSON_AddItemToArray(entities, node = cJSON_CreateObject());
                 this->_grades[entity_id->valueint]->generate(node, entity_id->valueint);
                 return cJSON_Print(root);
@@ -977,7 +992,7 @@ char *Controller::j_kill(cJSON *startrek) {
 
     switch (entity_type) {
         case PLANETE:
-            if (this->_planetes.find(entity_id) == this->_planetes.end()) return List::returnJson(entity_type * 100 + 5);
+            if (this->_planetes.find(entity_id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
             for (auto h = this->_planetes[entity_id]->getHabitants().begin(); h != this->_planetes[entity_id]->getHabitants().end(); h++) {
                 if (h->lock()) {
                     /* je remplis mon array de perso ou pnj qui vont mourir avec la planete */
@@ -1013,7 +1028,7 @@ char *Controller::j_kill(cJSON *startrek) {
         case PNJ:
         case EVIL:
             //recuperation des ID de l'inventaire
-            if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson(entity_type * 100 + 12);
+            if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
             for (auto it = this->_quidams[entity_type][entity_id]->getInventory().begin(); it != this->_quidams[entity_type][entity_id]->getInventory().end(); it++) {
                 if (inv == NULL) inv = cJSON_CreateArray();
                 cJSON_AddItemToArray(inv, item = cJSON_CreateObject());
@@ -1022,11 +1037,11 @@ char *Controller::j_kill(cJSON *startrek) {
             this->deletePerso(entity_id);
             break;
         case MISSION:
-            if (this->_missions.find(entity_id) == this->_missions.end()) return List::returnJson(entity_type * 100 + 5);
+            if (this->_missions.find(entity_id) == this->_missions.end()) return List::returnJson(UNKNOWN_MISSION);
             this->deleteMission(entity_id);
             break;
         case SPACESHIP:
-            if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(entity_type * 100 + 9);
+            if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
             for (auto it = this->_flotte[entity_id]->getInventory().begin(); it != this->_flotte[entity_id]->getInventory().end(); it++) {
                 if (inv == NULL) inv = cJSON_CreateArray();
                 cJSON_AddItemToArray(inv, item = cJSON_CreateObject());
@@ -1035,11 +1050,11 @@ char *Controller::j_kill(cJSON *startrek) {
             this->deleteSpaceship(entity_id);
             break;
         case GRADE:
-            if (this->_grades.find(entity_id) == this->_grades.end()) return List::returnJson(entity_type * 100 + 5);
+            if (this->_grades.find(entity_id) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
             this->deleteGrade(entity_id);
             break;
         case ITEM:
-            code = ITEM * 100 + 8;
+            code = UNKNOWN_ITEM;
             for (auto type : this->_tableDeCorrespondance) for (auto it : type.second) if (it.first == entity_id) {
                 this->deleteItem(entity_id);
                 code = 0;
@@ -1047,7 +1062,7 @@ char *Controller::j_kill(cJSON *startrek) {
             if (code != 0) List::returnJson(code);
             break;        
         default:
-            return List::returnJson(NONE * 100 + 14);
+            return List::returnJson(UNKNOWN_ENTITY);
             break;
     }
 
@@ -1061,6 +1076,7 @@ char *Controller::j_kill(cJSON *startrek) {
     
     print = cJSON_Print(root);
     cJSON_Delete(root);
+    this->saveJSON();
     return print;
 }
 
@@ -1089,13 +1105,13 @@ char *Controller::j_add_entities(cJSON *startrek) {
             case HEROS:
             case EVIL:
                 if (cJSON_GetObjectItem(array, "id_planet")->valueint != 0 
-                && this->_planetes.find(cJSON_GetObjectItem(array, "id_planet")->valueint) == this->_planetes.end()) return List::returnJson(PLANETE * 100 + 5);
+                && this->_planetes.find(cJSON_GetObjectItem(array, "id_planet")->valueint) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
                 if (cJSON_GetObjectItem(array, "id_planet_origin")->valueint != 0
-                && this->_planetes.find(cJSON_GetObjectItem(array, "id_planet_origin")->valueint) == this->_planetes.end()) return List::returnJson(PLANETE * 100 + 5);
+                && this->_planetes.find(cJSON_GetObjectItem(array, "id_planet_origin")->valueint) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
                 if (cJSON_GetObjectItem(array, "id_ship")->valueint != 0
-                && this->_flotte.find(cJSON_GetObjectItem(array, "id_ship")->valueint) == this->_flotte.end()) return List::returnJson(SPACESHIP * 100 + 9);
+                && this->_flotte.find(cJSON_GetObjectItem(array, "id_ship")->valueint) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
                 if (cJSON_GetObjectItem(array, "id_grade")->valueint != 0
-                && this->_grades.find(cJSON_GetObjectItem(array, "id_grade")->valueint) == this->_grades.end()) return List::returnJson(GRADE * 100 + 5);
+                && this->_grades.find(cJSON_GetObjectItem(array, "id_grade")->valueint) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
                 break;
             case ITEM:
                 type_owner =  (OBJETS)cJSON_GetObjectItem(array, "type_owner")->valueint;
@@ -1107,21 +1123,21 @@ char *Controller::j_add_entities(cJSON *startrek) {
                     case PNJ:
                     case SPACESHIP:
                         if (find(QUIDAMS.begin(), QUIDAMS.end(), (OBJETS)cJSON_GetObjectItem(array, "type_owner")->valueint) == QUIDAMS.end()) {
-                            if (this->_flotte.find(cJSON_GetObjectItem(array, "id_owner")->valueint) == this->_flotte.end()) return List::returnJson(SPACESHIP * 100 + 9);
+                            if (this->_flotte.find(cJSON_GetObjectItem(array, "id_owner")->valueint) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
                         } else {
-                            if (this->_quidams[type_owner].find(cJSON_GetObjectItem(array, "id_owner")->valueint) == this->_quidams[type_owner].end()) return List::returnJson(type_owner * 100 + 12);
+                            if (this->_quidams[type_owner].find(cJSON_GetObjectItem(array, "id_owner")->valueint) == this->_quidams[type_owner].end()) return List::returnJson((type_owner == HEROS ? UNKNOWN_HEROS : (type_owner == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
                         }
                         
                         break;
                     
                     default:
-                        return List::returnJson(NONE * 100 + 17);
+                        return List::returnJson(MISSING_INVENTORY);
                         break;
                     }
                 }
                 break;
             default:
-                return List::returnJson(NONE * 100 + 14);
+                return List::returnJson(UNKNOWN_ENTITY);
                 break;
         }
     }
@@ -1223,6 +1239,7 @@ char *Controller::j_add_entities(cJSON *startrek) {
 
     print = cJSON_Print(root);
     cJSON_Delete(root);
+    this->saveJSON();
     return print;
 }
 
@@ -1244,7 +1261,7 @@ char *Controller::j_escape(cJSON *startrek) {
     OBJETS type_def = (OBJETS)cJSON_GetObjectItem(defenseur, "type")->valueint;
     int id_def = cJSON_GetObjectItem(defenseur, "id")->valueint;
 
-    if (this->_quidams[type_def].find(id_def) == this->_quidams[type_def].end()) return List::returnJson(type_def * 100 + 12);
+    if (this->_quidams[type_def].find(id_def) == this->_quidams[type_def].end()) return List::returnJson((type_def == HEROS ? UNKNOWN_HEROS : (type_def == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
     this->_quidams[type_def][id_def]->generate(obj, id_def);
 
     print = cJSON_Print(root);
@@ -1296,7 +1313,7 @@ char    *Controller::j_getHabitants(cJSON *startrek) {
     cJSON *pnjs = NULL, *heros = NULL, *evils = NULL, *item;
 
     int id = cJSON_GetObjectItem(startrek, "id_planet")->valueint;
-    if (this->_planetes.find(id) == this->_planetes.end()) return List::returnJson(PLANETE * 100 + 5);
+    if (this->_planetes.find(id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
     cJSON *root = List::defaultNode();
 
     for (auto h : this->_planetes[id]->getHabitants()) {
@@ -1336,7 +1353,7 @@ char    *Controller::j_getEquipage(cJSON *startrek) {
     
     cJSON *pnjs = NULL, *heros = NULL, *evils = NULL, *item;
     int id = cJSON_GetObjectItem(startrek, "id_ship")->valueint;
-    if (this->_flotte.find(id) == this->_flotte.end()) return List::returnJson(SPACESHIP * 100 + 9);
+    if (this->_flotte.find(id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
 
     cJSON *root = List::defaultNode();
 
@@ -1376,19 +1393,19 @@ char    *Controller::j_getInventory(cJSON *startrek) {
         case HEROS:
         case EVIL:
         case PNJ:
-            if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson(entity_type * 100 + 12);
+            if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
             break;
         case SPACESHIP:
-            if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(entity_type * 100 + 9);
+            if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
             break;
         case MISSION:
         case ITEM:
         case PLANETE:
         case GRADE:
-            return List::returnJson(NONE * 100 + 17);
+            return List::returnJson(MISSING_INVENTORY);
             break;
         default:
-            return List::returnJson(NONE * 100 + 14);
+            return List::returnJson(UNKNOWN_ENTITY);
             break;
     }
     
@@ -1435,9 +1452,10 @@ char    *Controller::j_promote(cJSON *startrek) {
     cJSON *heros = NULL, *pnjs = NULL, *evils = NULL, *obj;
 
     for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
-        if (find(QUIDAMS.begin(), QUIDAMS.end(), (OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint) == QUIDAMS.end()) return List::returnJson(NONE * 100 + 18);
-        if (this->_quidams[(OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint].find(cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_id")->valueint) == this->_quidams[(OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint].end()) return List::returnJson(cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint * 100 + 12);
-        if (this->_grades.find((OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "id_grade")->valueint) == this->_grades.end()) return List::returnJson(GRADE * 100 + 5);
+        entity_type = (OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint;
+        if (find(QUIDAMS.begin(), QUIDAMS.end(), (OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint) == QUIDAMS.end()) return List::returnJson(MISSING_GRADE);
+        if (this->_quidams[(OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint].find(cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_id")->valueint) == this->_quidams[(OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "entity_type")->valueint].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
+        if (this->_grades.find((OBJETS)cJSON_GetObjectItem(cJSON_GetArrayItem(startrek, i), "id_grade")->valueint) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
     }
     cJSON *root = List::defaultNode();
     for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
@@ -1467,6 +1485,7 @@ char    *Controller::j_promote(cJSON *startrek) {
     }
     print = cJSON_Print(root);
     cJSON_Delete(root);
+    this->saveJSON();
     return print;
 }
 
@@ -1481,7 +1500,7 @@ char    *Controller::j_getHierarchy(cJSON *startrek) {
     char *print;
     cJSON *pnjs = NULL, *heros = NULL, *evils = NULL, *item;
     int id = cJSON_GetObjectItem(startrek, "id_grade")->valueint;
-    if (this->_grades.find(id) == this->_grades.end()) return List::returnJson(GRADE * 100 + 5);
+    if (this->_grades.find(id) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
 
     cJSON *root = List::defaultNode();
     for (auto h : this->_grades[id]->getMembre()) {
