@@ -15,6 +15,13 @@ using namespace std;
 
 Controller *ctrl = new Controller();
 
+COMMANDS findCommands(string command) {
+    for (auto it = COMMANDS_LIST.begin(); it != COMMANDS_LIST.end(); it++) {
+        if (strcmp(it->second.c_str(), command.c_str()) == 0) return it->first;
+    }
+    return ERROR_COMMAND;
+}
+
 void *connection_handler(void *sock_fd) {
         /* clock_t clock(void) returns the number of clock ticks 
            elapsed since the program was launched.To get the number  
@@ -59,62 +66,73 @@ void *connection_handler(void *sock_fd) {
                 if ((code = List::isRequiredRootStructure(parse)) == 0) {  //response = List::returnJson(code);
                     startrek = cJSON_GetObjectItem(parse, "startrek");
                 }
-                if (strcmp(key->valuestring, "init") == 0) {
-                    if ((code = List::isCorectToInitPrototype(parse)) == 0) ctrl->init(parse);
+                switch (findCommands(key->valuestring))
+                {
+                case INIT:
+                    if ((code = List::isCorectToInitPrototype(parse)) == 0)
+                        ctrl->init(parse);
                     response = List::returnJson(code);
-                }
-                else if (strcmp(key->valuestring, "attack") == 0) {
+                    break;
+                case ATTACK:
                     if ((code = List::isCorrectToAttackPrototype(parse)) == 0) {
                         response = ctrl->j_attack(startrek);
                     }
-                }
-                else if (strcmp(key->valuestring, "exchangeItem") == 0) {
+                    break;
+                case EXCHANGE_ITEM:
                     if ((code = List::isCorrectToExhangeItemPrototype(parse)) == 0) {
                         response = ctrl->j_exchangeItem(startrek);
                     }
-                }
-                else if (strcmp(key->valuestring, "getInfos") == 0) {
+                    break;
+                case GET_INFOS:
                     if ((code = List::isCorrectToGetInfosPrototype(parse)) == 0) {
                         response = ctrl->j_getInfos(startrek);
                     }
-                }
-                else if (strcmp(key->valuestring, "kill") == 0) {
+                    break;
+                case KILL:
                     if ((code = List::isCorrectToKillPrototype(parse)) == 0) {
                         response = ctrl->j_kill(startrek);
                     }
-                }
-                else if (strcmp(key->valuestring, "escape") == 0) {
+                    break;
+                case ESCAPE:
                     if ((code = List::isCorrectToEscapePrototype(parse)) == 0) {
                         response = ctrl->j_escape(startrek);
                     }
-                }
-                else if (strcmp(key->valuestring, "addEntities") == 0) {
+                    break;
+                case ADD_ENTITIES:
                     if ((code = List::isCorrectToGetAddEntitiesPrototype(parse)) == 0) {
                         response = ctrl->j_add_entities(startrek);
                     }
-                } else if (strcmp(key->valuestring, "getHabitants") == 0) {
+                    break;
+                case GET_HABITANTS:
                     if ((code = List::isCorrectToGetHabitantsPrototype(parse)) == 0) {
                         response = ctrl->j_getHabitants(startrek);
                     }
-                } else if (strcmp(key->valuestring, "getEquipage") == 0) {
+                    break;
+                case GET_EQUIPAGE:
                     if ((code = List::isCorrectToGetEquipagePrototype(parse)) == 0) {
                         response = ctrl->j_getEquipage(startrek);
                     }
-                } else if (strcmp(key->valuestring, "getInventory") == 0) {
+                    break;
+                case GET_INVENTORY:
                     if ((code = List::isCorrectToGetInventoryPrototype(parse)) == 0) {
                         response = ctrl->j_getInventory(startrek);
                     }
-                } else if (strcmp(key->valuestring, "promote") == 0) {
+                    break;
+                case PROMOTE:
                     if ((code = List::isCorrectToPromotePrototype(parse)) == 0) {
                         response = ctrl->j_promote(startrek);
                     }
-                } else if (strcmp(key->valuestring, "getHierarchy") == 0) {
+                    break;
+                case GET_HIERARCHY:
                     if ((code = List::isCorrectToGetHierarchyPrototype(parse)) == 0) {
                         response = ctrl->j_getHierarchy(startrek);
                     }
+                    break;
+                default:
+                    response = List::returnJson(UNKNOWN_COMMAND); // response = List::returnJson(-6);
+                    break;
                 }
-                else response = List::returnJson(-6);//response = List::returnJson(-6);
-            } else response = List::returnJson(-5);//response = List::returnJson(-5);
+            } else response = List::returnJson(JSON_SYNTAXE_ERROR);//response = List::returnJson(-5);
             
             response = code != 0 ? List::returnJson(code) : response;
             std::cout << "[RECEIVED] " << json << "\n";
@@ -159,14 +177,12 @@ void *connection_handler(void *sock_fd) {
         
         // exiting
         pthread_exit(NULL);
-} 
+}
 
 int main()
 {
     Serveur *serveur = ctrl->getServeur();
     serveur->init();
-    
-    
 
     socklen_t addrlen = sizeof(struct sockaddr_in);
     while (true)
