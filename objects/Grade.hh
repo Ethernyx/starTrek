@@ -36,7 +36,7 @@ public:
     vector<weak_ptr<AQuidam>>   &getMembre();
     void                        addMembre(shared_ptr<AQuidam> &);
     bool                        deleteMembre(const string);
-    void                        generate(cJSON *node, int id);
+    cJSON                       *generate(cJSON *node, int id);
     void                        cleanMembres();
 };
 

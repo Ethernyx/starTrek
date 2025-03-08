@@ -66,10 +66,11 @@ bool                        Grade::deleteMembre(const string name) {
     return false;
 }
 
-void    Grade::generate(cJSON *node, int id) {
+cJSON    *Grade::generate(cJSON *node, int id) {
     cJSON_AddNumberToObject(node, "id", id);
     cJSON_AddStringToObject(node, "name", this->_name.c_str());
     cJSON_AddNumberToObject(node, "level", this->_level);
+    return node;
 }
 
 void    Grade::cleanMembres() {
