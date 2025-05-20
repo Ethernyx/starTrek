@@ -414,6 +414,9 @@ string  List::codeError(int code) {
         case UNKNOWN_ATTACK_ACTION:
             str = "[ERROR] Ce type d'entité ne peux pas attaquer";
             break;
+        case UNAUTHORIZED:
+            str = "[ERROR] Bad TOKEN";
+            break;
         default:
             str = "[ERROR] Erreur inconnue";
             break;
@@ -534,4 +537,31 @@ int     List::isCorrectToPromotePrototype(cJSON *root) {
         if (cJSON_GetObjectItem(item, "id_grade") == NULL) return UNKNOWN_ID_GRADE;
     }
     return 0;
+}
+
+vector<string> List::split(string str, string delimiter)
+{
+    vector<string> v;
+    if (!str.empty())
+    {
+        int start = 0;
+        do
+        {
+            // Find the index of occurrence
+            size_t idx = str.find(delimiter, start);
+            if (idx == string::npos)
+            {
+                break;
+            }
+
+            // If found add the substring till that
+            // occurrence in the vector
+            int length = idx - start;
+            v.push_back(str.substr(start, length));
+            start += (length + delimiter.size());
+        } while (true);
+        v.push_back(str.substr(start));
+    }
+
+    return v;
 }

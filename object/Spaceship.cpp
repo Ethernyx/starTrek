@@ -9,7 +9,7 @@
 * -----
 */
 
-#include "Spaceship.hh"
+#include "../include/object/Spaceship.hh"
 
 Spaceship::Spaceship(string nom, string description, int ap, int hp, int dp): Attribut(ap, hp, dp), Inventory(5) {
     this->_name = nom;
@@ -91,15 +91,16 @@ void Spaceship::cleanEquipage(){
     }
 }
 
-cJSON   *Spaceship::generate(cJSON *node, int id) {
+boost::json::object Spaceship::generate(int id) {
+    boost::json::object obj;
 
-    cJSON_AddNumberToObject(node, "id", id);
-    cJSON_AddStringToObject(node, "name", this->_name.c_str());
-    cJSON_AddStringToObject(node, "description", this->_description.c_str());
-    cJSON_AddNumberToObject(node, "ap", this->_ap);
-    cJSON_AddNumberToObject(node, "dp", this->_dp);
-    cJSON_AddNumberToObject(node, "hp", this->_hp);
-    return node;
+    obj["id"] = id;
+    obj["name"] = this->_name.c_str();
+    obj["description"] = this->_description.c_str();
+    obj["ap"] = this->_ap;
+    obj["dp"] = this->_dp;
+    obj["hp"] = this->_hp;
+    return obj;
 
 }
 

@@ -9,7 +9,7 @@
 * -----
 */
 
-#include    "Heros.hh"
+#include    "../include/object/Heros.hh"
 
 Heros::Heros(string const nom, int const forceAttaque, int const sante, int const dp, int id_planet_origin) : AQuidam(nom, forceAttaque, sante, dp, id_planet_origin) {
     this->_type = HEROS;
@@ -40,16 +40,18 @@ Heros::~Heros() {
 #endif
 }
 
-cJSON       *Heros::generate(cJSON *node, int id) {
-    cJSON_AddNumberToObject(node, "id", id);
-    cJSON_AddStringToObject(node, "name", this->_name.c_str());
-    cJSON_AddNumberToObject(node, "ap", this->_ap);
-    cJSON_AddNumberToObject(node, "hp", this->_hp);
-    cJSON_AddNumberToObject(node, "dp", this->_dp);
-    cJSON_AddNumberToObject(node, "id_planet", this->_id_planet);
-    cJSON_AddNumberToObject(node, "id_ship", this->_id_ship);
-    cJSON_AddNumberToObject(node, "id_planet_origin", this->_id_planet_origin);
-    cJSON_AddNumberToObject(node, "id_grade", this->_id_grade);
-    return node;
+boost::json::object Heros::generate(int id) {
+    boost::json::object obj;
+    
+    obj["id"] = id;
+    obj["name"] = this->_name.c_str();
+    obj["ap"] = this->_ap;
+    obj["hp"] = this->_hp;
+    obj["dp"] = this->_dp;
+    obj["id_planet"] = this->_id_planet;
+    obj["id_ship"] = this->_id_ship;
+    obj["id_planet_origin"] = this->_id_planet_origin;
+    obj["id_grade"] = this->_id_grade;
+    return obj;
 }
 

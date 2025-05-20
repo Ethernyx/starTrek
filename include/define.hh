@@ -13,12 +13,23 @@
 #define DEFINE_HH_
 
 #include <map>
+#include <boost/asio.hpp>
+#include <boost/beast.hpp>
+#include <boost/json.hpp>
 
 #define BDDFILE "bdd.json"
 #define SEP "|"
 #define CLEAR "cls"
 #define MDP "je préfère le Faucon Millenium"
 #define QUIDAMS vector<OBJETS> {HEROS, PNJ, EVIL}
+
+#define ADDRESS "0.0.0.0"//"146.59.240.78"
+#define PORT 8888
+#define GET (http::verb::get)
+#define POST (http::verb::post)
+#define PUT (http::verb::put)
+#define PATCH (http::verb::patch)
+#define DELETE (http::verb::delete_)
 
 typedef enum {
     ERROR_COMMAND = -1,
@@ -61,7 +72,8 @@ typedef enum {
     MISSION,
     ITEM,
     GRADE,
-    LIVING
+    LIVING,
+    TOKEN
 } OBJETS;
 
 typedef  enum {
@@ -71,7 +83,7 @@ typedef  enum {
 } EFFECT;
 
 typedef enum {
-    UNKWOWN_ERROR = -1,
+    UNKWOWN_ERROR = 1,
     UNKNOWN_PLANET,
     UNKNOWN_SPACESHIP,
     UNKNOWN_HEROS,
@@ -182,7 +194,8 @@ typedef enum {
     ITEM_OCCUPY,
     INCORRECT_PASSWORD,
     ENTITY_OUT_RANGE,
-    
+    UNAUTHORIZED
+        
 }   CODE_ERROR;
 
 #endif //CPP_STAR_TREK_DEFINE_H

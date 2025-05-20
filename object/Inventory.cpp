@@ -9,7 +9,7 @@
  * -----
 */
 
-#include    "Inventory.hh"
+#include    "../include/object/Inventory.hh"
 
 Inventory::Inventory(size_t maxItem) : _maxItem(maxItem) {}
 

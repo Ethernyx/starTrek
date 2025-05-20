@@ -21,7 +21,7 @@ public:
             Pnj(cJSON *node);
     virtual ~Pnj();
 
-    cJSON*  generate(cJSON *node, int id);
+    boost::json::object generate(int id);
 };
 
 

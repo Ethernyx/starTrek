@@ -24,7 +24,7 @@ public:
 
     virtual                     ~Evil();
 
-    cJSON                       *generate(cJSON *node, int id);
+    boost::json::object         generate(int id);
 };
 
 #endif

@@ -17,7 +17,7 @@
 #include                        <iostream>
 
 #include                        "AQuidam.hh"
-#include                        "../lib_func/cJSON.hh"
+#include                        "../../lib_func/cJSON.hh"
 
 using namespace                 std;
 
@@ -36,7 +36,7 @@ public:
     vector<weak_ptr<AQuidam>>   &getMembre();
     void                        addMembre(shared_ptr<AQuidam> &);
     bool                        deleteMembre(const string);
-    cJSON                       *generate(cJSON *node, int id);
+    boost::json::object         generate(int id);
     void                        cleanMembres();
 };
 

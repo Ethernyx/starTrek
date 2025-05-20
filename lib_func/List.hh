@@ -16,7 +16,7 @@
 #include            <string.h>
 #include            <iostream>
 #include            "cJSON.hh"
-#include            "../define.hh"
+#include            "../include/define.hh"
 
 using namespace     std;
 
@@ -43,6 +43,7 @@ public:
     static string   codeError(int error);
     static char     *returnJson(int code);
     static bool     checkJson(string json);
+    static vector<string>   split(string, string);
 
 };
 

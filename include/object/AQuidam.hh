@@ -15,7 +15,7 @@
 #include                        <string>
 #include                        <memory>
 #include                        <map>
-#include                        "../lib_func/cJSON.hh"
+#include                        "../../lib_func/cJSON.hh"
 #include                        "Item.hh"
 #include                        "Attribut.hh"
 #include                        "Inventory.hh"
@@ -53,7 +53,7 @@ public:
     void                        setType(int type);
     void                        addItem(unique_ptr<Item> &, int id);
 
-    virtual cJSON               *generate(cJSON *node, int id) = 0;
+    virtual boost::json::object generate(int id) = 0;
 
 };
 

@@ -9,7 +9,7 @@
 * -----
 */
 
-#include    "Grade.hh"
+#include    "../include/object/Grade.hh"
 
 Grade::Grade(const string nom, const int level) : _name(nom), _level(level) {
     #ifdef DEBUG
@@ -66,11 +66,13 @@ bool                        Grade::deleteMembre(const string name) {
     return false;
 }
 
-cJSON    *Grade::generate(cJSON *node, int id) {
-    cJSON_AddNumberToObject(node, "id", id);
-    cJSON_AddStringToObject(node, "name", this->_name.c_str());
-    cJSON_AddNumberToObject(node, "level", this->_level);
-    return node;
+boost::json::object Grade::generate(int id) {
+    boost::json::object obj;
+
+    obj["id"] = id;
+    obj["name"] = this->_name.c_str();
+    obj["level"] = this->_level;
+    return obj;
 }
 
 void    Grade::cleanMembres() {

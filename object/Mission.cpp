@@ -9,7 +9,7 @@
 * -----
 */
 
-#include "Mission.hh"
+#include "../include/object/Mission.hh"
 
 Mission::Mission(string objectif, string description, bool is_complete) {
     this->_name = objectif;
@@ -53,11 +53,13 @@ void Mission::setIsCompleted(bool is) {
     this->_isComplete = is;
 }
 
-cJSON   *Mission::generate(cJSON *node, int id) {
-    cJSON_AddNumberToObject(node, "id", id);
-    cJSON_AddStringToObject(node, "name", this->_name.c_str());
-    cJSON_AddStringToObject(node, "description", this->_description.c_str());
-    cJSON_AddNumberToObject(node, "is_complete", this->_isComplete);
-    return node;
+boost::json::object Mission::generate(int id) {
+    boost::json::object obj;
+
+    obj["id"] = id;
+    obj["name"] = this->_name.c_str();
+    obj["description"] = this->_description.c_str();
+    obj["is_complete"] = this->_isComplete;
+    return obj;
 }
 

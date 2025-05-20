@@ -9,7 +9,7 @@
 * -----
 */
 
-#include "Attribut.hh"
+#include "../include/object/Attribut.hh"
 
 
 Attribut::Attribut(int ap, int hp, int dp):_hp(hp), _dp(dp), _ap(ap) {}

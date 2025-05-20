@@ -34,7 +34,7 @@ public:
 
     bool                        deleteHabitant(const string name);
     bool                        isExists(const string name);
-    cJSON                       *generate(cJSON *node, int id);
+    boost::json::object         generate(int id);
 
 private:
     string                      _name;

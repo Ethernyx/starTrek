@@ -16,7 +16,7 @@
 #include        <memory>
 #include        <iostream>
 #include        "../define.hh"
-#include        "../lib_func/cJSON.hh"
+#include        "../../lib_func/cJSON.hh"
 
 using namespace std;
 
@@ -46,7 +46,7 @@ public:
     void        setName(const string);
 
     void        setAttr(const string, const int, const EFFECT, const int, const OBJETS);
-    cJSON       *generate(cJSON *node, int id);
+    boost::json::object generate(int id);
 };
 
 #endif

@@ -13,7 +13,7 @@
 #define         ATTRIBUT_HH_
 
 #include        <vector>
-#include        "../lib_func/cJSON.hh"
+#include        "../../lib_func/cJSON.hh"
 
 using namespace std;
 

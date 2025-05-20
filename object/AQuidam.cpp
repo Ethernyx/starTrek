@@ -9,7 +9,7 @@
  * -----
 */
 
-#include    "AQuidam.hh"
+#include    "../include/object/AQuidam.hh"
 
 AQuidam::AQuidam(string const nom, int const forceAttaque, int const sante, int const dp, int id_planet_origin): Attribut(forceAttaque, sante, dp), Inventory(5) {
     this->_name = nom;

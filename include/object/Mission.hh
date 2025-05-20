@@ -15,7 +15,8 @@
 #include        <string>
 #include        <iostream>
 #include        <vector>
-#include        "../lib_func/cJSON.hh"
+#include        "../../lib_func/cJSON.hh"
+#include        "../define.hh"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ public:
     string      getName() const;
     string      getDescription() const;
     bool        getIsComplete();
-    cJSON       *generate(cJSON *node, int id);
+    boost::json::object generate(int id);
 
 private:
     string      _name;

@@ -9,7 +9,7 @@
 * -----
 */
 
-#include    "Item.hh"
+#include    "../include/object/Item.hh"
 
 Item::Item(const string name, const int stat, const EFFECT effect) :
 _name(name),
@@ -108,14 +108,16 @@ void Item::setAttr(const string name, const int stat, const EFFECT effect, const
     this->_type = type;
 }
 
-cJSON *Item::generate(cJSON *node, int id)
+boost::json::object Item::generate(int id)
 {
-    cJSON_AddNumberToObject(node, "id", id);
-    cJSON_AddStringToObject(node, "name", this->_name.c_str());
-    cJSON_AddNumberToObject(node, "stat", this->_stat);
-    cJSON_AddNumberToObject(node, "effect", this->_effect);
-    cJSON_AddNumberToObject(node, "id_owner", this->_id_owner);
-    cJSON_AddNumberToObject(node, "type_owner", this->_type);
+    boost::json::object obj;
+    
+    obj["id"] = id;
+    obj["name"] = this->_name.c_str();
+    obj["stat"] = this->_stat;
+    obj["effect"] = this->_effect;
+    obj["id_owner"] = this->_id_owner;
+    obj["type_owner"] = this->_type;
 
-    return node;
+    return obj;
 }

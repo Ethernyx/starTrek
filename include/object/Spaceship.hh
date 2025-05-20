@@ -38,7 +38,7 @@ public:
     bool                        deleteEquipage(string);
     void                        cleanEquipage();
     bool                        isExists(const std::string namePerso);
-    cJSON                       *generate(cJSON *node, int id);
+    boost::json::object         generate(int id);
 
 
 

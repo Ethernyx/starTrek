@@ -10,17 +10,16 @@ NAME_TEST		= star_trek_test
 RM				= rm -f
 
 SRCS  			= $(shell find *.cpp )
-SRCS 			+= $(shell find main/*.cpp)
 SRCS  			+= $(shell find lib_func/*.cpp)
-SRCS  			+= $(shell find objects/*.cpp)
+SRCS  			+= $(shell find object/*.cpp)
 
-HEADS 			= $(shell find *.hh)
+HEADS 			= $(shell find include/*.hh)
 HEADS  			+= $(shell find lib_func/*.hh)
-HEADS  			+= $(shell find objects/*.hh)
+HEADS  			+= $(shell find include/object/*.hh)
 
 SRCSTEST  		= $(shell find *.cpp )
 SRCSTEST  		+= $(shell find lib_func/*.cpp)
-SRCSTEST  		+= $(shell find objects/*.cpp)
+SRCSTEST  		+= $(shell find object/*.cpp)
 SRCSTEST		+= $(shell find test/*.cpp)
 
 OBJS 			= $(SRCS:.cpp=.o)
@@ -28,7 +27,7 @@ OBJSTEST		= $(SRCSTEST:.cpp=.o)
 
 CXXFLAGS		= -W -O2 -Werror -Wextra -pedantic -std=c++1z
 
-LDFLAGS 		= -lm -lpthread
+LDFLAGS 		= -lm -lpthread -lboost_json -lssl -lcrypto
 
 
 

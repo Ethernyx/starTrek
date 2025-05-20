@@ -15,20 +15,23 @@
 #include                                        <vector>
 #include                                        <algorithm>
 #include                                        <map>
+#include                                        <vector>
 #include                                        <string>
 #include                                        <fstream>
 #include                                        "define.hh"
-#include                                        "objects/Mission.hh"
-#include                                        "objects/Heros.hh"
-#include                                        "objects/Pnj.hh"
-#include                                        "objects/Evil.hh"
-#include                                        "objects/Planete.hh"
-#include                                        "objects/Spaceship.hh"
-#include                                        "objects/Item.hh"
-#include                                        "objects/Grade.hh"
-#include                                        "lib_func/List.hh"
-#include                                        "Serveur.hh"
-
+#include                                        "object/Mission.hh"
+#include                                        "object/Heros.hh"
+#include                                        "object/Pnj.hh"
+#include                                        "object/Evil.hh"
+#include                                        "object/Planete.hh"
+#include                                        "object/Spaceship.hh"
+#include                                        "object/Item.hh"
+#include                                        "object/Grade.hh"
+#include                                        "../lib_func/List.hh"
+#include                                        "server.hh"
+#include                                        "router.hh"
+#include                                        "token.hh"
+ 
 using namespace                                 std;
 
 class                                           Controller {
@@ -47,8 +50,9 @@ public:
     map<int, unique_ptr<Item>>                  &getItems();
     map<int, shared_ptr<Grade>>                 &getGrades();
     vector<string>                              getItems(bool); // trie false return pas affecté et true return les affecté
-    Serveur                                     *getServeur();
-
+    Server                                     *getServeur();
+    shared_ptr<Router>                          &getRouter() { return this->_router; }                                
+    vector<shared_ptr<Token>>                   &getToken() { return this->_tokens; }
     void                                        init(cJSON *node);
     bool                                        deletePerso(string const name); // --> suppression du perso via son nom
     bool                                        deletePerso(int const id); // --> surcharge suppression du perso via son ID
@@ -85,17 +89,18 @@ public:
     int                                         addGrade(const string, const int level);
     bool                                        deleteGrade(const int id);
 
-    char                                        *j_attack(cJSON *startrek);
-    char                                        *j_exchangeItem(cJSON *startrek);
-    char                                        *j_getInfos(cJSON *startrek);
-    char                                        *j_kill(cJSON *startrek);
-    char                                        *j_add_entities(cJSON *startrek);
-    char                                        *j_escape(cJSON *startrek);
-    char                                        *j_getHabitants(cJSON *starttrek);
-    char                                        *j_getEquipage(cJSON *starttrek);
-    char                                        *j_getInventory(cJSON *starttrek);
-    char                                        *j_getHierarchy(cJSON *strattrek);
-    char                                        *j_promote(cJSON *strattrek);
+    string                                      j_attack(Context &ctx);
+    string                                      j_exchangeItem(Context &ctx);
+    string                                      j_getInfos(Context &ctx);
+    string                                      j_kill(Context &ctx);
+    string                                      j_add_entities(Context &ctx);
+    string                                      j_escape(Context &ctx);
+    string                                      j_getHabitants(Context &ctx);
+    string                                      j_getEquipage(Context &ctx);
+    string                                      j_getInventory(Context &ctx);
+    string                                      j_getHierarchy(Context &ctx);
+    string                                      j_promote(Context &ctx);
+    string                                      j_getToken(Context &ctx);
 
     int                                          getMaxId(OBJETS type);
 
@@ -107,7 +112,9 @@ private:
     map<int, shared_ptr<Mission>>               _missions;
     map<int, unique_ptr<Item>>                  _items;
     map<int, map<int, int>>                     _tableDeCorrespondance; // map[OBJECT][id item] = id perso
-    Serveur                                     *_serveur;
+    vector<shared_ptr<Token>>                   _tokens;
+    Server                                      *_serveur;
+    shared_ptr<Router>                          _router;                                     
 };
 
 #endif //CPP_HEROSNNAGE_CONTROLLER_H

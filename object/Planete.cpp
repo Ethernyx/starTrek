@@ -9,7 +9,7 @@
 * -----
 */
 
-#include "Planete.hh"
+#include "../include/object/Planete.hh"
 
 Planete::Planete(string nom, string description) {
     this->_name = nom;
@@ -86,11 +86,12 @@ void Planete::cleanHabitants(){
     }
 }
 
-cJSON   *Planete::generate(cJSON *node, int id) {
+boost::json::object Planete::generate(int id) {
+    boost::json::object obj;
 
-    cJSON_AddNumberToObject(node, "id", id);
-    cJSON_AddStringToObject(node, "name", this->_name.c_str());
-    cJSON_AddStringToObject(node, "description", this->_description.c_str());
-    return node;
+    obj["id"] = id;
+    obj["name"] = this->_name.c_str();
+    obj["description"] = this->_description.c_str();
+    return obj;
 
 }
