@@ -31,3 +31,8 @@ X Uniformiser les headers
     * getHierarchy
     * promote
     X addEntities
+- Passage vers une architecture REST
+    * serveur
+        + gestion token (50%)
+    * routes (20%)
+    * CJSON --> boost (40%)
