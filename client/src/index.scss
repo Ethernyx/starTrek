@@ -1,0 +1,64 @@
+body { overflow-x: hidden; background-color: #fff;}
+a { color: $bleu;
+  &:hover { color: $bleu_darker;}
+}
+.alinea { padding-left: 20px;}
+
+.gauche { padding-top: 220px; background: $gris; color:#FFFFFF; font-size: 0.85em; height: 100%; font-size: 1em; font-family: "Lato", sans-serif; font-weight: 400;  padding-bottom: 20px;
+  h2 { font-size:1.87em; color: $bleu;}
+  .profil { margin-top: 10px;}
+  .expertise { margin-top: 10px;}
+  .coordonnees { margin-top: 10px;}
+  .interet { margin-top: 10px;}
+}
+.droite { padding-top: 220px; background: #FFFFFF;
+  .clickeable { cursor: pointer;}
+  .professionel {
+    h2 { font-size: 1.87em; color: $bleu;}
+    .exp, .exp_perso{ color: #000000; padding: 10px; position: relative; margin-bottom: 10px; transition: all 0.5s ease-out;
+      .poste { font-size: 1em;}
+      .entreprise { font-size: 1em; color: $bleu;}
+      .desc { font-size: 0.85em;}
+      .more { display: none; }
+      &:hover { border-radius: 8px; background: $gris; color: #FFFFFF; box-shadow: 5px 5px 5px 5px $gris;}
+      &.clickeable:after { content: ""; position: absolute; bottom: 7px; right: 7px; width: 20px; height: 20px; border-radius: 3px; background: $bleu; background: no-repeat center url(./src/assets/plus.png); background-color: $bleu; background-size: 10px;}
+      &:last-child { margin-bottom: 20px;}
+    }
+    .exp_perso { 
+      .clickeable:after { content: ""; position: absolute; bottom: 3px; right: 0; width: 20px; height: 20px; border-radius: 3px; background: $bleu; background: no-repeat center url(./src/assets/plus.png); background-color: $bleu; background-size: 10px;}
+      li {padding: 7px 27px 7px 7px; transition: all 0.5s ease-out;
+        &:before { top: 10px; }
+        &:hover { color:$bleu; }
+      }
+    }
+    .glide { padding: 0 45px 15px 35px; /*padding-bottom: 15px; */
+      .glide__slide, .glide__track { border-radius: 8px; transition: all 0.5s ease-out;
+        &:hover { background: $gris; box-shadow: 5px 5px 5px 5px $gris;}
+      }
+      .glide__bullet { position: relative; bottom: -10px; background-color: $bleu;
+        &:hover, &:focus { background-color: $bleu_darker;}
+      }
+      .glide__bullet--active {  background-color: $bleu_darker; border: 2px solid #fff; }
+      .fleche_droite { background: no-repeat center url(./src/assets/fleche_droite.png); background-size: 20px; width: 20px; height: 20px; position: absolute; right:7px; bottom: 50%; cursor: pointer;}
+      .fleche_gauche { background: no-repeat center url(./src/assets/fleche_droite.png); background-size: 20px; width: 20px; height: 20px; transform: rotateY(180deg); position: absolute; left:7px; bottom: 50%; cursor: pointer;}
+      .exp { margin-bottom: 0;}
+    }
+  }
+  .diplome {
+    h2 { font-size: 1.87em; color: $bleu;}
+    .qual { color: #000000; padding: 10px; position: relative; margin-bottom: 10px; transition: all 0.5s ease-out;
+      .lieu { font-size: 1em;}
+      .title { font-size: 1em; color: $bleu;}
+      .more { display: none;}
+      &:hover { border-radius: 8px; background: $gris; color:#FFFFFF; box-shadow: 5px 5px 5px 5px $gris;}
+      &.clickeable:after { content: ""; position: absolute; bottom: 7px; right: 7px; width: 20px; height: 20px; border-radius: 3px; background: $bleu; background: no-repeat center url(./src/assets/plus.png); background-color: $bleu; background-size: 10px;}
+      &:last-child { margin-bottom: 20px;}
+    }
+  }
+}
+
+li { position: relative; list-style:none; 
+  &:before { content: ""; position: absolute; top: 3px; left: -25px; height: 20px; width: 20px; background: no-repeat center url(./src/assets/puzzle_bleu.png); background-size: 20px; transition: all 1.5s ease;}
+  &:hover::before { transform: rotateX(360deg); }
+  > ul > li::before { background: no-repeat center url(./src/assets/puzzle_blanc.png); background-size: 20px;}
+}
