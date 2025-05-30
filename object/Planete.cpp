@@ -20,9 +20,9 @@ Planete::Planete(string nom, string description) {
     #endif
 }
 
-Planete::Planete(cJSON *node) {
-    this->_name = cJSON_GetObjectItem(node, "name")->valuestring;
-    this->_description = cJSON_GetObjectItem(node, "description")->valuestring;
+Planete::Planete(boost::json::object item) {
+    this->_name = item.at("name").as_string().c_str();
+    this->_description = item.at("description").as_string().c_str();
 
     #ifdef DEBUG
     cout << "La Planête " << this->_name << " est aparue dans cet univers" << endl;

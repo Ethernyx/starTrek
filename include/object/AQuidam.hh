@@ -15,10 +15,10 @@
 #include                        <string>
 #include                        <memory>
 #include                        <map>
-#include                        "../../lib_func/cJSON.hh"
 #include                        "Item.hh"
 #include                        "Attribut.hh"
 #include                        "Inventory.hh"
+#include                        "../define.hh"
 
 using namespace                 std;
 
@@ -30,18 +30,18 @@ protected:
     int                         _id_planet_origin;
     int                         _id_grade;
     string                      _name;
-    int                         _type; //type de perso -- Pnj || Personnage
+    OBJETS                      _type; //type de perso -- Pnj || Personnage
 public:
                                 AQuidam(string const nom, int const forceAttaque, int const sante, int const dp, int id_planet_origin);
                                 AQuidam(string const nom, int const forceAttaque, int const sante, const int dp, int id_planet_origin, int id_ship, int id_planet, int id_grade);
-                                AQuidam(cJSON *node);
+                                AQuidam(boost::json::object item);
     virtual                     ~AQuidam();
 
     int                         getIdShip() const;
     int                         getIdPlanet() const;
     int                         getIdPlanetOrigin() const;
     int                         getIdGrade() const;
-    int                         getType() const;
+    OBJETS                      getType() const;
     string                      getName() const;
 
     //setters
@@ -50,7 +50,7 @@ public:
     void                        setIdPlanet(int id_planet);
     void                        setIdPlanetOrigin(int id_planet_origin);
     void                        setIdGrade(int id_grade);
-    void                        setType(int type);
+    void                        setType(OBJETS type);
     void                        addItem(unique_ptr<Item> &, int id);
 
     virtual boost::json::object generate(int id) = 0;

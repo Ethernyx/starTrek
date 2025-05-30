@@ -19,9 +19,9 @@ Spaceship::Spaceship(string nom, string description, int ap, int hp, int dp): At
     cout << "Le Vaisseau " << this->_name << " a été construit" << endl;
 #endif
 }
-Spaceship::Spaceship(cJSON *node): Attribut(node), Inventory(5) {
-    this->_name = cJSON_GetObjectItem(node, "name")->valuestring;
-    this->_description = cJSON_GetObjectItem(node, "description")->valuestring;
+Spaceship::Spaceship(boost::json::object item): Attribut(item), Inventory(5) {
+    this->_name = item.at("name").as_string().c_str();
+    this->_description = item.at("description").as_string().c_str();
 #ifdef DEBUG
     cout << "Le Vaisseau " << this->_name << " a été construit" << endl;
 #endif

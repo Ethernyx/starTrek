@@ -1,1 +1,227 @@
-{"startrek":{"0":[{"id":1,"name":"Fury","description":"Seul un furien peut y vivre"},{"id":2,"name":"Earth","description":"La seule planete bleue de l'univers"},{"id":3,"name":"Venus","description":"La plus belle de toutes"}],"1":[{"id":1,"name":"Odyssey","description":"Le vaissal de la mort","ap":200,"dp":150,"hp":1000},{"id":2,"name":"Enterprise","description":"Le vaissal des vaisseaux","ap":200,"dp":150,"hp":1000}],"2":[{"id":1,"name":"Alex","ap":80,"hp":100,"dp":25,"id_planet":0,"id_ship":1,"id_planet_origin":1,"id_grade":0},{"id":2,"name":"Jack","ap":80,"hp":100,"dp":30,"id_planet":1,"id_ship":0,"id_planet_origin":1,"id_grade":0},{"id":3,"name":"Kirk","ap":80,"hp":100,"dp":22,"id_planet":2,"id_ship":0,"id_planet_origin":1,"id_grade":0},{"id":7,"name":"Sylvain","ap":80,"hp":100,"dp":50,"id_planet":0,"id_ship":1,"id_planet_origin":1,"id_grade":1},{"id":8,"name":"Popeye","ap":100,"hp":100,"dp":100,"id_planet":0,"id_ship":1,"id_planet_origin":0,"id_grade":1},{"id":9,"name":"test","ap":100,"hp":100,"dp":100,"id_planet":2,"id_ship":0,"id_planet_origin":1,"id_grade":0}],"3":[{"id":4,"name":"John","ap":80,"hp":100,"dp":20,"id_planet":0,"id_ship":1,"id_planet_origin":1,"id_grade":1},{"id":5,"name":"Romain","ap":80,"hp":100,"dp":18,"id_planet":2,"id_ship":0,"id_planet_origin":1,"id_grade":1},{"id":6,"name":"Gerald","ap":80,"hp":100,"dp":98,"id_planet":0,"id_ship":2,"id_planet_origin":1,"id_grade":1},{"id":7,"name":"Test","ap":80,"hp":100,"dp":25,"id_planet":0,"id_ship":1,"id_planet_origin":1,"id_grade":1}],"4":[],"5":[{"id":1,"name":"Sauver Dr Landra","description":"une description de mission","is_complete":false}],"6":[{"id":1,"name":"Escaliburne","stat":90,"effect":1,"id_owner":0,"type_owner":-1},{"id":2,"name":"sabre laser","stat":190,"effect":1,"id_owner":0,"type_owner":-1},{"id":3,"name":"potion de santé","stat":90,"effect":2,"id_owner":1,"type_owner":2},{"id":4,"name":"côte de maille","stat":75,"effect":3,"id_owner":2,"type_owner":2},{"id":5,"name":"cape d'invisibilité","stat":50,"effect":3,"id_owner":7,"type_owner":2},{"id":6,"name":"potion de poison","stat":-90,"effect":2,"id_owner":5,"type_owner":3}],"7":[{"id":1,"name":"Capitaine","level":5}],"9":["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsInN1YiI6InJvbWFpbiIsImlhdCI6MTc0NzQwMDkzNH0.VTymkQMIrkJjjk_ClRK-bscKlqk7jb31Hy7uMyD6Jyw"]}}
+{
+    "startrek": {
+        "0": [
+            {
+                "id": 1,
+                "name": "Fury",
+                "description": "Seul un furien peut y vivre"
+            },
+            {
+                "id": 2,
+                "name": "Earth",
+                "description": "La seule planete bleue de l'univers"
+            },
+            {
+                "id": 3,
+                "name": "Venus",
+                "description": "La plus belle de toutes"
+            }
+        ],
+        "1": [
+            {
+                "id": 1,
+                "name": "Odyssey",
+                "description": "Le vaissal de la mort",
+                "ap": 200,
+                "dp": 150,
+                "hp": 1000
+            },
+            {
+                "id": 2,
+                "name": "Enterprise",
+                "description": "Le vaissal des vaisseaux",
+                "ap": 200,
+                "dp": 150,
+                "hp": 1000
+            }
+        ],
+        "2": [
+            {
+                "id": 1,
+                "name": "Alex",
+                "ap": 80,
+                "hp": 100,
+                "dp": 25,
+                "id_planet": 0,
+                "id_ship": 1,
+                "id_planet_origin": 1,
+                "id_grade": 0
+            },
+            {
+                "id": 2,
+                "name": "Jack",
+                "ap": 80,
+                "hp": 100,
+                "dp": 30,
+                "id_planet": 1,
+                "id_ship": 0,
+                "id_planet_origin": 1,
+                "id_grade": 0
+            },
+            {
+                "id": 3,
+                "name": "Kirk",
+                "ap": 80,
+                "hp": 100,
+                "dp": 22,
+                "id_planet": 2,
+                "id_ship": 0,
+                "id_planet_origin": 1,
+                "id_grade": 0
+            },
+            {
+                "id": 7,
+                "name": "Sylvain",
+                "ap": 80,
+                "hp": 100,
+                "dp": 50,
+                "id_planet": 0,
+                "id_ship": 1,
+                "id_planet_origin": 1,
+                "id_grade": 1
+            },
+            {
+                "id": 8,
+                "name": "Popeye",
+                "ap": 100,
+                "hp": 100,
+                "dp": 100,
+                "id_planet": 0,
+                "id_ship": 1,
+                "id_planet_origin": 0,
+                "id_grade": 1
+            },
+            {
+                "id": 9,
+                "name": "test",
+                "ap": 100,
+                "hp": 100,
+                "dp": 100,
+                "id_planet": 2,
+                "id_ship": 0,
+                "id_planet_origin": 1,
+                "id_grade": 0
+            }
+        ],
+        "3": [
+            {
+                "id": 4,
+                "name": "John",
+                "ap": 80,
+                "hp": 100,
+                "dp": 20,
+                "id_planet": 0,
+                "id_ship": 1,
+                "id_planet_origin": 1,
+                "id_grade": 1
+            },
+            {
+                "id": 5,
+                "name": "Romain",
+                "ap": 80,
+                "hp": 100,
+                "dp": 18,
+                "id_planet": 2,
+                "id_ship": 0,
+                "id_planet_origin": 1,
+                "id_grade": 1
+            },
+            {
+                "id": 6,
+                "name": "Gerald",
+                "ap": 80,
+                "hp": 100,
+                "dp": 98,
+                "id_planet": 0,
+                "id_ship": 2,
+                "id_planet_origin": 1,
+                "id_grade": 1
+            },
+            {
+                "id": 7,
+                "name": "Test",
+                "ap": 80,
+                "hp": 100,
+                "dp": 25,
+                "id_planet": 0,
+                "id_ship": 1,
+                "id_planet_origin": 1,
+                "id_grade": 1
+            }
+        ],
+        "4": [],
+        "5": [
+            {
+                "id": 1,
+                "name": "Sauver Dr Landra",
+                "description": "une description de mission",
+                "is_complete": false
+            }
+        ],
+        "6": [
+            {
+                "id": 1,
+                "name": "Escaliburne",
+                "stat": 90,
+                "effect": 1,
+                "id_owner": 0,
+                "type_owner": -1
+            },
+            {
+                "id": 2,
+                "name": "sabre laser",
+                "stat": 190,
+                "effect": 1,
+                "id_owner": 0,
+                "type_owner": -1
+            },
+            {
+                "id": 3,
+                "name": "potion de santé",
+                "stat": 90,
+                "effect": 2,
+                "id_owner": 1,
+                "type_owner": 2
+            },
+            {
+                "id": 4,
+                "name": "côte de maille",
+                "stat": 75,
+                "effect": 3,
+                "id_owner": 2,
+                "type_owner": 2
+            },
+            {
+                "id": 5,
+                "name": "cape d'invisibilité",
+                "stat": 50,
+                "effect": 3,
+                "id_owner": 7,
+                "type_owner": 2
+            },
+            {
+                "id": 6,
+                "name": "potion de poison",
+                "stat": -90,
+                "effect": 2,
+                "id_owner": 5,
+                "type_owner": 3
+            }
+        ],
+        "7": [
+            {
+                "id": 1,
+                "name": "Capitaine",
+                "level": 5
+            }
+        ],
+        "9": [
+            {
+                "id" : 1,
+                "key": "je préfère le Faucon Millenium",
+                "user" : "romain",
+                "token" :  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsInN1YiI6InJvbWFpbiIsImlhdCI6MTc0NzQwMDkzNH0.VTymkQMIrkJjjk_ClRK-bscKlqk7jb31Hy7uMyD6Jyw"
+            }
+        ]
+    }
+}

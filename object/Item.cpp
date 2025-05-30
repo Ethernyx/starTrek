@@ -33,13 +33,13 @@ _type(type) {
     #endif
 }
 
-Item::Item(cJSON *node)
+Item::Item(boost::json::object item)
 {
-    this->_name = cJSON_GetObjectItem(node, "name")->valuestring;
-    this->_stat = cJSON_GetObjectItem(node, "stat")->valueint;
-    this->_effect = (EFFECT)cJSON_GetObjectItem(node, "effect")->valueint;
-    this->_id_owner = cJSON_GetObjectItem(node, "id_owner")->valueint;
-    this->_type = (OBJETS)cJSON_GetObjectItem(node, "type_owner")->valueint;
+    this->_name = item.at("name").as_string().c_str();
+    this->_stat = item.at("stat").as_int64();
+    this->_effect = (EFFECT)item.at("effect").as_int64();
+    this->_id_owner = item.at("id_owner").as_int64();
+    this->_type = (OBJETS)item.at("type_owner").as_int64();
 
     #ifdef DEBUG
     cout << "L'object' " << this->_name << "a été fabriqué avec succès" << endl;

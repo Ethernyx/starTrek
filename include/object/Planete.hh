@@ -20,7 +20,7 @@ using namespace                 std;
 class                           Planete {
 public:
                                 Planete(string nom, string description);
-                                Planete(cJSON *node);
+                                Planete(boost::json::object item);
     virtual                     ~Planete();
 
     //getters

@@ -16,7 +16,6 @@
 #include        <memory>
 #include        <iostream>
 #include        "../define.hh"
-#include        "../../lib_func/cJSON.hh"
 
 using namespace std;
 
@@ -31,7 +30,7 @@ private:
 public:
                 Item(const string, const int, const EFFECT);
                 Item(const string, const int, const EFFECT, const int, const OBJETS);
-                Item(cJSON *node);
+                Item(boost::json::object item);
     virtual     ~Item();
 
     EFFECT      getEffect() const;

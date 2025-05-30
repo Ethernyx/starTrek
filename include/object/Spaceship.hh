@@ -22,7 +22,7 @@ class                           Spaceship : public Attribut, public Inventory {
 public:
     //constructeur
                                 Spaceship(string nom, string description, int ap, int hp, int dp);
-                                Spaceship(cJSON *node);
+                                Spaceship(boost::json::object item);
     virtual                     ~Spaceship();
 
     //getters

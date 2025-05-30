@@ -27,7 +27,7 @@ Heros::Heros(string const nom, int const forceAttaque, int const sante, int cons
     #endif
 }
 
-Heros::Heros(cJSON *node) : AQuidam(node) {
+Heros::Heros(boost::json::object item) : AQuidam(item) {
     this->_type = HEROS;
         #ifdef DEBUG
     cout << "Le Heros " << this->_name << u8" est arrivé dans cet univers" << endl;

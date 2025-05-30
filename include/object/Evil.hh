@@ -20,7 +20,7 @@ private:
 public:
                                 Evil(string const nom, int const forceAttaque, int const sante, int const dp, int id_planet_origin);
                                 Evil(string const nom, int const forceAttaque, int const sante, const int dp, int id_planet_origin, int id_ship, int id_planet, int id_grade);
-                                Evil(cJSON *node);
+                                Evil(boost::json::object item);
 
     virtual                     ~Evil();
 

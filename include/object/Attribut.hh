@@ -13,14 +13,14 @@
 #define         ATTRIBUT_HH_
 
 #include        <vector>
-#include        "../../lib_func/cJSON.hh"
+#include        "../define.hh"
 
 using namespace std;
 
 class           Attribut {
 public:
                 Attribut(int ap, int hp, int dp);
-                Attribut(cJSON *node);
+                Attribut(boost::json::object item);
     virtual     ~Attribut();
 
     int         getAp();

@@ -21,10 +21,10 @@ Mission::Mission(string objectif, string description, bool is_complete) {
     #endif
 }
 
-Mission::Mission(cJSON *node) {
-    this->_name = cJSON_GetObjectItem(node, "name")->valuestring;
-    this->_description = cJSON_GetObjectItem(node, "description")->valuestring;
-    this->_isComplete = cJSON_GetObjectItem(node, "is_complete")->valueint;
+Mission::Mission(boost::json::object item) {
+    this->_name = item.at("name").as_string().c_str();
+    this->_description = item.at("description").as_string().c_str();
+    this->_isComplete = item.at("is_complete").as_bool();
 
     #ifdef DEBUG
     cout << "La Mission " << this->_name << "a été construite" << endl;

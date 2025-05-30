@@ -13,10 +13,10 @@
 
 
 Attribut::Attribut(int ap, int hp, int dp):_hp(hp), _dp(dp), _ap(ap) {}
-Attribut::Attribut(cJSON *node) {
-    this->_hp = cJSON_GetObjectItem(node, "hp")->valueint;
-    this->_dp = cJSON_GetObjectItem(node, "dp")->valueint;
-    this->_ap = cJSON_GetObjectItem(node, "ap")->valueint;
+Attribut::Attribut(boost::json::object item) {
+    this->_hp = item.at("hp").as_int64();
+    this->_dp = item.at("dp").as_int64();
+    this->_ap = item.at("ap").as_int64();
 }
 Attribut::~Attribut(){}
 

@@ -34,5 +34,8 @@ X Uniformiser les headers
 - Passage vers une architecture REST
     * serveur
         + gestion token (50%)
-    * routes (20%)
-    * CJSON --> boost (40%)
+    * routes (90%)
+        X kill
+    * CJSON --> boost (70%)
+        + message d'erreur
+        + test

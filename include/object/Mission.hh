@@ -15,7 +15,6 @@
 #include        <string>
 #include        <iostream>
 #include        <vector>
-#include        "../../lib_func/cJSON.hh"
 #include        "../define.hh"
 
 using namespace std;
@@ -25,7 +24,7 @@ class           Mission {
 
 public:
                 Mission(string objectif, string description, bool is_completed);
-                Mission(cJSON *node);
+                Mission(boost::json::object item);
     virtual     ~Mission();
 
     //setters

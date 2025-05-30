@@ -17,7 +17,6 @@
 #include                        <iostream>
 
 #include                        "AQuidam.hh"
-#include                        "../../lib_func/cJSON.hh"
 
 using namespace                 std;
 
@@ -29,7 +28,7 @@ private:
     vector<weak_ptr<AQuidam>>   _membre;
 public:
                                 Grade(const string, const int);
-                                Grade(cJSON *node);
+                                Grade(boost::json::object item);
     virtual                     ~Grade();
     string                      getNom() const;
     int                         getLevel() const;

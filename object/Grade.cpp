@@ -17,9 +17,9 @@ Grade::Grade(const string nom, const int level) : _name(nom), _level(level) {
      #endif
 }
 
-Grade::Grade(cJSON *node) {
-    this->_name = cJSON_GetObjectItem(node, "name")->valuestring;
-    this->_level = cJSON_GetObjectItem(node, "level")->valueint;
+Grade::Grade(boost::json::object item) {
+    this->_name = item.at("name").as_string().c_str();
+    this->_level = item.at("level").as_int64();
     
     #ifdef DEBUG
         cout << "Le grade " << this->_name << " avec un niveau d'accès de " << this->_level << "a été construit" << endl;

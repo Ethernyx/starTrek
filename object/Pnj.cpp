@@ -26,7 +26,7 @@ Pnj::Pnj(string const nom, int const forceAttaque, int const sante, int const dp
     #endif
 }
 
-Pnj::Pnj(cJSON *node) : AQuidam(node) {
+Pnj::Pnj(boost::json::object item) : AQuidam(item) {
     this->_type = PNJ;
 
     #ifdef DEBUG

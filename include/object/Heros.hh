@@ -20,7 +20,7 @@ class                           Heros: public AQuidam {
 public:
                                 Heros(string const nom, int const forceAttaque, int const sante, int const dp, int id_planet_origin);
                                 Heros(string const nom, int const forceAttaque, int const sante, const int dp, int id_planet_origin, int id_ship, int id_planet, int id_grade);
-                                Heros(cJSON *node);
+                                Heros(boost::json::object item);
 
     virtual                     ~Heros();
 

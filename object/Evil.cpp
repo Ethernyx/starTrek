@@ -27,7 +27,7 @@ Evil::Evil(string const nom, int const forceAttaque, int const sante, int const 
     #endif
 }
 
-Evil::Evil(cJSON *node) : AQuidam(node) {
+Evil::Evil(boost::json::object item) : AQuidam(item) {
     this->_type = EVIL;
         #ifdef DEBUG
     cout << "Le Méchant " << this->_name << u8" est arrivé dans cet univers" << endl;

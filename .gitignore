@@ -1,3 +1,5 @@
 .vscode
 star_trek
 star_trek_test
+*.o
+object/*.o

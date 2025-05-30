@@ -1,10 +1,9 @@
-#include    "include/token.hh"
-#include    "lib_func/List.hh"                                
+#include    "../include/object/Token.hh"                                
 
-Token::Token(const string token) {
-    this->_token = token;
-    this->_user = boost::json::parse(this->base64UrlDecode(List::split(token, ".")[1])).as_object().at("sub").as_string().c_str();
-    
+Token::Token(boost::json::object item) {
+    this->_token = item.at("token").as_string().c_str();
+    this->_key = item.at("key").as_string().c_str();
+    this->_user = item.at("user").as_string().c_str();
 }
 
 Token::Token(const string key, const string user) : _key(key), _user(user) {
@@ -100,4 +99,14 @@ string  Token::getToken() {
 
 string  Token::getUser() {
     return this->_user;
+}
+
+boost::json::object         Token::generate(int id) {
+    boost::json::object item;
+
+    item["id"] = id;
+    item["user"] = this->_user;
+    item["key"] = this->_key;
+    item["token"] = this->_token;
+    return item;
 }

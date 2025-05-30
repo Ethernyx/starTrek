@@ -16,17 +16,18 @@ class Token
 private:
     string    _key;
     string    _user;
-    string  _token;
+    string    _token;
 
     string  createJwt();
 public:
-    Token(const string token);
+    Token(boost::json::object item);
     Token(const string key, const string user);
     virtual ~Token();
     string  getToken();
     string  getUser();
     string  base64UrlDecode(const string &str);
     string  base64UrlEncode(const string &str);
+    boost::json::object         generate(int id);
 };
 
 #endif

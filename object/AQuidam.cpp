@@ -37,12 +37,12 @@ AQuidam::AQuidam(string const nom, int const forceAttaque, int const sante, int 
     #endif
 }
 
-AQuidam::AQuidam(cJSON *node) : Attribut(node), Inventory(5) {
-    this->_name = cJSON_GetObjectItem(node, "name")->valuestring;
-    this->_id_planet_origin = cJSON_GetObjectItem(node, "id_planet_origin")->valueint;
-    this->_id_ship = cJSON_GetObjectItem(node, "id_ship")->valueint;
-    this->_id_planet = cJSON_GetObjectItem(node, "id_planet")->valueint;
-    this->_id_grade = cJSON_GetObjectItem(node, "id_grade")->valueint;
+AQuidam::AQuidam(boost::json::object item) : Attribut(item), Inventory(5) {
+    this->_name = item.at("name").as_string().c_str();
+    this->_id_planet_origin = item.at("id_planet_origin").as_int64();
+    this->_id_ship = item.at("id_ship").as_int64();
+    this->_id_planet = item.at("id_planet").as_int64();
+    this->_id_grade = item.at("id_grade").as_int64();
     this->_type = HEROS;
         #ifdef DEBUG
     cout << "Le Personnage " << this->_name << u8" est arrivé dans cet univers" << endl;
@@ -82,7 +82,7 @@ int AQuidam::getIdGrade() const {
 }
 
 //retourne HEROS ||PNJ
-int AQuidam::getType() const {
+OBJETS AQuidam::getType() const {
     return this->_type;
 }
 
@@ -103,7 +103,7 @@ void AQuidam::setIdGrade(int id_grade) {
     this->_id_grade = id_grade;
 }
 
-void AQuidam::setType(int type) {
+void AQuidam::setType(OBJETS type) {
     this->_type = type;
 }
 

@@ -27,10 +27,10 @@
 #include                                        "object/Spaceship.hh"
 #include                                        "object/Item.hh"
 #include                                        "object/Grade.hh"
+#include                                        "object/Token.hh"
 #include                                        "../lib_func/List.hh"
 #include                                        "server.hh"
 #include                                        "router.hh"
-#include                                        "token.hh"
  
 using namespace                                 std;
 
@@ -52,8 +52,7 @@ public:
     vector<string>                              getItems(bool); // trie false return pas affecté et true return les affecté
     Server                                     *getServeur();
     shared_ptr<Router>                          &getRouter() { return this->_router; }                                
-    vector<shared_ptr<Token>>                   &getToken() { return this->_tokens; }
-    void                                        init(cJSON *node);
+    map<int, shared_ptr<Token>>                 &getToken() { return this->_tokens; }
     bool                                        deletePerso(string const name); // --> suppression du perso via son nom
     bool                                        deletePerso(int const id); // --> surcharge suppression du perso via son ID
     int                                         addQuidam(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade, OBJETS type);
@@ -89,12 +88,13 @@ public:
     int                                         addGrade(const string, const int level);
     bool                                        deleteGrade(const int id);
 
+    string                                      init();
+    string                                      init(string json);
     string                                      j_attack(Context &ctx);
     string                                      j_exchangeItem(Context &ctx);
     string                                      j_getInfos(Context &ctx);
     string                                      j_kill(Context &ctx);
     string                                      j_add_entities(Context &ctx);
-    string                                      j_escape(Context &ctx);
     string                                      j_getHabitants(Context &ctx);
     string                                      j_getEquipage(Context &ctx);
     string                                      j_getInventory(Context &ctx);
@@ -112,7 +112,7 @@ private:
     map<int, shared_ptr<Mission>>               _missions;
     map<int, unique_ptr<Item>>                  _items;
     map<int, map<int, int>>                     _tableDeCorrespondance; // map[OBJECT][id item] = id perso
-    vector<shared_ptr<Token>>                   _tokens;
+    map<int, shared_ptr<Token>>                 _tokens;
     Server                                      *_serveur;
     shared_ptr<Router>                          _router;                                     
 };

@@ -25,14 +25,14 @@
 
 #define ADDRESS "0.0.0.0"//"146.59.240.78"
 #define PORT 8888
-#define GET (http::verb::get)
+#define GET (http::verb::get)   
 #define POST (http::verb::post)
 #define PUT (http::verb::put)
 #define PATCH (http::verb::patch)
 #define DELETE (http::verb::delete_)
 
 typedef enum {
-    ERROR_COMMAND = -1,
+    ERROR_COMMAND = -1, 
     INIT,
     ATTACK,
     EXCHANGE_ITEM,
@@ -52,7 +52,7 @@ const std::map<COMMANDS, std::string> COMMANDS_LIST {
     {ATTACK, "attack"},
     {EXCHANGE_ITEM, "exchangeItem"},
     {GET_INFOS, "getInfos"},
-    {KILL, "kill"},
+    {KILL, "kill"}, 
     {ESCAPE, "escape"},
     {ADD_ENTITIES, "addEntities"},
     {GET_HABITANTS, "getHabitants"},
