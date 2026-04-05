@@ -1,12 +1,12 @@
-/**
- * File: List.hh
- * Project: lib_func
- * File Created: Friday', 28th July 2023 2:33:51 pm
- * Author: LALIN Romain
- * -----
- * Last Modified: Friday', 28th July 2023 2:33:51 pm
- * Modified by: LALIN Romain
- * -----
+/*
+ * File: List.hh                                                               *
+ * Project: lib_func                                                           *
+ * Created Date: Tu May 2025, 11:14:09 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Saturday, April 4th 2026, 3:03:02 pm                         *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #ifndef             LIST_HH_
@@ -15,7 +15,7 @@
 #include            <string>
 #include            <string.h>
 #include            <iostream>
-#include            "cJSON.hh"
+#include            <boost/json.hpp>
 #include            "../include/define.hh"
 
 using namespace     std;
@@ -23,28 +23,24 @@ using namespace     std;
 class               List
 {
 public:
-    static size_t   size(cJSON *node);
-    static cJSON    *firstElem(cJSON *node);
-    static cJSON    *defaultNode();
-    static int      isCorectToObjPrototype(cJSON *node, OBJETS type_obj, bool required);
-    static int      isRequiredRootStructure(cJSON *root);
-    static int      isCorectToInitPrototype(cJSON *root);
-    static int      isCorrectToAttackPrototype(cJSON *root);
-    static int      isCorrectToExhangeItemPrototype(cJSON *root);
-    static int      isCorrectToGetInfosPrototype(cJSON *root);
-    static int      isCorrectToGetAddEntitiesPrototype(cJSON *root);
-    static int      isCorrectToEscapePrototype(cJSON *root);
-    static int      isCorrectToKillPrototype(cJSON *root);
-    static int      isCorrectToGetHabitantsPrototype(cJSON *root);
-    static int      isCorrectToGetEquipagePrototype(cJSON *root);
-    static int      isCorrectToGetInventoryPrototype(cJSON *root);
-    static int      isCorrectToPromotePrototype(cJSON *root);
-    static int      isCorrectToGetHierarchyPrototype(cJSON *root);
+    static int      isCorectToObjPrototype(boost::json::object const &node, OBJETS type_obj, bool required);
+    static int      isRequiredRootStructure(boost::json::object const &root);
+    static int      isCorectToInitPrototype(boost::json::object const &root);
+    static int      isCorrectToAttackPrototype(boost::json::object const &root);
+    static int      isCorrectToExhangeItemPrototype(boost::json::object const &root);
+    static int      isCorrectToGetInfosPrototype(boost::json::object const &root);
+    static int      isCorrectToGetAddEntitiesPrototype(boost::json::object const &root);
+    static int      isCorrectToEscapePrototype(boost::json::object const &root);
+    static int      isCorrectToKillPrototype(boost::json::object const &root);
+    static int      isCorrectToGetHabitantsPrototype(boost::json::object const &root);
+    static int      isCorrectToGetEquipagePrototype(boost::json::object const &root);
+    static int      isCorrectToGetInventoryPrototype(boost::json::object const &root);
+    static int      isCorrectToPromotePrototype(boost::json::object const &root);
+    static int      isCorrectToGetHierarchyPrototype(boost::json::object const &root);
     static string   codeError(int error);
-    static char     *returnJson(int code);
-    static bool     checkJson(string json);
-    static vector<string>   split(string, string);
-
+    static string   returnJson(int code);
+    static bool     checkJson(string const &json);
+    static vector<string> split(string, string);
 };
 
 #endif

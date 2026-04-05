@@ -1,12 +1,12 @@
-/**
-* File: Spaceship.cpp
-* Project: objects
-* File Created: Tuesday, 18th July 2023 3:29:05 pm
-* Author: LALIN Romain 
-* -----
-* Last Modified: Wednesday, 26th July 2023 9:56:06 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: Spaceship.cpp                                                         *
+ * Project: object                                                             *
+ * Created Date: Tu May 2025, 11:12:16 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Saturday, April 4th 2026, 4:13:16 pm                         *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #include "../include/object/Spaceship.hh"
@@ -45,7 +45,7 @@ bool Spaceship::deleteEquipage(const string name)
     long cpt = 0;
     for( auto &h : this->_equipage) {
         auto l = h.lock();
-        if(!l && name == l->getName()) {
+        if(l && name == l->getName()) {
             l->setIdShip(0);
             this->_equipage.erase(this->_equipage.begin()+cpt);
             return true;

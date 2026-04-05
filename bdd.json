@@ -88,7 +88,7 @@
                 "dp": 100,
                 "id_planet": 0,
                 "id_ship": 1,
-                "id_planet_origin": 0,
+                "id_planet_origin": 1,
                 "id_grade": 1
             },
             {

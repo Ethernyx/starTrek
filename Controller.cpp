@@ -1,12 +1,12 @@
-/**
-* File: Controller.cpp
-* Project: star_strek
-* File Created: Monday, 24th July 2023 11:31:29 am
-* Author: LALIN Romain 
-* -----
-* Last Modified: Thursday, 27th July 2023 10:46:47 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: Controller.cpp                                                        *
+ * Project: starTrek                                                           *
+ * Created Date: Tu May 2025, 11:12:38 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Sunday, April 5th 2026, 12:01:00 pm                          *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #include "include/Controller.hh"
@@ -214,59 +214,47 @@ bool Controller::deletePerso(string const name)
 // surcharge de la methode de suppression
 bool Controller::deletePerso(const int id)
 {
-    OBJETS type;
-    auto it = this->_quidams[HEROS].find(id);
-    type = HEROS;
-    if (it == this->_quidams[HEROS].end()) { // si pas trouvé dans perso
-        it = this->_quidams[PNJ].find(id);
-        type = PNJ;
-        if (it == this->_quidams[HEROS].end()) return false; // si pas trouvé non plus dans pnj
-    }
-    
-    /* je m'occupe des items que possède le perso/pnj */
-    if (it->second->getInventory().size() > 0) {
-        for (auto i = it->second->getInventory().begin(); i != it->second->getInventory().end(); i++) {
-            this->removeItem(i->first, it->second->getName(), type);
+    shared_ptr<AQuidam> found = nullptr;
+    OBJETS foundType = NONE;
+
+    for (auto type : QUIDAMS) {
+        auto it = this->_quidams[type].find(id);
+        if (it != this->_quidams[type].end()) {
+            found = it->second;
+            foundType = type;
+            break;
         }
     }
+    if (!found) return false;
 
-    /* je check le type pour savoir ou je dois mettre le nullptr*/
-    if (type == HEROS) this->_quidams[HEROS][id] = nullptr;
-    else this->_quidams[PNJ][id] = nullptr;
+    // ── gestion des inventaires ────────────────
+    vector<int> itemIds;
+    for (auto &i : found->getInventory()) itemIds.push_back(i.first);
+    for (auto itemId : itemIds) this->removeItem(itemId, found->getName(), foundType);
 
-    for (auto &p : this->_planetes)
-        p.second->cleanHabitants();
-    for (auto &f : this->_flotte)
-        f.second->cleanEquipage();
-    for (auto &g : this->_grades)
-        g.second->cleanMembres();
+    // ── suppression du quidam ────────────────
+    this->_quidams[foundType].erase(id);
 
-    /* je check le type pour savoir ou je dois erase*/
-    if (type == HEROS) this->_quidams[HEROS].erase(it);
-    else this->_quidams[PNJ].erase(it);
+    // ── gestion des effets de bords ────────────────
+    for (auto &p : this->_planetes) p.second->cleanHabitants();
+    for (auto &f : this->_flotte)   f.second->cleanEquipage();
+    for (auto &g : this->_grades)   g.second->cleanMembres();
     return true;
 }
 
-int Controller::addQuidam(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade, OBJETS type)
+int Controller::addQuidam(boost::json::object &item)
 {
-    int id = this->getMaxId(type) + 1;
-    switch (type)
-    {
-        case HEROS:
-            this->_quidams[type][id] = make_shared<Heros>(name, puissance, sante, dp, id_planet, id_ship, id_planete_origine, id_grade);
-            break;
-        case PNJ:
-            this->_quidams[type][id] = make_shared<Pnj>(name, puissance, sante, dp, id_planet, id_ship, id_planete_origine, id_grade);
-            break;
-        case EVIL:
-            this->_quidams[type][id] = make_shared<Evil>(name, puissance, sante, dp, id_planet, id_ship, id_planete_origine, id_grade);
-            break;
-        default:
-            break;
-    }
-    if (id_ship != 0 && this->_flotte[id_ship]) this->_flotte[id_ship]->addEquipage(this->_quidams[type][id]);
-    if (id_planet != 0 && this->_planetes[id_planet]) this->_planetes[id_planet]->setHabitant(this->_quidams[type][id]);
-    if (id_grade != 0 && this->_grades[id_grade]) this->_grades[id_grade]->addMembre(this->_quidams[type][id]);  
+    auto quidam = AQuidamBuilder::fromJson(item);
+    int id = this->getMaxId(quidam->getType()) + 1;
+    
+    if (quidam->getIdShip() != 0 && !this->_flotte[quidam->getIdShip()])        throw runtime_error("ID SHIP inconnu");
+    if (quidam->getIdPlanet() != 0 && !this->_planetes[quidam->getIdPlanet()])  throw runtime_error("ID PLANET inconnu");
+    if (quidam->getIdGrade() != 0 && !this->_grades[quidam->getIdGrade()])      throw runtime_error("ID GRADE inconnu");
+
+    this->_quidams[quidam->getType()][id] = quidam;
+    if (quidam->getIdShip() != 0)   this->_flotte[quidam->getIdShip()]->addEquipage(quidam);
+    if (quidam->getIdPlanet())      this->_planetes[quidam->getIdPlanet()]->setHabitant(quidam);
+    if (quidam->getIdGrade() != 0)  this->_grades[quidam->getIdGrade()]->addMembre(quidam);  
     return id;
 }
 int Controller::addPnj(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade) {
@@ -277,22 +265,22 @@ int Controller::addPnj(const string name, const int puissance, const int sante, 
     return id;
 }
 
-int Controller::addPlanet(const string name, const string description)
+int Controller::addPlanet(boost::json::object &item)
 {
     int id = this->getMaxId(PLANETE) + 1;
-    this->_planetes[id] = make_shared<Planete>(name, description);
+    this->_planetes[id] = PlaneteBuilder::fromJson(item);
     return id;
 }
-int Controller::addSpaceShip(const std::string name, const std::string description, int ap, int hp, int dp)
+int Controller::addSpaceShip(boost::json::object &item)
 {
     int id = this->getMaxId(SPACESHIP) + 1;
-    this->_flotte[id] = make_shared<Spaceship>(name, description, ap, hp, dp);
+    this->_flotte[id] = SpaceshipBuilder::fromJson(item);
     return id;
 }
-int Controller::addMission(const std::string name, const std::string description)
+int Controller::addMission(boost::json::object &item)
 {
     int id = this->getMaxId(MISSION) + 1;
-    this->_missions[id] = make_shared<Mission>(name, description, false);
+    this->_missions[id] = MissionBuilder::fromJson(item);
     return id;
 }
 
@@ -418,20 +406,21 @@ void    Controller::removeItem(int idItem, string name, OBJETS type) {
     this->_tableDeCorrespondance[NONE][idItem] = 0;
 }
 
-int Controller::addItem(const string name, const int stat, const EFFECT effect, const int id_owner, const OBJETS type) {
+int Controller::addItem(boost::json::object &item) {
     int id = this->getMaxId(ITEM) + 1;
-    this->_items[id] = make_unique<Item>(name, stat, effect, id_owner, type);
-    this->_tableDeCorrespondance[type][id] = id_owner;
-    if (id_owner != 0) {
-        switch (type)
+    this->_items[id] = ItemBuilder::fromJson(item);
+    
+    this->_tableDeCorrespondance[this->_items[id]->getTypeOwner()][id] = this->_items[id]->getIdOwner();
+    if (this->_items[id]->getIdOwner() != 0) {
+        switch (this->_items[id]->getTypeOwner())
         {
         case HEROS:
         case EVIL:
         case PNJ:
-            this->_quidams[type][id_owner]->addItem(this->_items[id], id);
+            this->_quidams[this->_items[id]->getTypeOwner()][this->_items[id]->getIdOwner()]->addItem(this->_items[id], id);
             break;
         case SPACESHIP:
-            this->_flotte[id_owner]->addItem(this->_items[id], id);
+            this->_flotte[this->_items[id]->getIdOwner()]->addItem(this->_items[id], id);
             break;
         default:
             break;
@@ -477,9 +466,9 @@ void    Controller::removeGrade(int id_entity, OBJETS entity_type) {
     }
 }
 
-int     Controller::addGrade(const string name, const int level) {
+int     Controller::addGrade(boost::json::object &item) {
     int id = this->getMaxId(GRADE) + 1;
-    this->_grades[id] = make_shared<Grade>(name, level);
+    this->_grades[id] = GradeBuilder::fromJson(item);
     return id;
 }
 
@@ -715,7 +704,7 @@ string Controller::init() {
  */
 string  Controller::j_attack(Context &ctx) {
     int hp = 0, dead = 0;
-    char *retour = NULL;
+    string retour = NULL;
     boost::json::object json = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object(), defenseur, attaquant, res, node;
     attaquant = json.at("attaquant").as_object();
     defenseur = json.at("defenseur").as_object();
@@ -754,6 +743,7 @@ string  Controller::j_attack(Context &ctx) {
         }
     } else retour = List::returnJson(ENTITY_OUT_RANGE);
 
+    if (!retour.empty()) return retour;
     node["id"] = defenseur.at("id").as_int64();
     node["entity_type"] = defenseur.at("type").as_int64();
     node["hp"] = hp;
@@ -834,20 +824,22 @@ string  Controller::j_exchangeItem(Context &ctx) {
  */
 string  Controller::j_getInfos(Context &ctx) {
 
-    auto startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
+    //auto startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
+    OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
+    int entity_id = ctx.getParam("entity_id").c_str() ? atoi(ctx.getParam("entity_id").c_str()) : -1;
     boost::json::object res, node;
-    OBJETS entity_type = (OBJETS)startrek.at("entity_type").as_int64();
-    int entity_id = -1;
-    if (startrek.contains("entity_id")) entity_id = startrek.at("entity_id").as_int64(); 
+    //OBJETS entity_type = (OBJETS)startrek.at("entity_type").as_int64();
+    //int entity_id = -1;
+    //if (startrek.contains("entity_id")) entity_id = startrek.at("entity_id").as_int64(); 
 
     node["entity_type"] = entity_type;
     node["entities"].emplace_array();
     switch(entity_type) {
         case PLANETE:
-            if(entity_id == -1) {
+            if(entity_id != -1) {
                 if (this->_planetes.find(entity_id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
                 node["entities"].get_array().push_back(this->_planetes[entity_id]->generate(entity_id));
-                return boost::json::serialize(res);
+                break;
             }
             for(auto p: this->_planetes) {
                 node["entities"].get_array().push_back(p.second->generate(p.first));
@@ -859,7 +851,7 @@ string  Controller::j_getInfos(Context &ctx) {
                     
                     if (living.second.find(entity_id) == living.second.end()) return List::returnJson((living.first == HEROS ? UNKNOWN_HEROS : (living.first == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
                     node["entities"].get_array().push_back(living.second[entity_id]->generate(entity_id));
-                    return boost::json::serialize(res);
+                    break;
                 }
                 
             }
@@ -949,7 +941,7 @@ string  Controller::j_getInfos(Context &ctx) {
         default:
             break;
     }
-     res["statut"] = "Success";
+    res["statut"] = "Success";
     res["code"] = 0;
     res["return"].emplace_object();
     res["return"] = node;
@@ -1143,55 +1135,28 @@ string  Controller::j_add_entities(Context &ctx) {
             case HEROS:
             case PNJ:
             case EVIL:
-                id = this->addQuidam(
-                    array.at("name").as_string().c_str(),
-                    array.at("ap").as_int64(),
-                    array.at("hp").as_int64(),
-                    array.at("dp").as_int64(),
-                    array.at("id_planet").as_int64(),
-                    array.at("id_ship").as_int64(),
-                    array.at("id_planet_origin").as_int64(),
-                    array.at("id_grade").as_int64(),
-                    (OBJETS)array.at("entity_type").as_int64());
+
+                id = this->addQuidam(array);
                 if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_quidams[(OBJETS)array.at("entity_type").as_int64()][id]->generate(id));
                 break;
             case PLANETE:
-                id = this->addPlanet(
-                    array.at("name").as_string().c_str(),
-                    array.at("description").as_string().c_str()
-                    );
+                id = this->addPlanet(array);
                 if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_planetes[id]->generate(id));
                 break;
             case MISSION:
-                id = this->addMission(
-                    array.at("name").as_string().c_str(),
-                    array.at("description").as_string().c_str()
-                    );
-
+                id = this->addMission(array);
                 if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_missions[id]->generate(id));
                 break;
             case SPACESHIP:
-                id = this->addSpaceShip(
-                    array.at("name").as_string().c_str(),
-                    array.at("description").as_string().c_str(),
-                    array.at("ap").as_int64(),
-                    array.at("hp").as_int64(),
-                    array.at("dp").as_int64()
-                    );
+                id = this->addSpaceShip(array);
                 if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_flotte[id]->generate(id));
                 break;
             case ITEM:
-                id = this->addItem(
-                    array.at("name").as_string().c_str(),
-                    array.at("stat").as_int64(),
-                    (EFFECT)array.at("effect").as_int64(),
-                    array.at("id_owner").as_int64(),
-                    (OBJETS)array.at("type_owner").as_int64()
-                    );
+                id = this->addItem(array);
                 if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 switch ((OBJETS)array.at("type_owner").as_int64())
                 {
@@ -1211,10 +1176,7 @@ string  Controller::j_add_entities(Context &ctx) {
                 }
                 break;
             case GRADE:
-                id = this->addGrade(
-                    array.at("name").as_string().c_str(),
-                    array.at("level").as_int64()
-                    );
+                id = this->addGrade(array);
                     if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_grades[id]->generate(id));
                 break;
@@ -1270,30 +1232,33 @@ int Controller::getMaxId(OBJETS type) {
  * @return string
  */
 string  Controller::j_getHabitants(Context &ctx) {
-    boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
     boost::json::array pnjs, heros, evils;
     boost::json::object res;
-
-    int id = startrek.at("id_planet").as_int64();
+    boost::json::object tmp;
+    int id = atoi(ctx.getParam("id_planet").c_str());
     if (this->_planetes.find(id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
 
     for (auto h : this->_planetes[id]->getHabitants()) {
         if (!h.lock()) continue;
-
-        int id_h = 0;
-        switch (h.lock()->getType())
-        {
-        case PNJ:
-            for (auto p : this->_quidams[PNJ]) if (p.second == h.lock()) pnjs.push_back(h.lock()->generate(p.first));
-            break;
-        case HEROS:
-            for (auto p : this->_quidams[HEROS]) if (p.second == h.lock()) heros.push_back(h.lock()->generate(p.first));
-            break;
-        case EVIL:
-            for (auto p : this->_quidams[EVIL]) if (p.second == h.lock()) evils.push_back(h.lock()->generate(p.first));
-            break;
-        default:
-            break;
+        for (auto p : this->_quidams[h.lock()->getType()]) if (p.second == h.lock()) {
+            tmp = h.lock()->generate(p.first);
+            tmp["planet_origin"] = this->_planetes[tmp["id_planet_origin"].as_int64()]->getName().c_str();
+            tmp["lieu"] = tmp["id_planet"].as_int64() <= 0 ? this->_flotte[tmp["id_ship"].as_int64()]->getName().c_str() : this->_planetes[tmp["id_planet"].as_int64()]->getName().c_str();
+            switch (h.lock()->getType())
+            {
+            case PNJ:
+                pnjs.push_back(tmp);
+                break;
+            case HEROS:
+                heros.push_back(tmp);
+                break;
+            case EVIL:
+                evils.push_back(tmp);
+                break;
+            default:
+                break;
+            }
+            tmp.clear();
         }
     }
     res["statut"] = "Success";
@@ -1315,31 +1280,36 @@ string  Controller::j_getHabitants(Context &ctx) {
  * @return string
  */
 string  Controller::j_getEquipage(Context &ctx) {
-    boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
+    int id = atoi(ctx.getParam("id_ship").c_str());
     boost::json::array pnjs, heros, evils;
     boost::json::object res;
-
-    int id = startrek.at("id_ship").as_int64();
+    boost::json::object tmp;
     if (this->_flotte.find(id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
     
    for (auto h : this->_flotte[id]->getEquipage()) {
         if (!h.lock()) continue;
 
-        int id_h = 0;
-        switch (h.lock()->getType())
-        {
-        case PNJ:
-            for (auto p : this->_quidams[PNJ]) if (p.second == h.lock()) pnjs.push_back(h.lock()->generate(p.first));
-            break;
-        case HEROS:
-            for (auto p : this->_quidams[HEROS]) if (p.second == h.lock()) heros.push_back(h.lock()->generate(p.first));
-            break;
-        case EVIL:
-            for (auto p : this->_quidams[EVIL]) if (p.second == h.lock()) evils.push_back(h.lock()->generate(p.first));
-            break;
-        default:
-            break;
+        for (auto p : this->_quidams[h.lock()->getType()]) if (p.second == h.lock()) {
+            tmp = h.lock()->generate(p.first);
+            tmp["planet_origin"] = this->_planetes[tmp["id_planet_origin"].as_int64()]->getName().c_str();
+            tmp["lieu"] = tmp["id_planet"].as_int64() <= 0 ? this->_flotte[tmp["id_ship"].as_int64()]->getName().c_str() : this->_planetes[tmp["id_planet"].as_int64()]->getName().c_str();
+            switch (h.lock()->getType())
+            {
+            case PNJ:
+                pnjs.push_back(tmp);
+                break;
+            case HEROS:
+                heros.push_back(tmp);
+                break;
+            case EVIL:
+                evils.push_back(tmp);
+                break;
+            default:
+                break;
+            }
+            tmp.clear();
         }
+        
     }
 
     res["statut"] = "Success";
@@ -1356,8 +1326,8 @@ string  Controller::j_getInventory(Context &ctx) {
     boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
     boost::json::array obj;
     boost::json::object res;
-    OBJETS entity_type = (OBJETS)startrek.at("entity_type").as_int64();
-    int entity_id = startrek.at("entity_id").as_int64();
+    OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
+    int entity_id = atoi(ctx.getParam("entity_id").c_str());
     switch (entity_type)
     {
         case HEROS:
@@ -1471,11 +1441,9 @@ string  Controller::j_promote(Context &ctx) {
  * @return string
  */
 string  Controller::j_getHierarchy(Context &ctx) {
-    boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
     boost::json::array pnjs, heros, evils;
     boost::json::object res;
-
-    int id = startrek.at("id_grade").as_int64();
+    int id = atoi(ctx.getParam("id_grade").c_str());
     if (this->_grades.find(id) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
     for (auto h : this->_grades[id]->getMembre()) {
         if (!h.lock()) continue;

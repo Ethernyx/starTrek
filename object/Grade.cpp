@@ -1,12 +1,12 @@
-/**
-* File: Grade.cpp
-* Project: objects
-* File Created: Friday, 23rd June 2023 6:58:39 pm
-* Author: LALIN Romain 
-* -----
-* Last Modified: Wednesday, 26th July 2023 10:42:59 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: Grade.cpp                                                             *
+ * Project: object                                                             *
+ * Created Date: Tu May 2025, 11:12:16 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Saturday, April 4th 2026, 4:13:37 pm                         *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #include    "../include/object/Grade.hh"
@@ -56,7 +56,7 @@ bool                        Grade::deleteMembre(const string name) {
     long cpt = 0;
     for( auto &h : this->_membre) {
         auto l = h.lock();
-        if(!l && name == l->getName()) {
+        if(l && name == l->getName()) {
             l->setIdGrade(0);
             this->_membre.erase(this->_membre.begin()+cpt);
             return true;

@@ -27,6 +27,7 @@ void  fillResponse(Context &ctx, string response) {
       else  ctx.getResponse().result(http::status::bad_request);
       ctx.getResponse().body() = response;
       ctx.getResponse().set(http::field::content_type, "application/json");
+      ctx.getResponse().set(http::field::accept_language, "fr-FR");
 }
 
 int main(void) {
@@ -46,23 +47,23 @@ int main(void) {
       ctx.getResponse().set(http::field::content_type, "application/json");
     });
 
-    ctrl->getRouter()->addRoute(POST, "/getInfos", [ctrl](Context &ctx) {
+    ctrl->getRouter()->addRoute(GET, "/getInfos/{entity_type}/{entity_id}", [ctrl](Context &ctx) {
       if (checkAuthorizedRequest(ctrl, ctx)) fillResponse(ctx,  ctrl->j_getInfos(ctx));
     });
 
-    ctrl->getRouter()->addRoute(GET, "/getHabitants", [ctrl](Context &ctx) {
+    ctrl->getRouter()->addRoute(GET, "/getHabitants/{id_planet}", [ctrl](Context &ctx) {
       if (checkAuthorizedRequest(ctrl, ctx)) fillResponse(ctx,  ctrl->j_getHabitants(ctx));
     });
 
-    ctrl->getRouter()->addRoute(GET, "/getEquipage", [ctrl](Context &ctx) {
+    ctrl->getRouter()->addRoute(GET, "/getEquipage/{id_ship}", [ctrl](Context &ctx) {
       if (checkAuthorizedRequest(ctrl, ctx)) fillResponse(ctx,  ctrl->j_getEquipage(ctx));
     });
 
-    ctrl->getRouter()->addRoute(GET, "/getInventory", [ctrl](Context &ctx) {
+    ctrl->getRouter()->addRoute(GET, "/getInventory/{entity_type}/{entity_id}", [ctrl](Context &ctx) {
       if (checkAuthorizedRequest(ctrl, ctx)) fillResponse(ctx,  ctrl->j_getInventory(ctx));
     });
 
-    ctrl->getRouter()->addRoute(GET, "/getHierarchy", [ctrl](Context &ctx) {
+    ctrl->getRouter()->addRoute(GET, "/getHierarchy/{entity_type}/{entity_id}", [ctrl](Context &ctx) {
       if (checkAuthorizedRequest(ctrl, ctx)) fillResponse(ctx,  ctrl->j_getHierarchy(ctx));
     });
 

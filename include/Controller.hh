@@ -1,12 +1,12 @@
-/**
-* File: Controller.hh
-* Project: star_strek
-* File Created: Monday, 24th July 2023 11:31:29 am
-* Author: LALIN Romain 
-* -----
-* Last Modified: Thursday, 27th July 2023 9:56:28 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: Controller.hh                                                         *
+ * Project: include                                                            *
+ * Created Date: Tu May 2025, 11:12:03 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Sunday, April 5th 2026, 11:57:01 am                          *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #ifndef                                         CONTROLLER_HH_
@@ -15,7 +15,7 @@
 #include                                        <vector>
 #include                                        <algorithm>
 #include                                        <map>
-#include                                        <vector>
+#include                                        <list>
 #include                                        <string>
 #include                                        <fstream>
 #include                                        "define.hh"
@@ -28,6 +28,12 @@
 #include                                        "object/Item.hh"
 #include                                        "object/Grade.hh"
 #include                                        "object/Token.hh"
+#include                                        "builder/AQuidamBuilder.hh"
+#include                                        "builder/SpaceshipBuilder.hh"
+#include                                        "builder/GradeBuilder.hh"
+#include                                        "builder/ItemBuilder.hh"
+#include                                        "builder/PlaneteBuilder.hh"
+#include                                        "builder/MissionBuilder.hh"
 #include                                        "../lib_func/List.hh"
 #include                                        "server.hh"
 #include                                        "router.hh"
@@ -55,7 +61,7 @@ public:
     map<int, shared_ptr<Token>>                 &getToken() { return this->_tokens; }
     bool                                        deletePerso(string const name); // --> suppression du perso via son nom
     bool                                        deletePerso(int const id); // --> surcharge suppression du perso via son ID
-    int                                         addQuidam(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade, OBJETS type);
+    int                                         addQuidam(boost::json::object &item);
     int                                         addPnj(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade);
 
     shared_ptr<AQuidam>                         getPerso(const string name);
@@ -66,26 +72,26 @@ public:
 
     bool                                        deletePlanete(string const name); // -> surcharge de la suppression d'une planete par son nom
     bool                                        deletePlanete(int const id_planet); // -> surcharge de la suppression d'une planete par son ID
-    int                                         addPlanet(const string name, const string description);
+    int                                         addPlanet(boost::json::object &item);
 
     bool                                        deleteMission(string const name);
     bool                                        deleteMission(int const id);
-    int                                         addMission(const string name, const string description);
+    int                                         addMission(boost::json::object &item);
 
     bool                                        deleteSpaceship(string const name); // delete spaceShip par son nom
     bool                                        deleteSpaceship(int const id_ship); // delete spaceShip par son ID
-    int                                         addSpaceShip(const string name, const string description, int ap, int hp, int dp);
+    int                                         addSpaceShip(boost::json::object &item);
 
     int                                         attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJETS type_victime,const int id_victime);
     void                                        takeItem(int item, int id, OBJETS type);
     void                                        removeItem(int idItem, string name, OBJETS type);
-    int                                         addItem(const string name, const int stat, const EFFECT effect, const int id, const OBJETS type);
+    int                                         addItem(boost::json::object &item);
     void                                        deleteItem(int id);
     void                                        saveJSON();
 
     void                                        promote(int id_grade, int id_entity, OBJETS entity_type);
     void                                        removeGrade(int id_entity, OBJETS entity_type);
-    int                                         addGrade(const string, const int level);
+    int                                         addGrade(boost::json::object &item);
     bool                                        deleteGrade(const int id);
 
     string                                      init();

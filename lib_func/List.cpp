@@ -1,542 +1,386 @@
-/**
- * File: List.cpp
- * Project: lib_func
- * File Created: Friday', 28th July 2023 2:33:51 pm
- * Author: LALIN Romain
- * -----
- * Last Modified: Friday', 28th July 2023 2:33:51 pm
- * Modified by: LALIN Romain
- * -----
+/*
+ * File: List.cpp                                                              *
+ * Project: lib_func                                                           *
+ * Created Date: Tu May 2025, 11:14:09 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Saturday, April 4th 2026, 2:39:08 pm                         *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #include    "List.hh"
 
-size_t  List::size(cJSON *node) {
-    size_t cpt = 1;
+// ---------------------------------------------------------------------------
+// Helpers internes
+// ---------------------------------------------------------------------------
 
-    if (node->prev != NULL) node = List::firstElem(node);
-    while (node != NULL) {
-        cpt++;
-        node = node->next;
-    }
-    return cpt;
+static bool hasKey(boost::json::object const &obj, string const &key)
+{
+    return obj.contains(key);
 }
 
-cJSON   *List::firstElem(cJSON *node) {
-    while (node->prev != NULL) node = node->prev;
-    return node;
-}
+// ---------------------------------------------------------------------------
+// Validation des prototypes objets
+// ---------------------------------------------------------------------------
 
-cJSON *List::defaultNode() {
-    cJSON *root = cJSON_CreateObject();
-    cJSON_AddStringToObject(root,"statut", "Success");
-    cJSON_AddNumberToObject(root,"code", 0);
-    cJSON_AddItemToObject(root, "return", cJSON_CreateObject());
-    return root;
-}
-
-
-int    List::isCorectToObjPrototype(cJSON *node, OBJETS type_obj, bool required) {
-    
+int List::isCorectToObjPrototype(boost::json::object const &node, OBJETS type_obj, bool required)
+{
     switch (type_obj)
     {
         case HEROS:
         case PNJ:
         case EVIL:
-            //if (List::size(node) < 8) return (type_obj == HEROS ? NOT_ENOUGHT_ATTRIBUT_HEROS : (type_obj == PNJ ? NOT_ENOUGHT_ATTRIBUT_PNJ : NOT_ENOUGHT_ATTRIBUT_EVIL));
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return (type_obj == HEROS ? MISSING_ID_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_ATTRIBUT_PNJ : MISSING_ID_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "name") == NULL) return (type_obj == HEROS ? MISSING_NAME_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_NAME_ATTRIBUT_PNJ : MISSING_NAME_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "ap") == NULL) return (type_obj == HEROS ? MISSING_AP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_AP_ATTRIBUT_PNJ : MISSING_AP_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "hp") == NULL) return (type_obj == HEROS ? MISSING_HP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_HP_ATTRIBUT_PNJ : MISSING_HP_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "dp") == NULL) return (type_obj == HEROS ? MISSING_DP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_DP_ATTRIBUT_PNJ : MISSING_DP_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "id_planet") == NULL) return (type_obj == HEROS ? MISSING_ID_PLANET_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_PLANET_ATTRIBUT_PNJ : MISSING_ID_PLANET_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "id_ship") == NULL) return (type_obj == HEROS ? MISSING_ID_SHIP_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_SHIP_ATTRIBUT_PNJ : MISSING_ID_SHIP_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "id_planet_origin") == NULL) return (type_obj == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL));
-            if (cJSON_GetObjectItem(node, "id_grade") == NULL) return (type_obj == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS : (type_obj == PNJ ? MISSING_ID_GRADE_ATTRIBUT_PNJ : MISSING_ID_GRADE_ATTRIBUT_EVIL));
+            if (required && !hasKey(node, "id"))
+                return (type_obj == HEROS ? MISSING_ID_ATTRIBUT_HEROS   :
+                        type_obj == PNJ  ? MISSING_ID_ATTRIBUT_PNJ      : MISSING_ID_ATTRIBUT_EVIL);
+            if (!hasKey(node, "name"))
+                return (type_obj == HEROS ? MISSING_NAME_ATTRIBUT_HEROS  :
+                        type_obj == PNJ  ? MISSING_NAME_ATTRIBUT_PNJ     : MISSING_NAME_ATTRIBUT_EVIL);
+            if (!hasKey(node, "ap"))
+                return (type_obj == HEROS ? MISSING_AP_ATTRIBUT_HEROS    :
+                        type_obj == PNJ  ? MISSING_AP_ATTRIBUT_PNJ       : MISSING_AP_ATTRIBUT_EVIL);
+            if (!hasKey(node, "hp"))
+                return (type_obj == HEROS ? MISSING_HP_ATTRIBUT_HEROS    :
+                        type_obj == PNJ  ? MISSING_HP_ATTRIBUT_PNJ       : MISSING_HP_ATTRIBUT_EVIL);
+            if (!hasKey(node, "dp"))
+                return (type_obj == HEROS ? MISSING_DP_ATTRIBUT_HEROS    :
+                        type_obj == PNJ  ? MISSING_DP_ATTRIBUT_PNJ       : MISSING_DP_ATTRIBUT_EVIL);
+            if (!hasKey(node, "id_planet"))
+                return (type_obj == HEROS ? MISSING_ID_PLANET_ATTRIBUT_HEROS :
+                        type_obj == PNJ  ? MISSING_ID_PLANET_ATTRIBUT_PNJ    : MISSING_ID_PLANET_ATTRIBUT_EVIL);
+            if (!hasKey(node, "id_ship"))
+                return (type_obj == HEROS ? MISSING_ID_SHIP_ATTRIBUT_HEROS   :
+                        type_obj == PNJ  ? MISSING_ID_SHIP_ATTRIBUT_PNJ      : MISSING_ID_SHIP_ATTRIBUT_EVIL);
+            if (!hasKey(node, "id_planet_origin"))
+                return (type_obj == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS :
+                        type_obj == PNJ  ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ    : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL);
+            if (!hasKey(node, "id_grade"))
+                return (type_obj == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS  :
+                        type_obj == PNJ  ? MISSING_ID_GRADE_ATTRIBUT_PNJ     : MISSING_ID_GRADE_ATTRIBUT_EVIL);
             break;
+
         case SPACESHIP:
-            //if (List::size(node) < 6) return UNKNOWN_MISSION;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_SPACESHIP;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_SPACESHIP;
-            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSING_DESC_ATTRIBUT_SPACESHIP;
-            if (cJSON_GetObjectItem(node, "ap") == NULL) return MISSING_AP_ATTRIBUT_SPACESHIP;
-            if (cJSON_GetObjectItem(node, "dp") == NULL) return MISSING_DP_ATTRIBUT_SPACESHIP;
-            if (cJSON_GetObjectItem(node, "hp") == NULL) return MISSING_HP_ATTRIBUT_SPACESHIP;
+            if (required && !hasKey(node, "id"))          return MISSING_ID_ATTRIBUT_SPACESHIP;
+            if (!hasKey(node, "name"))                    return MISSING_NAME_ATTRIBUT_SPACESHIP;
+            if (!hasKey(node, "description"))             return MISSING_DESC_ATTRIBUT_SPACESHIP;
+            if (!hasKey(node, "ap"))                      return MISSING_AP_ATTRIBUT_SPACESHIP;
+            if (!hasKey(node, "dp"))                      return MISSING_DP_ATTRIBUT_SPACESHIP;
+            if (!hasKey(node, "hp"))                      return MISSING_HP_ATTRIBUT_SPACESHIP;
             break;
+
         case MISSION:
-            //if (List::size(node) < 3) return NOT_ENOUGHT_ATTRIBUT_MISSION;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_MISSION;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_MISSION;
-            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSING_DESC_ATTRIBUT_MISSION;
-            if (cJSON_GetObjectItem(node, "is_complete") == NULL) return MISSING_IS_COMPLETE_ATTRIBUT_MISSION;
+            if (required && !hasKey(node, "id"))          return MISSING_ID_ATTRIBUT_MISSION;
+            if (!hasKey(node, "name"))                    return MISSING_NAME_ATTRIBUT_MISSION;
+            if (!hasKey(node, "description"))             return MISSING_DESC_ATTRIBUT_MISSION;
+            if (!hasKey(node, "is_complete"))             return MISSING_IS_COMPLETE_ATTRIBUT_MISSION;
             break;
+
         case PLANETE:
-            //if (List::size(node) < 3) return 1;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_PLANET;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_PLANET;
-            if (cJSON_GetObjectItem(node, "description") == NULL) return MISSING_DESC_ATTRIBUT_PLANET;
+            if (required && !hasKey(node, "id"))          return MISSING_ID_ATTRIBUT_PLANET;
+            if (!hasKey(node, "name"))                    return MISSING_NAME_ATTRIBUT_PLANET;
+            if (!hasKey(node, "description"))             return MISSING_DESC_ATTRIBUT_PLANET;
             break;
+
         case ITEM:
-            //if (List::size(node) < 6) return UNKNOWN_GRADE;
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_ITEM;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_ITEM;
-            if (cJSON_GetObjectItem(node, "stat") == NULL) return MISSING_STAT_ATTRIBUT_ITEM;
-            if (cJSON_GetObjectItem(node, "effect") == NULL) return MISSING_EFFECT_ATTRIBUT_ITEM;
-            if (cJSON_GetObjectItem(node, "id_owner") == NULL) return MISSING_ID_OWNER_ATTRIBUT_ITEM;
-            if (cJSON_GetObjectItem(node, "type_owner") == NULL) return MISSING_TYPE_OWNER_ATTRIBUT_ITEM;
+            if (required && !hasKey(node, "id"))          return MISSING_ID_ATTRIBUT_ITEM;
+            if (!hasKey(node, "name"))                    return MISSING_NAME_ATTRIBUT_ITEM;
+            if (!hasKey(node, "stat"))                    return MISSING_STAT_ATTRIBUT_ITEM;
+            if (!hasKey(node, "effect"))                  return MISSING_EFFECT_ATTRIBUT_ITEM;
+            if (!hasKey(node, "id_owner"))                return MISSING_ID_OWNER_ATTRIBUT_ITEM;
+            if (!hasKey(node, "type_owner"))              return MISSING_TYPE_OWNER_ATTRIBUT_ITEM;
             break;
+
         case GRADE:
-            if (required && cJSON_GetObjectItem(node, "id") == NULL) return MISSING_ID_ATTRIBUT_GRADE;
-            if (cJSON_GetObjectItem(node, "name") == NULL) return MISSING_NAME_ATTRIBUT_GRADE;
-            if (cJSON_GetObjectItem(node, "level") == NULL) return MISSING_LEVEL_ATTRIBUT_GRADE;
+            if (required && !hasKey(node, "id"))          return MISSING_ID_ATTRIBUT_GRADE;
+            if (!hasKey(node, "name"))                    return MISSING_NAME_ATTRIBUT_GRADE;
+            if (!hasKey(node, "level"))                   return MISSING_LEVEL_ATTRIBUT_GRADE;
+            break;
+
         default:
             break;
     }
     return 0;
 }
 
-int    List::isRequiredRootStructure(cJSON *root) {
-    //if (List::size(root) < 3) return -1;
-    if (cJSON_GetObjectItem(root, "security") == NULL) return MISSING_SECURITY_ATTRIBUT;
-    if (strcmp(cJSON_GetObjectItem(root, "security")->valuestring, MDP) != 0) return INCORRECT_PASSWORD;
-    if (cJSON_GetObjectItem(root, "command") == NULL) return MISSING_COMMAND_ATTRIBUT;
-    if (cJSON_GetObjectItem(root, "startrek") == NULL) return MISSING_STARTREK_ATTRIBUT;
+// ---------------------------------------------------------------------------
+// Validation structure racine
+// ---------------------------------------------------------------------------
+
+int List::isRequiredRootStructure(boost::json::object const &root)
+{
+    if (!hasKey(root, "security"))                          return MISSING_SECURITY_ATTRIBUT;
+    if (root.at("security").as_string() != MDP)            return INCORRECT_PASSWORD;
+    if (!hasKey(root, "command"))                          return MISSING_COMMAND_ATTRIBUT;
+    if (!hasKey(root, "startrek"))                         return MISSING_STARTREK_ATTRIBUT;
     return 0;
 }
 
-int    List::isCorectToInitPrototype(cJSON *root) {
+int List::isCorectToInitPrototype(boost::json::object const &root)
+{
     int code = 0;
     if ((code = List::isRequiredRootStructure(root)) != 0) return code;
-    auto items = cJSON_GetObjectItem(root, "startrek")->child;
 
-    while (items != NULL) {
-        for (int i = 0; i < cJSON_GetArraySize(items); i++) if ((code = List::isCorectToObjPrototype(cJSON_GetArrayItem(items, i), (OBJETS)atoi(items->string), true)) != 0) return code;
-        items = items->next;
+    auto const &startrek = root.at("startrek").as_object();
+    for (auto const &entry : startrek)
+    {
+        auto const &arr = entry.value().as_array();
+        for (auto const &item : arr)
+        {
+            code = List::isCorectToObjPrototype(
+                item.as_object(),
+                (OBJETS)stoi(string(entry.key())),
+                true);
+            if (code != 0) return code;
+        }
     }
-    return code;
+    return 0;
 }
 
-string  List::codeError(int code) {
-    string str = "";
+// ---------------------------------------------------------------------------
+// Validation des prototypes de commandes
+// ---------------------------------------------------------------------------
+
+int List::isCorrectToAttackPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "defenseur"))                              return MISSING_DEFENSE_ATTRIBUT;
+    if (!hasKey(startrek, "attaquant"))                              return MISSING_ATTACK_ATTRIBUT;
+    auto const &def = startrek.at("defenseur").as_object();
+    auto const &att = startrek.at("attaquant").as_object();
+    if (!hasKey(def, "type"))                                        return MISSING_DEFENSE_TYPE_ATTRIBUT;
+    if (!hasKey(def, "id"))                                          return MISSING_DEFENSE_ID_ATTRIBUT;
+    if (!hasKey(att, "type"))                                        return MISSING_ATTACK_TYPE_ATTRIBUT;
+    if (!hasKey(att, "id"))                                          return MISSING_ATTACK_ID_ATTRIBUT;
+    return 0;
+}
+
+int List::isCorrectToExhangeItemPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_array();
+    for (auto const &elem : startrek)
+    {
+        auto const &item = elem.as_object();
+        if (!hasKey(item, "entity_type"))   return MISSING_ENTITY_TYPE_ATTRIBUT;
+        if (!hasKey(item, "entity_id"))     return MISSING_ENTITY_ID_ATTRIBUT;
+        if (!hasKey(item, "action"))        return MISSING_ACTION_ATTRIBUT;
+        if (!hasKey(item, "items"))         return MISSING_ITEMS_ATTRIBUT;
+    }
+    return 0;
+}
+
+int List::isCorrectToGetInfosPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "entity_type"))   return MISSING_ENTITY_TYPE_ATTRIBUT;
+    return 0;
+}
+
+int List::isCorrectToKillPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "entity_type"))   return MISSING_ENTITY_TYPE_ATTRIBUT;
+    if (!hasKey(startrek, "entity_id"))     return MISSING_ENTITY_ID_ATTRIBUT;
+    return 0;
+}
+
+int List::isCorrectToGetAddEntitiesPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_array();
+    int code = 0;
+    for (auto const &elem : startrek)
+    {
+        auto const &item = elem.as_object();
+        if (!hasKey(item, "entity_type"))   return MISSING_ENTITY_TYPE_ATTRIBUT;
+        code = isCorectToObjPrototype(item, (OBJETS)item.at("entity_type").as_int64(), false);
+        if (code != 0) return code;
+    }
+    return 0;
+}
+
+int List::isCorrectToEscapePrototype(boost::json::object const &root)
+{
+    // même structure que attack
+    return List::isCorrectToAttackPrototype(root);
+}
+
+int List::isCorrectToGetHabitantsPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "id_planet"))     return MISSING_ID_ATTRIBUT_PLANET;
+    return 0;
+}
+
+int List::isCorrectToGetEquipagePrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "id_ship"))       return MISSING_ID_ATTRIBUT_SPACESHIP;
+    return 0;
+}
+
+int List::isCorrectToGetInventoryPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "entity_type"))   return MISSING_ENTITY_TYPE_ATTRIBUT;
+    if (!hasKey(startrek, "entity_id"))     return MISSING_ENTITY_ID_ATTRIBUT;
+    return 0;
+}
+
+int List::isCorrectToGetHierarchyPrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_object();
+    if (!hasKey(startrek, "id_grade"))      return UNKNOWN_ID_GRADE;
+    return 0;
+}
+
+int List::isCorrectToPromotePrototype(boost::json::object const &root)
+{
+    auto const &startrek = root.at("startrek").as_array();
+    for (auto const &elem : startrek)
+    {
+        auto const &item = elem.as_object();
+        if (!hasKey(item, "entity_type"))   return MISSING_ENTITY_TYPE_ATTRIBUT;
+        if (!hasKey(item, "entity_id"))     return MISSING_ENTITY_ID_ATTRIBUT;
+        if (!hasKey(item, "id_grade"))      return UNKNOWN_ID_GRADE;
+    }
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Retour JSON et messages d'erreur
+// ---------------------------------------------------------------------------
+
+string List::returnJson(int code)
+{
+    boost::json::object json;
+    json["statut"]      = (code == 0 ? "Success" : "Error");
+    json["code"]        = code;
+    json["description"] = (code == 0 ? "" : List::codeError(code));
+    return boost::json::serialize(json);
+}
+
+string List::codeError(int code)
+{
     switch (code)
     {
-        case NOT_ENOUGHT_ATTRIBUT /*-1*/:
-            str = "[ERROR] Il manque des attributs à la racine du JSON";
-            break;
-        case MISSING_SECURITY_ATTRIBUT:
-            str = "[ERROR] Attribut security à la racine du JSON non renseigné";
-            break;
-        case MISSING_COMMAND_ATTRIBUT:
-            str = "[ERROR] Attribut command à la racine du JSON non renseigné";
-            break;
-        case MISSING_STARTREK_ATTRIBUT:
-            str = "[ERROR] Attribut startrek à la racine du JSON non renseigné";
-            break;
-        case JSON_SYNTAXE_ERROR:
-            str = "[ERROR] Syntaxe du JSON incorrecte";
-            break;
-        case UNKNOWN_COMMAND:
-            str = "[ERROR] Commande inconnue";
-            break;
-        case INCORRECT_PASSWORD:
-            str = "[ERROR] Mot de passe incorrect";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_PLANET:
-            str = "[ERROR] Il manque des attributs à l'obj planète";
-            break;
-        case MISSING_ID_ATTRIBUT_PLANET:
-            str = "[ERROR] Attribut id pour l'obj planète non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_PLANET:
-            str = "[ERROR] Attribut name pour l'obj planète non renseigné";
-            break;
-        case MISSING_DESC_ATTRIBUT_PLANET:
-            str = "[ERROR] Attribut description pour l'obj planète non renseigné";
-            break;
-        case UNKNOWN_PLANET:
-            str = "[ERROR] Planète non trouvée";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Il manque des attributs à l'obj spaceship";
-            break;
-        case MISSING_ID_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Attribut id pour l'obj spaceship non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Attribut name pour l'obj spaceship non renseigné";
-            break;
-        case MISSING_DESC_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Attribut description pour l'obj spaceship non renseigné";
-            break;
-        case MISSING_AP_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Attribut ap pour l'obj spaceship non renseigné";
-            break;
-        case MISSING_DP_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Attribut dp pour l'obj spaceship non renseigné";
-            break;
-        case MISSING_HP_ATTRIBUT_SPACESHIP:
-            str = "[ERROR] Attribut hp pour l'obj spaceship non renseigné";
-            break;
-        case MAX_ITEM_OVERFLOW_SPACESHIP:
-            str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
-            break;
-        case UNKNOWN_SPACESHIP:
-           str = "[ERROR] Spaceship non trouvé";
-            break;
-        case UNKNOWN_ITEM_SPACECHIP:
-            str = "[ERROR] le Spaceship ne possède pas cet item";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_HEROS:
-            str = "[ERROR] Il manque des attributs à l'obj heros";
-            break;
-        case MISSING_ID_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut id pour l'obj heros non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut name pour l'obj heros non renseigné";
-            break;
-        case MISSING_AP_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut ap pour l'obj heros non renseigné";
-            break;
-        case MISSING_HP_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut hp pour l'obj heros non renseigné";
-            break;
-        case MISSING_DP_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut dp pour l'obj heros non renseigné";
-            break;
-        case MISSING_ID_PLANET_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut id_planet pour l'obj heros non renseigné";
-            break;
-        case MISSING_ID_SHIP_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut id_ship pour l'obj heros non renseigné";
-            break;
-        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut id_planet_origin pour l'obj heros non renseigné";
-            break;
-        case MISSING_ID_GRADE_ATTRIBUT_HEROS:
-            str = "[ERROR] Attribut id_grade pour l'obj heros non renseigné";
-            break;
-        case MAX_ITEM_OVERFLOW_HEROS:
-            str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
-            break;
-        case UNKNOWN_HEROS:
-            str = "[ERROR] Heros non trouvé";
-            break;
-        case UNKNOWN_ITEM_HEROS:
-            str = "[ERROR] le Heros ne possède pas cet item";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_EVIL:
-            str = "[ERROR] Il manque des attributs à l'obj evil";
-            break;
-        case MISSING_ID_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut id pour l'obj evil non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut name pour l'obj evil non renseigné";
-            break;
-        case MISSING_AP_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut ap pour l'obj evil non renseigné";
-            break;
-        case MISSING_HP_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut hp pour l'obj evil non renseigné";
-            break;
-        case MISSING_DP_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut dp pour l'obj evil non renseigné";
-            break;
-        case MISSING_ID_PLANET_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut id_planet pour l'obj evil non renseigné";
-            break;
-        case MISSING_ID_SHIP_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut id_ship pour l'obj evil non renseigné";
-            break;
-        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut id_planet_origin pour l'obj evil non renseigné";
-            break;
-        case MISSING_ID_GRADE_ATTRIBUT_EVIL:
-            str = "[ERROR] Attribut id_grade pour l'obj evil non renseigné";
-            break;
-        case MAX_ITEM_OVERFLOW_EVIL:
-            str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
-            break;
-        case UNKNOWN_EVIL:
-            str = "[ERROR] Evil non trouvé";
-            break;
-        case UNKNOWN_ITEM_EVIL:
-            str = "[ERROR] le Mechant ne possède pas cet item";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_MISSION:
-            str = "[ERROR] Il manque des attributs à l'obj mission";
-            break;
-        case MISSING_ID_ATTRIBUT_MISSION:
-            str = "[ERROR] Attribut id pour l'obj mission non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_MISSION:
-            str = "[ERROR] Attribut name pour l'obj mission non renseigné";
-            break;
-        case MISSING_DESC_ATTRIBUT_MISSION:
-            str = "[ERROR] Attribut description pour l'obj mission non renseigné";
-            break;
-        case MISSING_IS_COMPLETE_ATTRIBUT_MISSION:
-            str = "[ERROR] Attribut is_complete pour l'obj mission non renseigné";
-            break;
-        case UNKNOWN_MISSION:
-            str = "[ERROR] Mission non trouvé";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_PNJ:
-            str = "[ERROR] Il manque des attributs à l'obj pnj";
-            break;
-        case MISSING_ID_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut id pour l'obj pnj non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut name pour l'obj pnj non renseigné";
-            break;
-        case MISSING_AP_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut ap pour l'obj pnj non renseigné";
-            break;
-        case MISSING_HP_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut hp pour l'obj pnj non renseigné";
-            break;
-        case MISSING_DP_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut dp pour l'obj pnj non renseigné";
-            break;
-        case MISSING_ID_PLANET_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut id_planet pour l'obj pnj non renseigné";
-            break;
-        case MISSING_ID_SHIP_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut id_ship pour l'obj pnj non renseigné";
-            break;
-        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut id_planet_origin pour l'obj pnj non renseigné";
-            break;
-        case MISSING_ID_GRADE_ATTRIBUT_PNJ:
-            str = "[ERROR] Attribut id_grade pour l'obj pnj non renseigné";
-            break;
-        case MAX_ITEM_OVERFLOW_PNJ:
-            str = "[ERROR] Nombre max d'item dans l'inventaire ateint";
-            break;
-        case UNKNOWN_PNJ:
-            str = "[ERROR] Pnj non trouvé";
-            break;
-        case UNKNOWN_ITEM_PNJ:
-            str = "[ERROR] le Pnj ne possède pas cet item";
-            break;
-        case NOT_ENOUGHT_ATTRIBUT_ITEM:
-            str = "[ERROR] Il manque des attributs à l'obj item";
-            break;
-        case MISSING_ID_ATTRIBUT_ITEM:
-            str = "[ERROR] Attribut id pour l'obj item non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_ITEM:
-            str = "[ERROR] Attribut name pour l'obj item non renseigné";
-            break;
-        case MISSING_STAT_ATTRIBUT_ITEM:
-            str = "[ERROR] Attribut stat pour l'obj item non renseigné";
-            break;
-        case MISSING_EFFECT_ATTRIBUT_ITEM:
-            str = "[ERROR] Attribut effect pour l'obj item non renseigné";
-            break;
-        case MISSING_ID_OWNER_ATTRIBUT_ITEM:
-            str = "[ERROR] Attribut id_owner pour l'obj item non renseigné";
-            break;
-        case MISSING_TYPE_OWNER_ATTRIBUT_ITEM:
-            str = "[ERROR] Attribut type_owner pour l'obj item non renseigné";
-            break;
-        case UNKNOWN_ITEM:
-            str = "[ERROR] Item non trouvé";
-            break;
-        case MISSING_ID_ATTRIBUT_GRADE:
-            str = "[ERROR] Attribut id pour l'obj grade non renseigné";
-            break;
-        case MISSING_NAME_ATTRIBUT_GRADE:
-            str = "[ERROR] Attribut name pour l'obj grade non renseigné";
-            break;
-        case MISSING_LEVEL_ATTRIBUT_GRADE:
-            str = "[ERROR] Attribut level pour l'obj grade non renseigné";
-            break;
-        case UNKNOWN_GRADE:
-            str = "[ERROR] Grade non trouvé";
-            break;
-        case MISSING_ENTITY_TYPE_ATTRIBUT:
-            str = "[ERROR] Attribut entity_type non renseigné";
-            break;
-        case MISSING_DEFENSE_ATTRIBUT:
-            str = "[ERROR] Attribut defenseur non renseigné";
-            break;
-        case MISSING_ATTACK_ATTRIBUT:
-            str = "[ERROR] Attribut attaquant non renseigné";
-            break;
-        case MISSING_ENTITY_ID_ATTRIBUT:
-            str = "[ERROR] Attribut entity_id non renseigné";
-            break;
-        case MISSING_ACTION_ATTRIBUT:
-            str = "[ERROR] Attribut action non renseigné";
-            break;
-        case MISSING_ITEMS_ATTRIBUT:
-            str = "[ERROR] Attribut items non renseigné";
-            break;
-        case MISSING_DEFENSE_TYPE_ATTRIBUT:
-            str = "[ERROR] Attribut type du defenseur non renseigné";
-            break;
-        case MISSING_DEFENSE_ID_ATTRIBUT:
-            str = "[ERROR] Attribut id du defenseur non renseigné";
-            break;
-        case MISSING_ATTACK_TYPE_ATTRIBUT:
-            str = "[ERROR] Attribut type de l'attaquant non renseigné";
-            break;
-        case MISSING_ATTACK_ID_ATTRIBUT:
-            str = "[ERROR] Attribut id de l'attaquant non renseigné";
-            break;
-        case UNKNOWN_DEFENSE_OR_ATTACK:
-            str = "[ERROR] L'attaquant et/ou le defenseur n'existe pas";
-            break;
-        case UNKNOWN_ID_GRADE:
-            str = "[ERROR] Attribut id_grade n'existe pas";
-            break;
-        case ENTITY_OUT_RANGE:
-            str = "[ERROR] Les Entité ne peuvent pas s'attaquer directement";
-            break;
-        case UNKNOWN_ENTITY:
-            str = "[ERROR] type d'entité inconnue";
-            break;
-        case UNKNOWN_ACTION:
-            str = "[ERROR] type d'action inconnue";
-            break;
-        case ITEM_OCCUPY:
-            str = "[ERROR] L'objet n'est pas disponible";
-            break;
-        case MISSING_INVENTORY:
-            str = "[ERROR] L'objet ne possède pas d'inventaire";
-            break;
-        case MISSING_GRADE:
-            str = "[ERROR] Ce type d'entité ne possède pas de grade";
-            break;
-        case UNKNOWN_ATTACK_ACTION:
-            str = "[ERROR] Ce type d'entité ne peux pas attaquer";
-            break;
-        case UNAUTHORIZED:
-            str = "[ERROR] Bad TOKEN";
-            break;
-        default:
-            str = "[ERROR] Erreur inconnue";
-            break;
+        case NOT_ENOUGHT_ATTRIBUT:                      return "[ERROR] Il manque des attributs à la racine du JSON";
+        case MISSING_SECURITY_ATTRIBUT:                 return "[ERROR] Attribut security à la racine du JSON non renseigné";
+        case MISSING_COMMAND_ATTRIBUT:                  return "[ERROR] Attribut command à la racine du JSON non renseigné";
+        case MISSING_STARTREK_ATTRIBUT:                 return "[ERROR] Attribut startrek à la racine du JSON non renseigné";
+        case JSON_SYNTAXE_ERROR:                        return "[ERROR] Syntaxe du JSON incorrecte";
+        case UNKNOWN_COMMAND:                           return "[ERROR] Commande inconnue";
+        case INCORRECT_PASSWORD:                        return "[ERROR] Mot de passe incorrect";
+
+        case NOT_ENOUGHT_ATTRIBUT_PLANET:               return "[ERROR] Il manque des attributs à l'obj planète";
+        case MISSING_ID_ATTRIBUT_PLANET:                return "[ERROR] Attribut id pour l'obj planète non renseigné";
+        case MISSING_NAME_ATTRIBUT_PLANET:              return "[ERROR] Attribut name pour l'obj planète non renseigné";
+        case MISSING_DESC_ATTRIBUT_PLANET:              return "[ERROR] Attribut description pour l'obj planète non renseigné";
+        case UNKNOWN_PLANET:                            return "[ERROR] Planète non trouvée";
+
+        case NOT_ENOUGHT_ATTRIBUT_SPACESHIP:            return "[ERROR] Il manque des attributs à l'obj spaceship";
+        case MISSING_ID_ATTRIBUT_SPACESHIP:             return "[ERROR] Attribut id pour l'obj spaceship non renseigné";
+        case MISSING_NAME_ATTRIBUT_SPACESHIP:           return "[ERROR] Attribut name pour l'obj spaceship non renseigné";
+        case MISSING_DESC_ATTRIBUT_SPACESHIP:           return "[ERROR] Attribut description pour l'obj spaceship non renseigné";
+        case MISSING_AP_ATTRIBUT_SPACESHIP:             return "[ERROR] Attribut ap pour l'obj spaceship non renseigné";
+        case MISSING_DP_ATTRIBUT_SPACESHIP:             return "[ERROR] Attribut dp pour l'obj spaceship non renseigné";
+        case MISSING_HP_ATTRIBUT_SPACESHIP:             return "[ERROR] Attribut hp pour l'obj spaceship non renseigné";
+        case MAX_ITEM_OVERFLOW_SPACESHIP:               return "[ERROR] Nombre max d'item dans l'inventaire atteint";
+        case UNKNOWN_SPACESHIP:                         return "[ERROR] Spaceship non trouvé";
+        case UNKNOWN_ITEM_SPACECHIP:                    return "[ERROR] le Spaceship ne possède pas cet item";
+
+        case NOT_ENOUGHT_ATTRIBUT_HEROS:                return "[ERROR] Il manque des attributs à l'obj heros";
+        case MISSING_ID_ATTRIBUT_HEROS:                 return "[ERROR] Attribut id pour l'obj heros non renseigné";
+        case MISSING_NAME_ATTRIBUT_HEROS:               return "[ERROR] Attribut name pour l'obj heros non renseigné";
+        case MISSING_AP_ATTRIBUT_HEROS:                 return "[ERROR] Attribut ap pour l'obj heros non renseigné";
+        case MISSING_HP_ATTRIBUT_HEROS:                 return "[ERROR] Attribut hp pour l'obj heros non renseigné";
+        case MISSING_DP_ATTRIBUT_HEROS:                 return "[ERROR] Attribut dp pour l'obj heros non renseigné";
+        case MISSING_ID_PLANET_ATTRIBUT_HEROS:          return "[ERROR] Attribut id_planet pour l'obj heros non renseigné";
+        case MISSING_ID_SHIP_ATTRIBUT_HEROS:            return "[ERROR] Attribut id_ship pour l'obj heros non renseigné";
+        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS:   return "[ERROR] Attribut id_planet_origin pour l'obj heros non renseigné";
+        case MISSING_ID_GRADE_ATTRIBUT_HEROS:           return "[ERROR] Attribut id_grade pour l'obj heros non renseigné";
+        case MAX_ITEM_OVERFLOW_HEROS:                   return "[ERROR] Nombre max d'item dans l'inventaire atteint";
+        case UNKNOWN_HEROS:                             return "[ERROR] Heros non trouvé";
+        case UNKNOWN_ITEM_HEROS:                        return "[ERROR] le Heros ne possède pas cet item";
+
+        case NOT_ENOUGHT_ATTRIBUT_EVIL:                 return "[ERROR] Il manque des attributs à l'obj evil";
+        case MISSING_ID_ATTRIBUT_EVIL:                  return "[ERROR] Attribut id pour l'obj evil non renseigné";
+        case MISSING_NAME_ATTRIBUT_EVIL:                return "[ERROR] Attribut name pour l'obj evil non renseigné";
+        case MISSING_AP_ATTRIBUT_EVIL:                  return "[ERROR] Attribut ap pour l'obj evil non renseigné";
+        case MISSING_HP_ATTRIBUT_EVIL:                  return "[ERROR] Attribut hp pour l'obj evil non renseigné";
+        case MISSING_DP_ATTRIBUT_EVIL:                  return "[ERROR] Attribut dp pour l'obj evil non renseigné";
+        case MISSING_ID_PLANET_ATTRIBUT_EVIL:           return "[ERROR] Attribut id_planet pour l'obj evil non renseigné";
+        case MISSING_ID_SHIP_ATTRIBUT_EVIL:             return "[ERROR] Attribut id_ship pour l'obj evil non renseigné";
+        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL:    return "[ERROR] Attribut id_planet_origin pour l'obj evil non renseigné";
+        case MISSING_ID_GRADE_ATTRIBUT_EVIL:            return "[ERROR] Attribut id_grade pour l'obj evil non renseigné";
+        case MAX_ITEM_OVERFLOW_EVIL:                    return "[ERROR] Nombre max d'item dans l'inventaire atteint";
+        case UNKNOWN_EVIL:                              return "[ERROR] Evil non trouvé";
+        case UNKNOWN_ITEM_EVIL:                         return "[ERROR] le Mechant ne possède pas cet item";
+
+        case NOT_ENOUGHT_ATTRIBUT_PNJ:                  return "[ERROR] Il manque des attributs à l'obj pnj";
+        case MISSING_ID_ATTRIBUT_PNJ:                   return "[ERROR] Attribut id pour l'obj pnj non renseigné";
+        case MISSING_NAME_ATTRIBUT_PNJ:                 return "[ERROR] Attribut name pour l'obj pnj non renseigné";
+        case MISSING_AP_ATTRIBUT_PNJ:                   return "[ERROR] Attribut ap pour l'obj pnj non renseigné";
+        case MISSING_HP_ATTRIBUT_PNJ:                   return "[ERROR] Attribut hp pour l'obj pnj non renseigné";
+        case MISSING_DP_ATTRIBUT_PNJ:                   return "[ERROR] Attribut dp pour l'obj pnj non renseigné";
+        case MISSING_ID_PLANET_ATTRIBUT_PNJ:            return "[ERROR] Attribut id_planet pour l'obj pnj non renseigné";
+        case MISSING_ID_SHIP_ATTRIBUT_PNJ:              return "[ERROR] Attribut id_ship pour l'obj pnj non renseigné";
+        case MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ:     return "[ERROR] Attribut id_planet_origin pour l'obj pnj non renseigné";
+        case MISSING_ID_GRADE_ATTRIBUT_PNJ:             return "[ERROR] Attribut id_grade pour l'obj pnj non renseigné";
+        case MAX_ITEM_OVERFLOW_PNJ:                     return "[ERROR] Nombre max d'item dans l'inventaire atteint";
+        case UNKNOWN_PNJ:                               return "[ERROR] Pnj non trouvé";
+        case UNKNOWN_ITEM_PNJ:                          return "[ERROR] le Pnj ne possède pas cet item";
+
+        case NOT_ENOUGHT_ATTRIBUT_ITEM:                 return "[ERROR] Il manque des attributs à l'obj item";
+        case MISSING_ID_ATTRIBUT_ITEM:                  return "[ERROR] Attribut id pour l'obj item non renseigné";
+        case MISSING_NAME_ATTRIBUT_ITEM:                return "[ERROR] Attribut name pour l'obj item non renseigné";
+        case MISSING_STAT_ATTRIBUT_ITEM:                return "[ERROR] Attribut stat pour l'obj item non renseigné";
+        case MISSING_EFFECT_ATTRIBUT_ITEM:              return "[ERROR] Attribut effect pour l'obj item non renseigné";
+        case MISSING_ID_OWNER_ATTRIBUT_ITEM:            return "[ERROR] Attribut id_owner pour l'obj item non renseigné";
+        case MISSING_TYPE_OWNER_ATTRIBUT_ITEM:          return "[ERROR] Attribut type_owner pour l'obj item non renseigné";
+        case UNKNOWN_ITEM:                              return "[ERROR] Item non trouvé";
+
+        case MISSING_ID_ATTRIBUT_GRADE:                 return "[ERROR] Attribut id pour l'obj grade non renseigné";
+        case MISSING_NAME_ATTRIBUT_GRADE:               return "[ERROR] Attribut name pour l'obj grade non renseigné";
+        case MISSING_LEVEL_ATTRIBUT_GRADE:              return "[ERROR] Attribut level pour l'obj grade non renseigné";
+        case UNKNOWN_GRADE:                             return "[ERROR] Grade non trouvé";
+
+        case MISSING_ENTITY_TYPE_ATTRIBUT:              return "[ERROR] Attribut entity_type non renseigné";
+        case MISSING_DEFENSE_ATTRIBUT:                  return "[ERROR] Attribut defenseur non renseigné";
+        case MISSING_ATTACK_ATTRIBUT:                   return "[ERROR] Attribut attaquant non renseigné";
+        case MISSING_ENTITY_ID_ATTRIBUT:                return "[ERROR] Attribut entity_id non renseigné";
+        case MISSING_ACTION_ATTRIBUT:                   return "[ERROR] Attribut action non renseigné";
+        case MISSING_ITEMS_ATTRIBUT:                    return "[ERROR] Attribut items non renseigné";
+        case MISSING_DEFENSE_TYPE_ATTRIBUT:             return "[ERROR] Attribut type du defenseur non renseigné";
+        case MISSING_DEFENSE_ID_ATTRIBUT:               return "[ERROR] Attribut id du defenseur non renseigné";
+        case MISSING_ATTACK_TYPE_ATTRIBUT:              return "[ERROR] Attribut type de l'attaquant non renseigné";
+        case MISSING_ATTACK_ID_ATTRIBUT:                return "[ERROR] Attribut id de l'attaquant non renseigné";
+        case UNKNOWN_DEFENSE_OR_ATTACK:                 return "[ERROR] L'attaquant et/ou le defenseur n'existe pas";
+        case UNKNOWN_ID_GRADE:                          return "[ERROR] Attribut id_grade n'existe pas";
+        case ENTITY_OUT_RANGE:                          return "[ERROR] Les Entités ne peuvent pas s'attaquer directement";
+        case UNKNOWN_ENTITY:                            return "[ERROR] type d'entité inconnue";
+        case UNKNOWN_ACTION:                            return "[ERROR] type d'action inconnue";
+        case ITEM_OCCUPY:                               return "[ERROR] L'objet n'est pas disponible";
+        case MISSING_INVENTORY:                         return "[ERROR] L'objet ne possède pas d'inventaire";
+        case MISSING_GRADE:                             return "[ERROR] Ce type d'entité ne possède pas de grade";
+        case UNKNOWN_ATTACK_ACTION:                     return "[ERROR] Ce type d'entité ne peut pas attaquer";
+        case UNAUTHORIZED:                              return "[ERROR] Bad TOKEN";
+        default:                                        return "[ERROR] Erreur inconnue";
     }
-    return str;
 }
 
-char  *List::returnJson(int code) {
-    char *retour;
-    cJSON *json = cJSON_CreateObject();
-    cJSON_AddStringToObject(json, "statut", code == 0 ? "Success" : "Error");
-    cJSON_AddNumberToObject(json, "code", code);
-    cJSON_AddStringToObject(json, "description", code == 0 ? "" : List::codeError(code).c_str());
-    retour = cJSON_Print(json);
-    cJSON_Delete(json);
-    return retour;
-}
+// ---------------------------------------------------------------------------
+// Utilitaires
+// ---------------------------------------------------------------------------
 
-int List::isCorrectToAttackPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "defenseur") == NULL) return MISSING_DEFENSE_ATTRIBUT;
-    if (cJSON_GetObjectItem(startrek, "attaquant") == NULL) return MISSING_ATTACK_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "type") == NULL) return MISSING_DEFENSE_TYPE_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "id") == NULL) return MISSING_DEFENSE_ID_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "type") == NULL) return MISSING_ATTACK_TYPE_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "id") == NULL) return MISSING_ATTACK_ID_ATTRIBUT;
-
-    return 0;
-}
-
-int List::isCorrectToExhangeItemPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-
-    for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
-        auto item = cJSON_GetArrayItem(startrek, i);
-        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
-        if (cJSON_GetObjectItem(item, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
-        if (cJSON_GetObjectItem(item, "action") == NULL) return MISSING_ACTION_ATTRIBUT;
-        if (cJSON_GetObjectItem(item, "items") == NULL) return MISSING_ITEMS_ATTRIBUT;
-    }
-    return 0;
-}
-
-int List::isCorrectToGetInfosPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
-    // if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return MISSING_LEVEL_ATTRIBUT_GRADE;
-    return 0;
-}
-
-int List::isCorrectToKillPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
-    if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
-    return 0;
-}
-
-int List::isCorrectToGetAddEntitiesPrototype(cJSON *root) {
-   auto startrek = cJSON_GetObjectItem(root, "startrek");
-   int code = 0;
-   for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
-        auto item = cJSON_GetArrayItem(startrek, i);
-        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
-        if ((code = isCorectToObjPrototype(item, (OBJETS)cJSON_GetObjectItem(item, "entity_type")->valueint, false)) != 0) return code;
-    }
-    return 0;
-}
-
-int List::isCorrectToEscapePrototype(cJSON *root) {
-   auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "defenseur") == NULL) return MISSING_DEFENSE_ATTRIBUT;
-    if (cJSON_GetObjectItem(startrek, "attaquant") == NULL) return MISSING_ATTACK_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "type") == NULL) return MISSING_DEFENSE_TYPE_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "defenseur"), "id") == NULL) return MISSING_DEFENSE_ID_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "type") == NULL) return MISSING_ATTACK_TYPE_ATTRIBUT;
-    if (cJSON_GetObjectItem(cJSON_GetObjectItem(startrek, "attaquant"), "id") == NULL) return MISSING_ATTACK_ID_ATTRIBUT;
-    return 0;
-}
-
-bool    List::checkJson(string json) {
+bool List::checkJson(string const &json)
+{
     int cpt = 0;
-    for (size_t i = 0; i < json.size(); i++) {
-        if (json.at(i) == '{') cpt++;
-        if (json.at(i) == '}') cpt--;
+    for (char c : json)
+    {
+        if (c == '{') cpt++;
+        if (c == '}') cpt--;
     }
-    return (cpt == 0 ? true : false);
-}
-
-int     List::isCorrectToGetHabitantsPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "id_planet") == NULL) return MISSING_ID_ATTRIBUT_PLANET;
-    return 0;
-}
-int     List::isCorrectToGetEquipagePrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "id_ship") == NULL) return MISSING_ID_ATTRIBUT_SPACESHIP;
-    return 0;
-}
-int     List::isCorrectToGetInventoryPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
-    if (cJSON_GetObjectItem(startrek, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
-    return 0;
-}
-
-int     List::isCorrectToGetHierarchyPrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    if (cJSON_GetObjectItem(startrek, "id_grade") == NULL) return UNKNOWN_ID_GRADE;
-    return 0;
-}
-
-int     List::isCorrectToPromotePrototype(cJSON *root) {
-    auto startrek = cJSON_GetObjectItem(root, "startrek");
-    for (int i = 0; i < cJSON_GetArraySize(startrek); i++) {
-        auto item = cJSON_GetArrayItem(startrek, i);
-        if (cJSON_GetObjectItem(item, "entity_type") == NULL) return MISSING_ENTITY_TYPE_ATTRIBUT;
-        if (cJSON_GetObjectItem(item, "entity_id") == NULL) return MISSING_ENTITY_ID_ATTRIBUT;
-        if (cJSON_GetObjectItem(item, "id_grade") == NULL) return UNKNOWN_ID_GRADE;
-    }
-    return 0;
+    return cpt == 0;
 }
 
 vector<string> List::split(string str, string delimiter)
@@ -547,21 +391,13 @@ vector<string> List::split(string str, string delimiter)
         int start = 0;
         do
         {
-            // Find the index of occurrence
             size_t idx = str.find(delimiter, start);
-            if (idx == string::npos)
-            {
-                break;
-            }
-
-            // If found add the substring till that
-            // occurrence in the vector
+            if (idx == string::npos) break;
             int length = idx - start;
             v.push_back(str.substr(start, length));
             start += (length + delimiter.size());
         } while (true);
         v.push_back(str.substr(start));
     }
-
     return v;
 }

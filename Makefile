@@ -1,4 +1,3 @@
-
 CXX				= clang++
 
 NAME			= star_trek
@@ -12,15 +11,18 @@ RM				= rm -f
 SRCS  			= $(shell find *.cpp )
 SRCS  			+= $(shell find lib_func/*.cpp)
 SRCS  			+= $(shell find object/*.cpp)
+SRCS  			+= $(shell find builder/*.cpp)
 
 HEADS 			= $(shell find include/*.hh)
 HEADS  			+= $(shell find lib_func/*.hh)
 HEADS  			+= $(shell find include/object/*.hh)
+HEADS  			+= $(shell find include/builder/*.hh)
 
 SRCSTEST  		= $(shell find *.cpp )
 SRCSTEST  		+= $(shell find lib_func/*.cpp)
 SRCSTEST  		+= $(shell find object/*.cpp)
 SRCSTEST		+= $(shell find test/*.cpp)
+SRCSTEST  		+= $(shell find builder/*.cpp)
 
 OBJS 			= $(SRCS:.cpp=.o)
 OBJSTEST		= $(SRCSTEST:.cpp=.o)
