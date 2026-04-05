@@ -1,3 +1,14 @@
+/*
+ * File: ToDoList.txt                                                          *
+ * Project: starTrek                                                           *
+ * Created Date: Mo Nov 2024, 11:51:40 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Sunday, April 5th 2026, 12:29:30 pm                          *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
+*/
+
 X Ajout Evil 
 X Ajout Evil à la gestion des json
 X Modification Personnage en Heros
@@ -36,6 +47,7 @@ X Uniformiser les headers
         + gestion token (50%)
     * routes (90%)
         X kill
-    * CJSON --> boost (70%)
+    X CJSON --> boost (100%)
         + message d'erreur
         + test
+- Eclatement de Controller

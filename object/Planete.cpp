@@ -1,12 +1,12 @@
-/**
-* File: Planete.cpp
-* Project: objects
-* File Created: Tuesday, 18th July 2023 3:29:05 pm
-* Author: LALIN Romain 
-* -----
-* Last Modified: Wednesday, 26th July 2023 9:54:06 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: Planete.cpp                                                           *
+ * Project: object                                                             *
+ * Created Date: Tu May 2025, 11:12:16 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Sunday, April 5th 2026, 12:11:35 pm                          *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #include "../include/object/Planete.hh"
@@ -81,7 +81,7 @@ void Planete::cleanHabitants(){
     long cpt = 0;
     for( auto &h : this->_habitants) {
         auto l = h.lock();
-        if(!l) this->_habitants.erase(this->_habitants.begin()+cpt);
+        if(l) this->_habitants.erase(this->_habitants.begin()+cpt);
         cpt++;
     }
 }

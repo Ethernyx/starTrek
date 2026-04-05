@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 12:01:00 pm                          *
+ * Last Modified: Sunday, April 5th 2026, 12:27:33 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -664,7 +664,7 @@ string Controller::init(string bdd) {
             if (elem.second->getIdGrade() != 0) {
             for (auto g : this->_grades)
                 {
-                    if (elem.second->getIdShip() == g.first)
+                    if (elem.second->getIdGrade() == g.first)
                     {
                         g.second->addMembre(elem.second); // si id du player = id ship je add
                         break;
@@ -1130,34 +1130,30 @@ string  Controller::j_add_entities(Context &ctx) {
     
     for (size_t i = 0; i < startrek.size(); i++) {
         auto array = startrek.at(i).as_object();
+        string key = to_string(array.at("entity_type").as_int64());
+        if (!res_array.contains(key)) res_array[key].emplace_array();
         switch (array.at("entity_type").as_int64())
         {
             case HEROS:
             case PNJ:
             case EVIL:
-
                 id = this->addQuidam(array);
-                if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_quidams[(OBJETS)array.at("entity_type").as_int64()][id]->generate(id));
                 break;
             case PLANETE:
                 id = this->addPlanet(array);
-                if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_planetes[id]->generate(id));
                 break;
             case MISSION:
-                id = this->addMission(array);
-                if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
+                id = this->addMission(array);;
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_missions[id]->generate(id));
                 break;
             case SPACESHIP:
                 id = this->addSpaceShip(array);
-                if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_flotte[id]->generate(id));
                 break;
             case ITEM:
                 id = this->addItem(array);
-                if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 switch ((OBJETS)array.at("type_owner").as_int64())
                 {
                 case HEROS:
@@ -1177,7 +1173,6 @@ string  Controller::j_add_entities(Context &ctx) {
                 break;
             case GRADE:
                 id = this->addGrade(array);
-                    if (res_array.at(to_string(array.at("entity_type").as_int64())).as_object() == NULL) res_array.at(to_string(array.at("entity_type").as_int64())).emplace_array();
                 res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_grades[id]->generate(id));
                 break;
             default:
@@ -1323,7 +1318,6 @@ string  Controller::j_getEquipage(Context &ctx) {
     return boost::json::serialize(res);
 }
 string  Controller::j_getInventory(Context &ctx) {
-    boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
     boost::json::array obj;
     boost::json::object res;
     OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
