@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 12:27:33 pm                          *
+ * Last Modified: Sunday, April 5th 2026, 4:01:04 pm                           *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -27,58 +27,6 @@ Controller::~Controller()
 #ifdef DEBUG
     cout << "Le contrôler à été détruit, que va t'on devenir" << endl;
 #endif
-}
-
-map<int, shared_ptr<Spaceship>> &Controller::getFlotte()
-{
-    return this->_flotte;
-}
-
-map<int, shared_ptr<AQuidam>> &Controller::getPersos()
-{
-    return this->_quidams[HEROS];
-}
-map<int, shared_ptr<AQuidam>> &Controller::getPnjs()
-{   
-    return this->_quidams[PNJ];
-}
-
-map<int, shared_ptr<AQuidam>> &Controller::getEvils()
-{   
-    return this->_quidams[EVIL];
-}
-
-map<int, shared_ptr<Planete>> &Controller::getPlanetes()
-{
-    return this->_planetes;
-}
-
-map<int, shared_ptr<Mission>> &Controller::getMissions()
-{
-    return this->_missions;
-}
-
-map<int, unique_ptr<Item>> &Controller::getItems()
-{
-    return this->_items;
-}
-
-map<int, shared_ptr<Grade>> &Controller::getGrades()
-{
-    return this->_grades;
-}
-
-vector<string> Controller::getItems(bool isAffected)
-{
-    vector<string> items;
-
-    if (!isAffected) for (auto c : this->_tableDeCorrespondance[NONE]) items.push_back(this->_items[c.first]->getName());
-    if (isAffected) {
-        for (auto c : this->_tableDeCorrespondance[HEROS]) items.push_back(this->_quidams[HEROS][c.second]->getInventory()[c.first]->getName());
-        for (auto c : this->_tableDeCorrespondance[PNJ]) items.push_back(this->_quidams[PNJ][c.second]->getInventory()[c.first]->getName());
-        for (auto c : this->_tableDeCorrespondance[SPACESHIP]) items.push_back(this->_flotte[c.second]->getInventory()[c.first]->getName());
-    }
-    return items;
 }
 
 Server *Controller::getServeur() {
@@ -110,178 +58,6 @@ vector<string> split(string str, string delimiter)
     }
 
     return v;
-}
-
-// suppression de la planete par son nom
-// cette methode fait appel a la methode ci-dessous qui supprime une planete par son ID
-bool Controller::deletePlanete(string const name)
-{
-    for (auto pl : this->_planetes)
-    {
-        if (pl.second->getName() == name)
-        {
-            this->deletePlanete(pl.first);
-            return true;
-        }
-    }
-    return false;
-}
-// surcharge de la methode de suppression
-bool Controller::deletePlanete(int const id_planet)
-{
-    auto it = this->_planetes.find(id_planet);
-    if (it == this->_planetes.end())
-        return false;
-
-    for (auto p : this->_quidams[HEROS])
-    {
-        if (it->first == p.second->getIdPlanetOrigin())
-        {
-            p.second->setIdPlanetOrigin(0);
-        }
-        if (it->first == p.second->getIdPlanet())
-        {
-            deletePerso(p.first);
-        }
-    }
-    this->_planetes.erase(it);
-    return true;
-}
-
-bool Controller::deleteMission(string const name)
-{
-    for (auto m : this->_missions)
-    {
-        if (m.second->getName() == name)
-        {
-            this->deleteMission(m.first);
-            return true;
-        }
-    }
-    return false;
-}
-bool Controller::deleteMission(int const id)
-{
-    auto it = this->_missions.find(id);
-    if (it == this->_missions.end())
-        return false;
-    this->_missions.erase(it);
-    return true;
-}
-
-bool Controller::deleteSpaceship(string const name)
-{
-    for (auto s : this->_flotte)
-    {
-        if (s.second->getName() == name)
-        {
-            this->deleteSpaceship(s.first);
-            return true;
-        }
-    }
-    return false;
-}
-// surcharge de la methode de suppression
-bool Controller::deleteSpaceship(const int id_ship)
-{
-    auto it = this->_flotte.find(id_ship);
-    if (it == this->_flotte.end())
-        return false;
-    for (auto p : this->_quidams[HEROS])
-    {
-        if (it->first == p.second->getIdShip())
-        {
-            deletePerso(p.first);
-        }
-    }
-    for (auto i =  it->second->getInventory().begin(); i !=  it->second->getInventory().end(); i++) this->removeItem(i->first, it->second->getName(), SPACESHIP);
-    this->_flotte.erase(it);
-    return true;
-}
-
-bool Controller::deletePerso(string const name)
-{
-    for (auto p : this->_quidams[HEROS])
-    {
-        if (p.second->getName() == name)
-        {
-            this->deletePerso(p.first);
-            return true;
-        }
-    }
-    return false;
-}
-// surcharge de la methode de suppression
-bool Controller::deletePerso(const int id)
-{
-    shared_ptr<AQuidam> found = nullptr;
-    OBJETS foundType = NONE;
-
-    for (auto type : QUIDAMS) {
-        auto it = this->_quidams[type].find(id);
-        if (it != this->_quidams[type].end()) {
-            found = it->second;
-            foundType = type;
-            break;
-        }
-    }
-    if (!found) return false;
-
-    // ── gestion des inventaires ────────────────
-    vector<int> itemIds;
-    for (auto &i : found->getInventory()) itemIds.push_back(i.first);
-    for (auto itemId : itemIds) this->removeItem(itemId, found->getName(), foundType);
-
-    // ── suppression du quidam ────────────────
-    this->_quidams[foundType].erase(id);
-
-    // ── gestion des effets de bords ────────────────
-    for (auto &p : this->_planetes) p.second->cleanHabitants();
-    for (auto &f : this->_flotte)   f.second->cleanEquipage();
-    for (auto &g : this->_grades)   g.second->cleanMembres();
-    return true;
-}
-
-int Controller::addQuidam(boost::json::object &item)
-{
-    auto quidam = AQuidamBuilder::fromJson(item);
-    int id = this->getMaxId(quidam->getType()) + 1;
-    
-    if (quidam->getIdShip() != 0 && !this->_flotte[quidam->getIdShip()])        throw runtime_error("ID SHIP inconnu");
-    if (quidam->getIdPlanet() != 0 && !this->_planetes[quidam->getIdPlanet()])  throw runtime_error("ID PLANET inconnu");
-    if (quidam->getIdGrade() != 0 && !this->_grades[quidam->getIdGrade()])      throw runtime_error("ID GRADE inconnu");
-
-    this->_quidams[quidam->getType()][id] = quidam;
-    if (quidam->getIdShip() != 0)   this->_flotte[quidam->getIdShip()]->addEquipage(quidam);
-    if (quidam->getIdPlanet())      this->_planetes[quidam->getIdPlanet()]->setHabitant(quidam);
-    if (quidam->getIdGrade() != 0)  this->_grades[quidam->getIdGrade()]->addMembre(quidam);  
-    return id;
-}
-int Controller::addPnj(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade) {
-    int id = this->getMaxId(PNJ) + 1;
-    this->_quidams[PNJ][id] = make_shared<Pnj>(name, puissance, sante, dp, id_planete_origine, id_ship, id_planet, id_grade);
-    if (id_ship != 0 && this->_flotte[id_ship]) this->_flotte[id_ship]->addEquipage(this->_quidams[PNJ][id]);
-    if (id_planet != 0 && this->_planetes[id_planet]) this->_planetes[id_planet]->setHabitant(this->_quidams[PNJ][id]);
-    return id;
-}
-
-int Controller::addPlanet(boost::json::object &item)
-{
-    int id = this->getMaxId(PLANETE) + 1;
-    this->_planetes[id] = PlaneteBuilder::fromJson(item);
-    return id;
-}
-int Controller::addSpaceShip(boost::json::object &item)
-{
-    int id = this->getMaxId(SPACESHIP) + 1;
-    this->_flotte[id] = SpaceshipBuilder::fromJson(item);
-    return id;
-}
-int Controller::addMission(boost::json::object &item)
-{
-    int id = this->getMaxId(MISSION) + 1;
-    this->_missions[id] = MissionBuilder::fromJson(item);
-    return id;
 }
 
 int Controller::attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJETS type_victime,const int id_victime)
@@ -319,58 +95,6 @@ int Controller::attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJ
     return 0;
 }
 
-shared_ptr<AQuidam> Controller::getPerso(const string name)
-{
-    for (auto p : this->_quidams[HEROS])
-    {
-        if (p.second->getName() == name)
-        {
-            return p.second;
-        }
-    }
-    for (auto p : this->_quidams[PNJ])
-    {
-        if (p.second->getName() == name)
-        {
-            return p.second;
-        }
-    }
-    return nullptr;
-}
-shared_ptr<Spaceship> Controller::getSpaceship(const string name)
-{
-    for (auto p : this->_flotte)
-    {
-        if (p.second->getName() == name)
-        {
-            return p.second;
-        }
-    }
-    return nullptr;
-}
-shared_ptr<Mission> Controller::getMission(const string name)
-{
-    for (auto p : this->_missions)
-    {
-        if (p.second->getName() == name)
-        {
-            return p.second;
-        }
-    }
-    return nullptr;
-}
-shared_ptr<Planete> Controller::getPlanete(const string name)
-{
-    for (auto p : this->_planetes)
-    {
-        if (p.second->getName() == name)
-        {
-            return p.second;
-        }
-    }
-    return nullptr;
-}
-
 void    Controller::takeItem(const int item, const int owner, OBJETS type) {
     switch (type)
     {
@@ -395,59 +119,6 @@ void    Controller::takeItem(const int item, const int owner, OBJETS type) {
     this->_tableDeCorrespondance[type][item] = owner;
 }
 
-void    Controller::removeItem(int idItem, string name, OBJETS type) {
-    if (type == SPACESHIP) this->_items[idItem].swap(this->getSpaceship(name)->getInventory()[idItem]);
-    else this->_items[idItem].swap(this->getPerso(name)->getInventory()[idItem]);
-    /* je set le owner */
-    this->_items[idItem]->setOwner(0, NONE);
-    /* j'erase l'ancienne corespondance */
-    this->_tableDeCorrespondance[type].erase(this->_tableDeCorrespondance[type].find(idItem));
-    /* j'ajoute la nouvelle */
-    this->_tableDeCorrespondance[NONE][idItem] = 0;
-}
-
-int Controller::addItem(boost::json::object &item) {
-    int id = this->getMaxId(ITEM) + 1;
-    this->_items[id] = ItemBuilder::fromJson(item);
-    
-    this->_tableDeCorrespondance[this->_items[id]->getTypeOwner()][id] = this->_items[id]->getIdOwner();
-    if (this->_items[id]->getIdOwner() != 0) {
-        switch (this->_items[id]->getTypeOwner())
-        {
-        case HEROS:
-        case EVIL:
-        case PNJ:
-            this->_quidams[this->_items[id]->getTypeOwner()][this->_items[id]->getIdOwner()]->addItem(this->_items[id], id);
-            break;
-        case SPACESHIP:
-            this->_flotte[this->_items[id]->getIdOwner()]->addItem(this->_items[id], id);
-            break;
-        default:
-            break;
-        }
-    }
-    return id;
-}
-
-void    Controller::deleteItem(int id) {
-for (auto type : this->_tableDeCorrespondance) for (auto it : type.second) if (it.first == id) {
-        switch (type.first)
-        {
-            case HEROS:
-            case PNJ:
-            case EVIL:
-                this->_quidams[(OBJETS)type.first][it.second]->getInventory().erase(this->_quidams[(OBJETS)type.first][it.second]->getInventory().find(it.first));
-                break;
-            case SPACESHIP:
-                this->_flotte[it.second]->getInventory().erase(this->_flotte[it.second]->getInventory().find(it.first));
-            case NONE:
-                this->_items.erase(this->_items.find(id));
-            default:
-                break;
-        }
-    }
-}
-
 void    Controller::promote(int id_grade, int id_entity, OBJETS entity_type) {
     this->_quidams[entity_type][id_entity]->setIdGrade(id_grade);
     this->_grades[id_grade]->addMembre(this->_quidams[HEROS][id_entity]);
@@ -464,24 +135,6 @@ void    Controller::removeGrade(int id_entity, OBJETS entity_type) {
     default:
         break;
     }
-}
-
-int     Controller::addGrade(boost::json::object &item) {
-    int id = this->getMaxId(GRADE) + 1;
-    this->_grades[id] = GradeBuilder::fromJson(item);
-    return id;
-}
-
-bool    Controller::deleteGrade(const int id) {
-    auto it = this->_grades.find(id);
-
-    if (it == this->_grades.end()) return false;
-    
-    for (auto i = this->_quidams[HEROS].begin(); i != this->_quidams[HEROS].end();i++) if (i->second->getIdGrade() == it->first) i->second->setIdGrade(0);
-    for (auto i = this->_quidams[PNJ].begin(); i != this->_quidams[PNJ].end();i++) if (i->second->getIdGrade() == it->first) i->second->setIdGrade(0);
-
-    this->_grades.erase(it);
-    return true;
 }
 
 void    Controller::saveJSON() {
@@ -1187,37 +840,6 @@ string  Controller::j_add_entities(Context &ctx) {
 
     return boost::json::serialize(res);
 }   
-
-int Controller::getMaxId(OBJETS type) {
-    int id = 0;
-    switch (type)
-    {
-    case PLANETE:
-        for (auto it = this->_planetes.begin(); it != this->_planetes.end(); it++) if (id < it->first) id = it->first;
-        break;
-    case SPACESHIP:
-        for (auto it = this->_flotte.begin(); it != this->_flotte.end(); it++) if (id < it->first) id = it->first;
-        break;
-    case HEROS:
-    case PNJ:
-    case EVIL:
-        for (auto it = this->_quidams[type].begin(); it != this->_quidams[type].end(); it++) if (id < it->first) id = it->first;
-        break;
-    case MISSION:
-        for (auto it = this->_missions.begin(); it != this->_missions.end(); it++) if (id < it->first) id = it->first;
-        break;
-    case ITEM:
-        for (auto i = this->_tableDeCorrespondance.begin(); i != this->_tableDeCorrespondance.end(); i++) for (auto it = i->second.begin(); it != i->second.end(); it++) if (id < it->first) id = it->first;
-        break;
-    case GRADE:
-        for (auto it = this->_grades.begin(); it != this->_grades.end(); it++) if (id < it->first) id = it->first;
-        break;
-    default:
-        break;
-    }
-    
-    return id;
-}
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
 /**
