@@ -1,12 +1,12 @@
-/**
-* File: define.hh
-* Project: star_strek
-* File Created: Monday, 10th July 2023 11:18:59 am
-* Author: LALIN Romain 
-* -----
-* Last Modified: Thursday, 27th July 2023 9:18:08 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: define.hh                                                             *
+ * Project: include                                                            *
+ * Created Date: Tu May 2025, 11:12:03 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Sunday, April 5th 2026, 4:45:58 pm                           *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #ifndef DEFINE_HH_
@@ -83,7 +83,8 @@ typedef  enum {
 } EFFECT;
 
 typedef enum {
-    UNKWOWN_ERROR = 1,
+    OK = 0,
+    UNKWOWN_ERROR,
     UNKNOWN_PLANET,
     UNKNOWN_SPACESHIP,
     UNKNOWN_HEROS,

@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 4:01:04 pm                           *
+ * Last Modified: Tuesday, April 7th 2026, 11:25:25 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -58,83 +58,6 @@ vector<string> split(string str, string delimiter)
     }
 
     return v;
-}
-
-int Controller::attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJETS type_victime,const int id_victime)
-{
-    switch (type_attaquant)
-    {
-        case HEROS:
-        case PNJ:
-        {
-            auto a = type_attaquant == HEROS ? this->_quidams[HEROS][id_attaquant] : this->_quidams[PNJ][id_attaquant];
-            auto v = type_victime == HEROS ? this->_quidams[HEROS][id_victime] : this->_quidams[PNJ][id_victime];
-
-            if (a == nullptr || v == nullptr)
-                return -1;
-            v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
-            if (v->getHp() <= 0)
-                return 1;
-        }
-            break;
-        case SPACESHIP:
-        {
-            auto a = this->_flotte[id_attaquant];
-            auto v = this->_flotte[id_victime];
-
-            if (a == nullptr || v == nullptr)
-                return -1;
-            v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
-            if (v->getHp() <= 0)
-                return 1;
-        }
-            break;
-        default:
-            break;
-    }
-    return 0;
-}
-
-void    Controller::takeItem(const int item, const int owner, OBJETS type) {
-    switch (type)
-    {
-        case HEROS:
-            if (this->_items[item]) this->_quidams[HEROS][owner]->addItem(this->_items[item], item);
-            this->_quidams[HEROS][owner]->getInventory()[item]->setOwner(owner, type);
-            break;
-        case PNJ:
-            this->_quidams[PNJ][owner]->addItem(this->_items[item], item);
-            this->_quidams[PNJ][owner]->getInventory()[item]->setOwner(owner, type);
-            break;
-        case SPACESHIP:
-            this->_flotte[owner]->addItem(this->_items[item], item);
-            this->_flotte[owner]->getInventory()[item]->setOwner(owner, type);
-            break;
-        default:
-            break;
-    }
-    /* j'erase l'ancienne corespondance */
-    this->_tableDeCorrespondance[NONE].erase(this->_tableDeCorrespondance[NONE].find(item));
-    /* j'ajoute la nouvelle */
-    this->_tableDeCorrespondance[type][item] = owner;
-}
-
-void    Controller::promote(int id_grade, int id_entity, OBJETS entity_type) {
-    this->_quidams[entity_type][id_entity]->setIdGrade(id_grade);
-    this->_grades[id_grade]->addMembre(this->_quidams[HEROS][id_entity]);
-}
-
-void    Controller::removeGrade(int id_entity, OBJETS entity_type) {
-    switch (entity_type)
-    {
-    case HEROS:
-        this->_grades[this->_quidams[HEROS][id_entity]->getIdGrade()]->deleteMembre(this->_quidams[HEROS][id_entity]->getName());
-        break;
-    case PNJ:
-        this->_grades[this->_quidams[PNJ][id_entity]->getIdGrade()]->deleteMembre(this->_quidams[PNJ][id_entity]->getName());
-    default:
-        break;
-    }
 }
 
 void    Controller::saveJSON() {
@@ -617,6 +540,11 @@ string  Controller::j_kill(Context &ctx) {
     auto entity_type = (OBJETS)startrek.at("entity_type").as_int64();
     auto entity_id = startrek.at("entity_id").as_int64();
 
+    auto result = this->fillResultRequestKillEntities(entity_type, entity_id);
+    string responce = this->buildResponse(result);
+    this->killEntities(result);
+    return responce;
+
     switch (entity_type) {
         case PLANETE:
             if (this->_planetes.find(entity_id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
@@ -699,7 +627,7 @@ string  Controller::j_kill(Context &ctx) {
                 this->deleteItem(entity_id);
                 code = 0;
             }
-            if (code != 0) List::returnJson(code);
+            if (code != 0) return List::returnJson(code);
             break;        
         default:
             return List::returnJson(UNKNOWN_ENTITY);
@@ -1006,7 +934,6 @@ string  Controller::j_promote(Context &ctx) {
     boost::json::array startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
     boost::json::array pnjs, heros, evils;
     boost::json::object res;
-    char *print;
     int entity_id, id_grade;
     OBJETS entity_type;
 
@@ -1118,4 +1045,44 @@ string  Controller::j_getToken(Context &ctx) {
     } 
     
     return boost::json::serialize(res);
+}
+
+string  Controller::buildResponse(ResultRequest result) {
+    if (result._code != OK) return List::returnJson(result._code);
+    boost::json::object res;
+
+    res["statut"] = "Success";
+    res["code"] = OK;
+    res["return"].emplace_object();
+    if(!result._quidams.empty()) res["return"].as_object()["quidams"].emplace_object();
+    for (auto q = result._quidams.begin(); q != result._quidams.end(); q++) {
+        string typeStr = q->first == HEROS ? "heros" : (q->first == PNJ ? "pnjs" : "evils");
+        if (!q->second.empty()) res["return"].as_object()["quidams"].as_object()[typeStr].emplace_array();
+        for (auto it = q->second.begin(); it != q->second.end(); it++) {
+            res["return"].as_object()["quidams"].as_object()[typeStr].as_array().push_back(it->second->generate(it->first));
+        }
+        
+    }
+    if(!result._items.empty()) res["return"].as_object()["items"].emplace_array();
+    for (auto it = result._items.begin(); it != result._items.end(); it++) {
+        res["return"].as_object()["items"].as_array().push_back(it->second->generate(it->first));
+    }
+    if(!result._missions.empty()) res["return"].as_object()["missions"].emplace_array();
+    for (auto it = result._missions.begin(); it != result._missions.end(); it++) {
+        res["return"].as_object()["missions"].as_array().push_back(it->second->generate(it->first));
+    }
+    if(!result._planetes.empty()) res["return"].as_object()["planetes"].emplace_array();
+    for (auto it = result._planetes.begin(); it != result._planetes.end(); it++) {
+        res["return"].as_object()["planetes"].as_array().push_back(it->second->generate(it->first));
+    }
+    if(!result._spaceships.empty()) res["return"].as_object()["spaceships"].emplace_array();
+    for (auto it = result._spaceships.begin(); it != result._spaceships.end(); it++) {
+        res["return"].as_object()["spaceships"].as_array().push_back(it->second->generate(it->first));
+    }
+    if(!result._grades.empty()) res["return"].as_object()["grades"].emplace_array();
+    for (auto it = result._grades.begin(); it != result._grades.end(); it++) {
+        res["return"].as_object()["grades"].as_array().push_back(it->second->generate(it->first));
+    }
+    return boost::json::serialize(res);
+
 }

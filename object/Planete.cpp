@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:16 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 12:11:35 pm                          *
+ * Last Modified: Sunday, April 5th 2026, 4:18:48 pm                           *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -42,7 +42,7 @@ bool Planete::deleteHabitant(const string name)
     long cpt = 0;
     for( auto &h : this->_habitants) {
         auto l = h.lock();
-        if(!l && name == l->getName()) {
+        if(l && name == l->getName()) {
             l->setIdPlanet(0);
             this->_habitants.erase(this->_habitants.begin()+cpt);
             return true;
@@ -81,7 +81,7 @@ void Planete::cleanHabitants(){
     long cpt = 0;
     for( auto &h : this->_habitants) {
         auto l = h.lock();
-        if(l) this->_habitants.erase(this->_habitants.begin()+cpt);
+        if(!l) this->_habitants.erase(this->_habitants.begin()+cpt);
         cpt++;
     }
 }

@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:41:26 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 3:53:10 pm                           *
+ * Last Modified: Tuesday, April 7th 2026, 11:23:57 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -13,11 +13,11 @@
 #define LIFE_DOOR_HH_
 
 #include    "World.hh"
-#include    "builder/AQuidamBuilder.hh"
 #include    "builder/GradeBuilder.hh"
 #include    "builder/ItemBuilder.hh"
 #include    "builder/MissionBuilder.hh"
 #include    "builder/PlaneteBuilder.hh"
+#include    "builder/AQuidamBuilder.hh"
 #include    "builder/SpaceshipBuilder.hh"
 
 class LifeDoor : public World

@@ -4,48 +4,12 @@
  * Created Date: Su Apr 2026, 3:45:50 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 3:53:50 pm                           *
+ * Last Modified: Tuesday, April 7th 2026, 11:25:41 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
 
 #include    "include/LifeDoor.hh"
-
-// suppression de la planete par son nom
-// cette methode fait appel a la methode ci-dessous qui supprime une planete par son ID
-bool LifeDoor::deletePlanete(string const name)
-{
-    for (auto pl : this->_planetes)
-    {
-        if (pl.second->getName() == name)
-        {
-            this->deletePlanete(pl.first);
-            return true;
-        }
-    }
-    return false;
-}
-// surcharge de la methode de suppression
-bool LifeDoor::deletePlanete(int const id_planet)
-{
-    auto it = this->_planetes.find(id_planet);
-    if (it == this->_planetes.end())
-        return false;
-
-    for (auto p : this->_quidams[HEROS])
-    {
-        if (it->first == p.second->getIdPlanetOrigin())
-        {
-            p.second->setIdPlanetOrigin(0);
-        }
-        if (it->first == p.second->getIdPlanet())
-        {
-            deletePerso(p.first);
-        }
-    }
-    this->_planetes.erase(it);
-    return true;
-}
 
 bool LifeDoor::deleteMission(string const name)
 {
