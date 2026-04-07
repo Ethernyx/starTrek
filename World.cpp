@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:38:27 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 3:55:21 pm                           *
+ * Last Modified: Tuesday, April 7th 2026, 5:00:18 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -142,6 +142,65 @@ int World::getMaxId(OBJETS type) {
     default:
         break;
     }
-    
     return id;
+}
+
+int World::getIdQuidam(shared_ptr<AQuidam> quidam) {
+    for (auto p : this->_quidams[quidam->getType()]) if (p.second == quidam) return p.first;
+    return 0;
+}
+
+bool    World::isQuidamExist(ResultRequest *result, OBJETS type, int id) {
+    if (this->_quidams.find(type) == this->_quidams.end()) { result->_code = UNKNOWN_ENTITY ; return false; }
+    if (this->_quidams[type].find(id) == this->_quidams[type].end()) { result->_code = (type == HEROS ? UNKNOWN_HEROS : (type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)); return false; }
+    return true;
+}
+
+bool    World::isGradeExist(ResultRequest *result, int id) {
+    if (this->_grades.find(id) == this->_grades.end()) { result->_code = UNKNOWN_GRADE; return false; }
+    return true;
+}
+    
+bool    World::isSpaceshipExist(ResultRequest *result, int id) {
+    if (this->_flotte.find(id) == this->_flotte.end()) { result->_code = UNKNOWN_SPACESHIP; return false; }
+    return true;
+}
+    
+bool    World::isPlaneteExist(ResultRequest *result, int id) {
+    if (this->_planetes.find(id) == this->_planetes.end()) { result->_code = UNKNOWN_PLANET; return false; }
+    return true;
+}
+    
+bool    World::isMissionExist(ResultRequest *result, int id) {
+    if (this->_missions.find(id) == this->_missions.end()) { result->_code = UNKNOWN_MISSION; return false; }
+    return true;
+}
+    
+bool    World::isItemExist(ResultRequest *result, int id) {
+    for (auto type : this->_tableDeCorrespondance) {
+        for (auto item : type.second) {
+            switch (type.first)
+            {
+            case HEROS:
+            case PNJ:
+            case EVIL:
+                if (!this->isQuidamExist(result, (OBJETS)type.first, item.second)) return false;
+                break;
+            case SPACESHIP:
+                if (!this->isSpaceshipExist(result, item.second)) return false;
+                break;
+                
+            default:
+                break;
+            }
+            if (!this->isItemExist(result, (OBJETS)type.first, item.first)) return false;
+        }
+    }
+    return true;
+}
+
+bool    World::isItemExist(ResultRequest *result, OBJETS type, int id) {
+    if (this->_tableDeCorrespondance.find(type) == this->_tableDeCorrespondance.end()) { result->_code = UNKNOWN_ENTITY; return false; }
+    if (this->_tableDeCorrespondance[type].find(id) == this->_tableDeCorrespondance[type].end()) { result->_code = UNKNOWN_ITEM; return false; }
+    return true;
 }

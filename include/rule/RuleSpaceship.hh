@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:00:46 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:23:50 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 2:23:57 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,7 +20,10 @@ class RuleSpaceship : public virtual RuleQuidam
 private:
 public:
     bool                                        kill(map<int, shared_ptr<Spaceship>> &spaceships);
-    ResultRequest                               &fillResultRequestKill(int id);
+    ResultRequest                               fillResultRequestKill(int id);
+    ResultRequest                               fillResultGetEquipage(int id);
+    ResultRequest                               fillResultRequestGetInventory(int id);
+    ResultRequest                               fillResultRequestGetInfos(int id);
     void                                        addToResultRequest(ResultRequest *result, int id);
 };
 

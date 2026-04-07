@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:16 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Saturday, April 4th 2026, 4:13:37 pm                         *
+ * Last Modified: Tuesday, April 7th 2026, 4:10:13 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -57,6 +57,20 @@ bool                        Grade::deleteMembre(const string name) {
     for( auto &h : this->_membre) {
         auto l = h.lock();
         if(l && name == l->getName()) {
+            l->setIdGrade(0);
+            this->_membre.erase(this->_membre.begin()+cpt);
+            return true;
+        }
+        cpt++;
+    }
+    return false;
+}
+
+bool                        Grade::deleteMembre(shared_ptr<AQuidam> &quidam) {
+    long cpt = 0;
+    for( auto &h : this->_membre) {
+        auto l = h.lock();
+        if(l && quidam == l) {
             l->setIdGrade(0);
             this->_membre.erase(this->_membre.begin()+cpt);
             return true;

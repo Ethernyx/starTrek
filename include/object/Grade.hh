@@ -1,12 +1,12 @@
-/**
-* File: Grade.hh
-* Project: objects
-* File Created: Friday, 23rd June 2023 6:54:56 pm
-* Author: LALIN Romain 
-* -----
-* Last Modified: Wednesday, 26th July 2023 10:40:28 pm
-* Modified By: LALIN Romain
-* -----
+/*
+ * File: Grade.hh                                                              *
+ * Project: object                                                             *
+ * Created Date: Tu May 2025, 11:12:03 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Tuesday, April 7th 2026, 4:10:08 pm                          *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #ifndef                         GRADE_HH_
@@ -35,6 +35,7 @@ public:
     vector<weak_ptr<AQuidam>>   &getMembre();
     void                        addMembre(shared_ptr<AQuidam> &);
     bool                        deleteMembre(const string);
+    bool                        deleteMembre(shared_ptr<AQuidam> &);
     boost::json::object         generate(int id);
     void                        cleanMembres();
 };

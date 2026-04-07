@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:29:42 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:19:08 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 2:28:26 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -102,7 +102,7 @@ bool    Rule::killEntities(ResultRequest &entities) {
     return isOk;
 }
 
-ResultRequest  &Rule::fillResultRequestKillEntities(OBJETS entity_type, int entity_id) {
+ResultRequest  Rule::fillResultRequestKillEntities(OBJETS entity_type, int entity_id) {
     ResultRequest   result;
     switch (entity_type)
     {
@@ -132,5 +132,64 @@ ResultRequest  &Rule::fillResultRequestKillEntities(OBJETS entity_type, int enti
         break;
     }
     result._code = UNKNOWN_ENTITY;
+    return result;
+}
+
+ResultRequest   Rule::fillResultRequestGetInventory(OBJETS entity_type, int entity_id) {
+    ResultRequest   result;
+
+    switch (entity_type)
+    {
+    case SPACESHIP:
+        result = RuleSpaceship::fillResultRequestGetInventory(entity_id);
+        break;
+    case HEROS:
+    case PNJ:
+    case EVIL:
+        result = RuleQuidam::fillResultRequestGetInventory(entity_type, entity_id);
+        break;
+    case MISSION:
+    case ITEM:
+    case PLANETE:
+    case GRADE:
+        result._code = MISSING_INVENTORY;
+        break;
+    default:
+        result._code = UNKNOWN_ENTITY;
+        break;
+    }
+    return result;
+}
+
+ResultRequest   Rule::fillResultRequestGetInfos(OBJETS entity_type, int entity_id) {
+    ResultRequest   result;
+
+    switch (entity_type)
+    {
+    case PLANETE:
+        result = RulePlanete::fillResultRequestGetInfos(entity_id);
+        break;
+    case LIVING:
+    case HEROS:
+    case EVIL:
+    case PNJ:
+        result = RuleQuidam::fillResultRequestGetInfos(entity_type, entity_id);
+        break;
+    case MISSION:
+        result = RuleMission::fillResultRequestGetInfos(entity_id);
+        break;
+    case SPACESHIP:
+        result = RuleSpaceship::fillResultRequestGetInfos(entity_id);
+        break;
+    case ITEM:
+        result = RuleItem::fillResultRequestGetInfos(entity_id);
+        break;
+    case GRADE:
+        result = RuleGrade::fillResultRequestGetInfos(entity_id);
+        break;
+    default:
+        result._code = UNKNOWN_ENTITY;
+        break;
+    }
     return result;
 }

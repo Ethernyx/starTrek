@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 10:53:48 pm                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:03:43 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 5:20:24 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,14 +20,22 @@ bool    RuleMission::kill(map<int, shared_ptr<Mission>> &missions) {
     return isOk;
 }
 
-ResultRequest   &RuleMission::fillResultRequestKill(int id) {
+ResultRequest   RuleMission::fillResultRequestKill(int id) {
     ResultRequest result;
 
-    if (this->_missions.find(id) == this->_missions.end()) { result._code = UNKNOWN_MISSION; return result; }
+    if (!this->isMissionExist(&result, id)) return result;
     this->addToResultRequest(&result, id);
     return result;
 }
 
 void    RuleMission::addToResultRequest(ResultRequest *result, int id) {
     result->_missions[id] = this->_missions[id];
+}
+
+ResultRequest   RuleMission::fillResultRequestGetInfos(int id) {
+    ResultRequest   result;
+
+    if (id != -1 && !this->isMissionExist(&result, id)) return result;
+    for (auto m : this->_missions) if ((id != -1 && id == m.first) || id == -1) this->addToResultRequest(&result, m.first);
+    return result;
 }

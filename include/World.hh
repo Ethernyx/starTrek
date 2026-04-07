@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:33:10 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 3:54:36 pm                           *
+ * Last Modified: Tuesday, April 7th 2026, 4:53:22 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,6 +20,7 @@
 #include    "object/Spaceship.hh"
 #include    "object/Planete.hh"
 #include    "object/Mission.hh"
+#include    "ReturnRequest.hh"
 
 class World
 {
@@ -47,8 +48,17 @@ public:
     shared_ptr<Mission>                         getMission(const string name);
     shared_ptr<Planete>                         getPlanete(const string name);
     unique_ptr<Item>                            getItem(const int id);
+    int                                         getIdQuidam(shared_ptr<AQuidam> quidam);
 
     int                                         getMaxId(OBJETS type);
+
+    bool                                        isQuidamExist(ResultRequest *result, OBJETS type, int id);
+    bool                                        isGradeExist(ResultRequest *result, int id);
+    bool                                        isSpaceshipExist(ResultRequest *result, int id);
+    bool                                        isPlaneteExist(ResultRequest *result, int id);
+    bool                                        isMissionExist(ResultRequest *result, int id);
+    bool                                        isItemExist(ResultRequest *result, int id);
+    bool                                        isItemExist(ResultRequest *result, OBJETS type, int id);
 };
 
 

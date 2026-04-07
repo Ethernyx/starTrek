@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:25:25 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 3:21:53 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -399,130 +399,9 @@ string  Controller::j_exchangeItem(Context &ctx) {
  * @return string
  */
 string  Controller::j_getInfos(Context &ctx) {
-
-    //auto startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
     OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
     int entity_id = ctx.getParam("entity_id").c_str() ? atoi(ctx.getParam("entity_id").c_str()) : -1;
-    boost::json::object res, node;
-    //OBJETS entity_type = (OBJETS)startrek.at("entity_type").as_int64();
-    //int entity_id = -1;
-    //if (startrek.contains("entity_id")) entity_id = startrek.at("entity_id").as_int64(); 
-
-    node["entity_type"] = entity_type;
-    node["entities"].emplace_array();
-    switch(entity_type) {
-        case PLANETE:
-            if(entity_id != -1) {
-                if (this->_planetes.find(entity_id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
-                node["entities"].get_array().push_back(this->_planetes[entity_id]->generate(entity_id));
-                break;
-            }
-            for(auto p: this->_planetes) {
-                node["entities"].get_array().push_back(p.second->generate(p.first));
-            }
-            break;
-        case LIVING:
-            if(entity_id != -1) {
-                for (auto living: this->_quidams) {
-                    
-                    if (living.second.find(entity_id) == living.second.end()) return List::returnJson((living.first == HEROS ? UNKNOWN_HEROS : (living.first == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-                    node["entities"].get_array().push_back(living.second[entity_id]->generate(entity_id));
-                    break;
-                }
-                
-            }
-            for(auto living: this->_quidams) {
-                for (auto l: living.second) {
-                    node["entities"].get_array().push_back(l.second->generate(l.first));
-                }
-            }
-            break;
-        case HEROS:
-        case EVIL:
-        case PNJ:
-            if(entity_id != -1) {
-                if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-                node["entities"].get_array().push_back(this->_quidams[entity_type][entity_id]->generate(entity_id));
-                break;
-            }
-            for(auto p: this->_quidams[entity_type]) {
-                node["entities"].get_array().push_back(p.second->generate(p.first));
-            }
-            break;
-        case MISSION:
-            if(entity_id != -1) {
-                if (this->_missions.find(entity_id) == this->_missions.end()) return List::returnJson(UNKNOWN_MISSION);
-                node["entities"].get_array().push_back(this->_missions[entity_id]->generate(entity_id));
-                break;
-            }
-            for(auto p: this->_missions) {
-                node["entities"].get_array().push_back(p.second->generate(p.first));
-            }
-            break;
-        case SPACESHIP:
-            if(entity_id != -1) {
-                if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-                node["entities"].get_array().push_back(this->_flotte[entity_id]->generate(entity_id));
-                break;
-            }
-            for(auto p: this->_flotte) {
-                node["entities"].get_array().push_back(p.second->generate(p.first));
-            }
-            break;
-        case ITEM:
-            for (auto i : this->_tableDeCorrespondance) { // comme fonctionnement par unique_ptr on prend la table des corespondances
-                if (i.first == HEROS || i.first == PNJ || i.first == EVIL) {
-                    for (auto p : i.second) { // ceux assignés à un quidam
-                        if(entity_id != -1) {
-                            if (this->_quidams[(OBJETS)i.first][p.second]->getInventory().find(entity_id) == this->_quidams[(OBJETS)i.first][p.second]->getInventory().end()) return List::returnJson(UNKNOWN_ITEM);
-                            node["entities"].get_array().push_back(this->_quidams[(OBJETS)i.first][p.second]->getInventory()[entity_id]->generate(entity_id));
-                            break;
-                        }
-                        node["entities"].get_array().push_back(this->_quidams[(OBJETS)i.first][p.second]->getInventory()[p.first]->generate(p.first));
-                    }
-                }
-                if (i.first == SPACESHIP) {
-                    for (auto s : i.second) { // ceux assignés à un vaisseau
-                        if(entity_id != -1) {
-                            if (this->_flotte[s.second]->getInventory().find(entity_id) ==  this->_flotte[s.second]->getInventory().end()) return List::returnJson(UNKNOWN_ITEM);
-                            node["entities"].get_array().push_back(this->_flotte[s.second]->getInventory()[entity_id]->generate(entity_id));
-                            break;
-                        }
-                        node["entities"].get_array().push_back(this->_flotte[s.second]->getInventory()[s.first]->generate(s.first));
-                    }
-                }
-                if (i.first == NONE) {
-                    for (auto s : i.second) { // ceux assignés à personne
-                        cout << s.first << endl;
-                        if(entity_id != -1) {
-                            if (this->_items.find(entity_id) ==  this->_items.end()) return List::returnJson(UNKNOWN_ITEM);
-                            node["entities"].get_array().push_back(this->_items[entity_id]->generate(entity_id));
-                            break;
-                        }
-                        node["entities"].get_array().push_back(this->_items[s.first]->generate(s.first));
-                    }
-                }
-            }
-            break;
-        case GRADE:
-            if(entity_id != -1) {
-                if (this->_grades.find(entity_id) == this->_grades.end())  return List::returnJson(UNKNOWN_GRADE);
-                node["entities"].get_array().push_back(this->_grades[entity_id]->generate(entity_id));
-                break;
-            }
-            for(auto p: this->_grades) {
-                node["entities"].get_array().push_back(p.second->generate(p.first));
-            }
-            break;
-        default:
-            break;
-    }
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"] = node;
-    return boost::json::serialize(res);
-
+    return this->buildResponse(Rule::fillResultRequestGetInfos(entity_type, entity_id));
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -533,9 +412,7 @@ string  Controller::j_getInfos(Context &ctx) {
  * @return string
  */
 string  Controller::j_kill(Context &ctx) {
-    boost::json::array heros, pnjs, evils, inv;
     boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object(), res;
-    int code;
 
     auto entity_type = (OBJETS)startrek.at("entity_type").as_int64();
     auto entity_id = startrek.at("entity_id").as_int64();
@@ -543,106 +420,8 @@ string  Controller::j_kill(Context &ctx) {
     auto result = this->fillResultRequestKillEntities(entity_type, entity_id);
     string responce = this->buildResponse(result);
     this->killEntities(result);
-    return responce;
-
-    switch (entity_type) {
-        case PLANETE:
-            if (this->_planetes.find(entity_id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
-            for (auto h = this->_planetes[entity_id]->getHabitants().begin(); h != this->_planetes[entity_id]->getHabitants().end(); h++) {
-                if (h->lock()) {
-                    // je remplis mon array de perso ou pnj qui vont mourir avec la planete
-                    for (auto p = this->_quidams[h->lock()->getType()].begin(); p != this->_quidams[h->lock()->getType()].end(); p++) {
-                        if (p->second == h->lock()) {
-                            switch (p->second->getType())
-                            {
-                                case HEROS:
-                                    heros.push_back(p->second->generate(p->first));
-                                    break;
-                                case PNJ:
-                                    pnjs.push_back(p->second->generate(p->first));
-                                    break;
-                                case EVIL:
-                                    evils.push_back(p->second->generate(p->first));
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                // recuperation des ID de l'inventaire
-                for (auto i = h->lock()->getInventory().begin(); i != h->lock()->getInventory().end(); i++) inv.push_back(i->second->generate(i->first));
-            }
-            this->deletePlanete(entity_id);
-            break;
-        case HEROS:
-        case PNJ:
-        case EVIL:
-            //recuperation des ID de l'inventaire
-            if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-            for (auto it = this->_quidams[entity_type][entity_id]->getInventory().begin(); it != this->_quidams[entity_type][entity_id]->getInventory().end(); it++) {
-                inv.push_back(it->second->generate(it->first));
-            }
-            this->deletePerso(entity_id);
-            break;
-        case MISSION:
-            if (this->_missions.find(entity_id) == this->_missions.end()) return List::returnJson(UNKNOWN_MISSION);
-            this->deleteMission(entity_id);
-            break;
-        case SPACESHIP:
-            if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-            for(auto it = this->_flotte[entity_id]->getEquipage().begin(); it != this->_flotte[entity_id]->getEquipage().end(); it++) {
-                if (it->lock()) {
-                    for (auto p = this->_quidams[it->lock()->getType()].begin(); p != this->_quidams[it->lock()->getType()].end(); p++) {
-                        if (p->second == it->lock()) {
-                            switch (p->second->getType())
-                            {
-                                case HEROS:
-                                    heros.push_back(p->second->generate(p->first));
-                                    break;
-                                case PNJ:
-                                    pnjs.push_back(p->second->generate(p->first));
-                                    break;
-                                case EVIL:
-                                    evils.push_back(p->second->generate(p->first));
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-            for (auto it = this->_flotte[entity_id]->getInventory().begin(); it != this->_flotte[entity_id]->getInventory().end(); it++) inv.push_back(it->second->generate(it->first));
-            this->deleteSpaceship(entity_id);
-            break;
-        case GRADE:
-            if (this->_grades.find(entity_id) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
-            this->deleteGrade(entity_id);
-            break;
-        case ITEM:
-            code = UNKNOWN_ITEM;
-            for (auto type : this->_tableDeCorrespondance) for (auto it : type.second) if (it.first == entity_id) {
-                this->deleteItem(entity_id);
-                code = 0;
-            }
-            if (code != 0) return List::returnJson(code);
-            break;        
-        default:
-            return List::returnJson(UNKNOWN_ENTITY);
-            break;
-    }
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"].as_object()["quidams"].emplace_object();
-    res["return"].as_object()["quidams"].as_object()["heros"] = heros;
-    res["return"].as_object()["quidams"].as_object()["pnjs"] = pnjs;
-    res["return"].as_object()["quidams"].as_object()["evils"] = evils;
-    res["return"].as_object()["objets"] = inv;
     this->saveJSON();
-    return boost::json::serialize(res);
+    return responce;
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -658,6 +437,8 @@ string  Controller::j_add_entities(Context &ctx) {
     boost::json::object res, node;
     map<OBJETS, string> _quidams {{HEROS, "heros"}, {PNJ, "pnjs"}, {EVIL, "mechants"}};
     boost::json::object res_array;
+    vector<boost::json::object>    entities;
+    for (size_t i = 0; i < startrek.size(); i++) entities.push_back(startrek.at(i).as_object());
 
     for (size_t i = 0; i < startrek.size(); i++) {
         auto array = startrek.at(i).as_object();
@@ -777,44 +558,8 @@ string  Controller::j_add_entities(Context &ctx) {
  * @return string
  */
 string  Controller::j_getHabitants(Context &ctx) {
-    boost::json::array pnjs, heros, evils;
-    boost::json::object res;
-    boost::json::object tmp;
     int id = atoi(ctx.getParam("id_planet").c_str());
-    if (this->_planetes.find(id) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
-
-    for (auto h : this->_planetes[id]->getHabitants()) {
-        if (!h.lock()) continue;
-        for (auto p : this->_quidams[h.lock()->getType()]) if (p.second == h.lock()) {
-            tmp = h.lock()->generate(p.first);
-            tmp["planet_origin"] = this->_planetes[tmp["id_planet_origin"].as_int64()]->getName().c_str();
-            tmp["lieu"] = tmp["id_planet"].as_int64() <= 0 ? this->_flotte[tmp["id_ship"].as_int64()]->getName().c_str() : this->_planetes[tmp["id_planet"].as_int64()]->getName().c_str();
-            switch (h.lock()->getType())
-            {
-            case PNJ:
-                pnjs.push_back(tmp);
-                break;
-            case HEROS:
-                heros.push_back(tmp);
-                break;
-            case EVIL:
-                evils.push_back(tmp);
-                break;
-            default:
-                break;
-            }
-            tmp.clear();
-        }
-    }
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"].as_object()["id_planet"] = id;
-    res["return"].as_object()["quidams"].emplace_object();
-    res["return"].as_object()["quidams"].as_object()["heros"] = heros;
-    res["return"].as_object()["quidams"].as_object()["pnjs"] = pnjs;
-    res["return"].as_object()["quidams"].as_object()["evils"] = evils;
-    return boost::json::serialize(res);
+    return this->buildResponse(RulePlanete::fillResultGetHabitant(id));
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -826,101 +571,20 @@ string  Controller::j_getHabitants(Context &ctx) {
  */
 string  Controller::j_getEquipage(Context &ctx) {
     int id = atoi(ctx.getParam("id_ship").c_str());
-    boost::json::array pnjs, heros, evils;
-    boost::json::object res;
-    boost::json::object tmp;
-    if (this->_flotte.find(id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-    
-   for (auto h : this->_flotte[id]->getEquipage()) {
-        if (!h.lock()) continue;
-
-        for (auto p : this->_quidams[h.lock()->getType()]) if (p.second == h.lock()) {
-            tmp = h.lock()->generate(p.first);
-            tmp["planet_origin"] = this->_planetes[tmp["id_planet_origin"].as_int64()]->getName().c_str();
-            tmp["lieu"] = tmp["id_planet"].as_int64() <= 0 ? this->_flotte[tmp["id_ship"].as_int64()]->getName().c_str() : this->_planetes[tmp["id_planet"].as_int64()]->getName().c_str();
-            switch (h.lock()->getType())
-            {
-            case PNJ:
-                pnjs.push_back(tmp);
-                break;
-            case HEROS:
-                heros.push_back(tmp);
-                break;
-            case EVIL:
-                evils.push_back(tmp);
-                break;
-            default:
-                break;
-            }
-            tmp.clear();
-        }
-        
-    }
-
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"].as_object()["id_ship"] = id;
-    res["return"].as_object()["quidams"].emplace_object();
-    res["return"].as_object()["quidams"].as_object()["heros"] = heros;
-    res["return"].as_object()["quidams"].as_object()["pnjs"] = pnjs;
-    res["return"].as_object()["quidams"].as_object()["evils"] = evils;
-    return boost::json::serialize(res);
+    return this->buildResponse(RuleSpaceship::fillResultGetEquipage(id));
 }
+
+/** Fonctions de traitement des JSON reçus par le client TCP */
+/**
+ * Lit le JSON startrek node passé en parametre et effectue l'action getInventory
+ * la fonction retourne le string json qui sera renvoyé au serveur
+ * @param Context &ctx
+ * @return string
+ */
 string  Controller::j_getInventory(Context &ctx) {
-    boost::json::array obj;
-    boost::json::object res;
     OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
     int entity_id = atoi(ctx.getParam("entity_id").c_str());
-    switch (entity_type)
-    {
-        case HEROS:
-        case EVIL:
-        case PNJ:
-            if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-            break;
-        case SPACESHIP:
-            if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-            break;
-        case MISSION:
-        case ITEM:
-        case PLANETE:
-        case GRADE:
-            return List::returnJson(MISSING_INVENTORY);
-            break;
-        default:
-            return List::returnJson(UNKNOWN_ENTITY);
-            break;
-    }
-
-    switch(entity_type) {
-        case HEROS:
-        case PNJ:
-        case EVIL:
-            for (auto c : this->_tableDeCorrespondance[entity_type]) {
-                if (c.second != entity_id) continue;
-                obj.push_back(this->_quidams[entity_type][c.second]->getInventory()[c.first]->generate(c.first));
-            }
-            break;
-        case SPACESHIP:
-            for (auto c : this->_tableDeCorrespondance[SPACESHIP]) {
-                if (c.second != entity_id) continue;
-                obj.push_back(this->_flotte[c.second]->getInventory()[c.first]->generate(c.first));
-            }
-            break;
-        default:
-            break;
-    }
-
-
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"].as_object()["entity_type"] = entity_type;
-    res["return"].as_object()["entity_id"] = entity_id;
-    res["return"].as_object()["object"].emplace_array();
-    res["return"].as_object()["object"].as_array() = obj;
-    return boost::json::serialize(res);
+    return this->buildResponse(Rule::fillResultRequestGetInventory(entity_type, entity_id));
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -987,36 +651,7 @@ string  Controller::j_getHierarchy(Context &ctx) {
     boost::json::array pnjs, heros, evils;
     boost::json::object res;
     int id = atoi(ctx.getParam("id_grade").c_str());
-    if (this->_grades.find(id) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
-    for (auto h : this->_grades[id]->getMembre()) {
-        if (!h.lock()) continue;
-
-        int id_h = 0;
-        switch (h.lock()->getType())
-        {
-        case PNJ:
-            for (auto p : this->_quidams[PNJ]) if (p.second == h.lock()) pnjs.push_back(h.lock()->generate(p.first));
-            break;
-        case HEROS:
-            for (auto p : this->_quidams[HEROS]) if (p.second == h.lock()) heros.push_back(h.lock()->generate(p.first));
-            break;
-        case EVIL:
-            for (auto p : this->_quidams[EVIL]) if (p.second == h.lock()) evils.push_back(h.lock()->generate(p.first));
-            break;
-        default:
-            break;
-        }
-    }
-
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"].as_object()["id_grade"] = id;
-    res["return"].as_object()["quidams"].emplace_object();
-    res["return"].as_object()["quidams"].as_object()["heros"] = heros;
-    res["return"].as_object()["quidams"].as_object()["pnjs"] = pnjs;
-    res["return"].as_object()["quidams"].as_object()["evils"] = evils;
-    return boost::json::serialize(res);
+    return this->buildResponse(RuleGrade::fillResultRequestGetHierarchy(id));
 }
 
 string  Controller::j_getToken(Context &ctx) {
@@ -1084,5 +719,4 @@ string  Controller::buildResponse(ResultRequest result) {
         res["return"].as_object()["grades"].as_array().push_back(it->second->generate(it->first));
     }
     return boost::json::serialize(res);
-
 }

@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:45:50 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:25:41 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 12:49:32 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -105,23 +105,29 @@ bool LifeDoor::deletePerso(const int id)
     return true;
 }
 
-void    LifeDoor::deleteItem(int id) {
-for (auto type : this->_tableDeCorrespondance) for (auto it : type.second) if (it.first == id) {
-        switch (type.first)
-        {
-            case HEROS:
-            case PNJ:
-            case EVIL:
-                this->_quidams[(OBJETS)type.first][it.second]->getInventory().erase(this->_quidams[(OBJETS)type.first][it.second]->getInventory().find(it.first));
-                break;
-            case SPACESHIP:
-                this->_flotte[it.second]->getInventory().erase(this->_flotte[it.second]->getInventory().find(it.first));
-            case NONE:
-                this->_items.erase(this->_items.find(id));
-            default:
-                break;
+bool    LifeDoor::deleteItem(int id) {
+    for (auto type : this->_tableDeCorrespondance) for (auto it : type.second) if (it.first == id) {
+            switch (type.first)
+            {
+                case HEROS:
+                case PNJ:
+                case EVIL:
+                    if (this->_quidams[(OBJETS)type.first][it.second]->getInventory().find(it.first) == this->_quidams[(OBJETS)type.first][it.second]->getInventory().end()) return false;
+                    this->_quidams[(OBJETS)type.first][it.second]->getInventory().erase(this->_quidams[(OBJETS)type.first][it.second]->getInventory().find(it.first));
+                    break;
+                case SPACESHIP:
+                    if (this->_flotte[it.second]->getInventory().find(it.first) == this->_flotte[it.second]->getInventory().end()) return false;
+                    this->_flotte[it.second]->getInventory().erase(this->_flotte[it.second]->getInventory().find(it.first));
+                case NONE:
+                    if (this->_items.find(id) == this->_items.end()) return false;
+                    this->_items.erase(this->_items.find(id));
+                    break;
+                default:
+                    return false;
+                    break;
+            }
         }
-    }
+    return true;
 }
 
 void    LifeDoor::removeItem(int idItem, string name, OBJETS type) {

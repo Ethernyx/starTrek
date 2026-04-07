@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:14:42 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:25:33 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 5:32:48 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,13 +20,11 @@ bool    RuleSpaceship::kill(map<int, shared_ptr<Spaceship>> &spaceships) {
     return isOk;
 }
 
-ResultRequest   &RuleSpaceship::fillResultRequestKill(int id) {
+ResultRequest   RuleSpaceship::fillResultRequestKill(int id) {
     ResultRequest result;
 
-    if (this->_flotte.find(id) == this->_flotte.end()) {
-        result._code = UNKNOWN_SPACESHIP;
-        return result;
-    }
+    if (!this->isSpaceshipExist(&result, id)) return result;
+    
     for (auto it = this->_flotte[id]->getEquipage().begin(); it != this->_flotte[id]->getEquipage().end(); it++) {
         if (it->lock()) {
             for (auto p = this->_quidams[it->lock()->getType()].begin(); p != this->_quidams[it->lock()->getType()].end(); p++) {
@@ -43,4 +41,39 @@ ResultRequest   &RuleSpaceship::fillResultRequestKill(int id) {
 
 void    RuleSpaceship::addToResultRequest(ResultRequest *result, int id) {
     result->_spaceships[id] = this->_flotte[id];
+}
+
+ResultRequest   RuleSpaceship::fillResultGetEquipage(int id) {
+    ResultRequest   result;
+
+    if (!this->isSpaceshipExist(&result, id)) return result;
+    
+    for (auto h : this->_flotte[id]->getEquipage()) {
+        if (!h.lock()) continue;
+        for (auto p : this->_quidams[h.lock()->getType()]) if (p.second == h.lock()) {
+            RuleQuidam::addToResultRequest(&result, p.second->getType(), p.first);
+        }
+    }
+    this->addToResultRequest(&result, id);
+    return result;
+}
+
+ResultRequest   RuleSpaceship::fillResultRequestGetInventory(int id) {
+    ResultRequest   result;
+
+    if (!this->isSpaceshipExist(&result, id)) return result;
+    for (auto item : this->_tableDeCorrespondance[SPACESHIP]) {
+        if(item.second != id) continue;
+        RuleItem::addToResultRequest(&result, item.first);
+    }
+    this->addToResultRequest(&result, id);
+    return result;
+}
+
+ResultRequest   RuleSpaceship::fillResultRequestGetInfos(int id) {
+    ResultRequest   result;
+
+    if (id != -1 && !this->isSpaceshipExist(&result, id)) return result;
+    for (auto s : this->_flotte) if ((id != -1 && id == s.first) || id == -1) this->addToResultRequest(&result, s.first);
+    return result;
 }

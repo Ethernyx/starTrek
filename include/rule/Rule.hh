@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:26:02 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:16:42 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 2:19:37 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -26,7 +26,9 @@ public:
     void                                        takeItem(int item, int id, OBJETS type);
     void                                        promote(int id_grade, int id_entity, OBJETS entity_type);
     void                                        removeGrade(int id_entity, OBJETS entity_type);
-    ResultRequest                               &fillResultRequestKillEntities(OBJETS entity_type, int entity_id);
+    ResultRequest                               fillResultRequestKillEntities(OBJETS entity_type, int entity_id);
+    ResultRequest                               fillResultRequestGetInventory(OBJETS entity_type, int entity_id);
+    ResultRequest                               fillResultRequestGetInfos(OBJETS entity_type, int entity_id);
     bool                                        killEntities(ResultRequest &entities);
 };
 

@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 1:59:57 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:23:24 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 2:23:16 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,8 +20,10 @@ class RulePlanete : public virtual RuleQuidam
 private:
 public:
     bool                                        kill(map<int, shared_ptr<Planete>> &planetes);
-    ResultRequest                               &fillResultRequestKill(int id);
+    ResultRequest                               fillResultRequestKill(int id);
+    ResultRequest                               fillResultRequestGetInfos(int id);
     void                                        addToResultRequest(ResultRequest *result, int id);
+    ResultRequest                               fillResultGetHabitant(int id);
 };
 
 

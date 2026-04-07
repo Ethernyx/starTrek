@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:03 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 4:45:58 pm                           *
+ * Last Modified: Tuesday, April 7th 2026, 4:14:02 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -195,7 +195,9 @@ typedef enum {
     ITEM_OCCUPY,
     INCORRECT_PASSWORD,
     ENTITY_OUT_RANGE,
-    UNAUTHORIZED
+    UNAUTHORIZED,
+    ERROR_DELETE_MEMBER,
+    ERROR_ADD_MEMBER,
         
 }   CODE_ERROR;
 

@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:41:26 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:23:57 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 12:49:52 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -42,7 +42,7 @@ public:
 
     int                                         addItem(boost::json::object &item);
     void                                        removeItem(int idItem, string name, OBJETS type);
-    void                                        deleteItem(int id);
+    bool                                        deleteItem(int id);
 
     int                                         addGrade(boost::json::object &item);
     bool                                        deleteGrade(const int id);

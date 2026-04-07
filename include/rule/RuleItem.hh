@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:08:07 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 11:21:23 am                         *
+ * Last Modified: Tuesday, April 7th 2026, 2:22:42 pm                          *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,7 +20,8 @@ class RuleItem : public virtual LifeDoor
 private:
 public:
     bool                                        kill(map<int, Item*> &items);
-    ResultRequest                               &fillResultRequestKill(int id);
+    ResultRequest                               fillResultRequestKill(int id);
+    ResultRequest                               fillResultRequestGetInfos(int id);
     void                                        addToResultRequest(ResultRequest *result, int id);
 };
 
