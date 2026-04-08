@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 3:21:53 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 3:42:39 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -432,122 +432,24 @@ string  Controller::j_kill(Context &ctx) {
  * @return string
  */
 string  Controller::j_add_entities(Context &ctx) {
-    int id;
+    
+    ResultRequest   result;
     boost::json::array startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
-    boost::json::object res, node;
-    map<OBJETS, string> _quidams {{HEROS, "heros"}, {PNJ, "pnjs"}, {EVIL, "mechants"}};
-    boost::json::object res_array;
-    vector<boost::json::object>    entities;
-    for (size_t i = 0; i < startrek.size(); i++) entities.push_back(startrek.at(i).as_object());
 
     for (size_t i = 0; i < startrek.size(); i++) {
-        auto array = startrek.at(i).as_object();
-        OBJETS type_owner;
-        switch ((OBJETS)array.at("entity_type").as_int64()) {
-            case PLANETE:
-            case MISSION:
-            case SPACESHIP:
-            case GRADE:
-                break;
-            case PNJ:
-            case HEROS:
-            case EVIL:
-                if (array.at("id_planet").as_int64() != 0 
-                && this->_planetes.find(array.at("id_planet").as_int64()) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
-                if (array.at("id_planet_origin").as_int64() != 0
-                && this->_planetes.find(array.at("id_planet_origin").as_int64()) == this->_planetes.end()) return List::returnJson(UNKNOWN_PLANET);
-                if (array.at("id_ship").as_int64() != 0
-                && this->_flotte.find(array.at("id_ship").as_int64()) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-                if (array.at("id_grade").as_int64() != 0
-                && this->_grades.find(array.at("id_grade").as_int64()) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
-                break;
-            case ITEM:
-                type_owner =  (OBJETS)array.at("type_owner").as_int64();
-                if (type_owner != NONE) {
-                    switch (type_owner)
-                    {
-                    case HEROS:
-                    case EVIL:
-                    case PNJ:
-                    case SPACESHIP:
-                        if (find(QUIDAMS.begin(), QUIDAMS.end(), type_owner) == QUIDAMS.end()) {
-                            if (this->_flotte.find(array.at("id_owner").as_int64()) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-                        } else {
-                            if (this->_quidams[type_owner].find(array.at("id_owner").as_int64()) == this->_quidams[type_owner].end()) return List::returnJson((type_owner == HEROS ? UNKNOWN_HEROS : (type_owner == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-                        }
-                        
-                        break;
-                    
-                    default:
-                        return List::returnJson(MISSING_INVENTORY);
-                        break;
-                    }
-                }
-                break;
-            default:
-                return List::returnJson(UNKNOWN_ENTITY);
-                break;
+        map<string, int>    entities_int;
+        map<string, string> entitites_string;
+        for (auto attr = startrek.at(i).as_object().begin(); attr != startrek.at(i).as_object().end(); attr++) {
+            if (attr->value().is_int64()) entities_int[attr->key_c_str()] = attr->value().as_int64();
+            else entitites_string[attr->key_c_str()] = attr->value().as_string().c_str();
         }
-    }
-    
-    for (size_t i = 0; i < startrek.size(); i++) {
-        auto array = startrek.at(i).as_object();
-        string key = to_string(array.at("entity_type").as_int64());
-        if (!res_array.contains(key)) res_array[key].emplace_array();
-        switch (array.at("entity_type").as_int64())
-        {
-            case HEROS:
-            case PNJ:
-            case EVIL:
-                id = this->addQuidam(array);
-                res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_quidams[(OBJETS)array.at("entity_type").as_int64()][id]->generate(id));
-                break;
-            case PLANETE:
-                id = this->addPlanet(array);
-                res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_planetes[id]->generate(id));
-                break;
-            case MISSION:
-                id = this->addMission(array);;
-                res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_missions[id]->generate(id));
-                break;
-            case SPACESHIP:
-                id = this->addSpaceShip(array);
-                res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_flotte[id]->generate(id));
-                break;
-            case ITEM:
-                id = this->addItem(array);
-                switch ((OBJETS)array.at("type_owner").as_int64())
-                {
-                case HEROS:
-                case PNJ:
-                case EVIL:
-                    res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_quidams[(OBJETS)array.at("type_owner").as_int64()][array.at("id_owner").as_int64()]->getInventory()[id]->generate(id));
-                    break;
-                case SPACESHIP:
-                    res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_flotte[array.at("id_owner").as_int64()]->getInventory()[id]->generate(id));
-                    
-                case NONE:
-                    res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_items[id]->generate(id));
-                    break;
-                default:
-                    break;
-                }
-                break;
-            case GRADE:
-                id = this->addGrade(array);
-                res_array.at(to_string(array.at("entity_type").as_int64())).as_array().push_back(this->_grades[id]->generate(id));
-                break;
-            default:
-                break;
-        }
+        Rule::fillResultRequestAddEntities(&result, entities_int, entitites_string);
+        entities_int.clear();
+        entitites_string.clear();
+        if (result._code != OK) break;
     }
     this->saveJSON();
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"] = res_array;
-
-    return boost::json::serialize(res);
+    return this->buildResponse(result);
 }   
 
 /** Fonctions de traitement des JSON reçus par le client TCP */

@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:00:46 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 2:23:57 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 12:24:38 pm                       *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -24,6 +24,7 @@ public:
     ResultRequest                               fillResultGetEquipage(int id);
     ResultRequest                               fillResultRequestGetInventory(int id);
     ResultRequest                               fillResultRequestGetInfos(int id);
+    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
     void                                        addToResultRequest(ResultRequest *result, int id);
 };
 

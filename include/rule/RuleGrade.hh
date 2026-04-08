@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 1:57:49 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 4:43:59 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 12:24:08 pm                       *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -23,6 +23,7 @@ public:
     ResultRequest                               fillResultRequestKill(int id);
     ResultRequest                               fillResultRequestGetHierarchy(int id);
     ResultRequest                               fillResultRequestGetInfos(int id);
+    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
     void                                        addToResultRequest(ResultRequest *result, int id);
 };
 

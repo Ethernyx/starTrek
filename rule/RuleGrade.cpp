@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 10:45:25 pm                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 5:22:18 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 3:42:44 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -51,4 +51,13 @@ ResultRequest   RuleGrade::fillResultRequestGetInfos(int id) {
     if (id != -1 && !this->isGradeExist(&result, id)) return result;
     for (auto g : this->_grades) if ((id != -1 && id == g.first) || id == -1) this->addToResultRequest(&result, g.first);
     return result;
+}
+
+void    RuleGrade::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+
+    if (attr_int.find("level") == attr_int.end()) { result->_code = MISSING_LEVEL_ATTRIBUT_GRADE; return; }
+    if (attr_string.find("name") == attr_string.end()) { result->_code = MISSING_NAME_ATTRIBUT_GRADE; return; }
+
+    int id = this->addGrade(attr_int, attr_string);
+    this->addToResultRequest(result, id);
 }

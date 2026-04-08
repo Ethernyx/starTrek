@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:08:07 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 2:22:42 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 12:24:12 pm                       *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -22,6 +22,7 @@ public:
     bool                                        kill(map<int, Item*> &items);
     ResultRequest                               fillResultRequestKill(int id);
     ResultRequest                               fillResultRequestGetInfos(int id);
+    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
     void                                        addToResultRequest(ResultRequest *result, int id);
 };
 

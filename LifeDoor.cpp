@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:45:50 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 12:49:32 pm                         *
+ * Last Modified: Wednesday, April 8th 2026, 3:41:39 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -118,6 +118,7 @@ bool    LifeDoor::deleteItem(int id) {
                 case SPACESHIP:
                     if (this->_flotte[it.second]->getInventory().find(it.first) == this->_flotte[it.second]->getInventory().end()) return false;
                     this->_flotte[it.second]->getInventory().erase(this->_flotte[it.second]->getInventory().find(it.first));
+                    break;
                 case NONE:
                     if (this->_items.find(id) == this->_items.end()) return false;
                     this->_items.erase(this->_items.find(id));
@@ -168,11 +169,30 @@ int LifeDoor::addQuidam(boost::json::object &item)
     if (quidam->getIdGrade() != 0)  this->_grades[quidam->getIdGrade()]->addMembre(quidam);  
     return id;
 }
-int LifeDoor::addPnj(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade) {
-    int id = this->getMaxId(PNJ) + 1;
-    this->_quidams[PNJ][id] = make_shared<Pnj>(name, puissance, sante, dp, id_planete_origine, id_ship, id_planet, id_grade);
-    if (id_ship != 0 && this->_flotte[id_ship]) this->_flotte[id_ship]->addEquipage(this->_quidams[PNJ][id]);
-    if (id_planet != 0 && this->_planetes[id_planet]) this->_planetes[id_planet]->setHabitant(this->_quidams[PNJ][id]);
+
+void    LifeDoor::edgeEffectAddQuidam(OBJETS type, int id) {
+    if (this->_quidams[type][id]->getIdShip() != 0)   this->_flotte[this->_quidams[type][id]->getIdShip()]->addEquipage(this->_quidams[type][id]);
+    if (this->_quidams[type][id]->getIdPlanet())      this->_planetes[this->_quidams[type][id]->getIdPlanet()]->setHabitant(this->_quidams[type][id]);
+    if (this->_quidams[type][id]->getIdGrade() != 0)  this->_grades[this->_quidams[type][id]->getIdGrade()]->addMembre(this->_quidams[type][id]);  
+}
+
+int LifeDoor::addQuidam(map<string, int> attr_int, map<string, string> attr_string)
+{
+    int id = this->getMaxId((OBJETS)attr_int["type"]) + 1;
+    auto quidam = AQuidamBuilder()
+        .withName(attr_string["name"])
+        .withAp(attr_int["ap"])
+        .withDp(attr_int["dp"])
+        .withHp(attr_int["hp"])
+        .ofType((OBJETS)attr_int["type"])
+        .fromPlanet(attr_int["id_planet_origin"])
+        .onPlanet(attr_int["id_planet"])
+        .onShip(attr_int["id_ship"])
+        .withGrade(attr_int["id_grade"])
+        .build();
+
+    this->_quidams[quidam->getType()][id] = quidam;
+    this->edgeEffectAddQuidam((OBJETS)attr_int["type"], id); 
     return id;
 }
 
@@ -182,12 +202,37 @@ int LifeDoor::addPlanet(boost::json::object &item)
     this->_planetes[id] = PlaneteBuilder::fromJson(item);
     return id;
 }
+
+int LifeDoor::addPlanet(map<string, int> attr_int, map<string, string> attr_string)
+{
+    int id = this->getMaxId(PLANETE) + 1;
+    this->_planetes[id] = PlaneteBuilder()
+        .withName(attr_string["name"])
+        .withDescription(attr_string["description"])
+        .build();
+    return id;
+}
+
 int LifeDoor::addSpaceShip(boost::json::object &item)
 {
     int id = this->getMaxId(SPACESHIP) + 1;
     this->_flotte[id] = SpaceshipBuilder::fromJson(item);
     return id;
 }
+
+int LifeDoor::addSpaceShip(map<string, int> attr_int, map<string, string> attr_string)
+{
+    int id = this->getMaxId(SPACESHIP) + 1;
+    this->_flotte[id] = SpaceshipBuilder()
+        .withName(attr_string["name"])
+        .withDescription(attr_string["description"])
+        .withAp(attr_int["ap"])
+        .withDp(attr_int["dp"])
+        .withHp(attr_int["hp"])
+        .build();
+    return id;
+}
+
 int LifeDoor::addMission(boost::json::object &item)
 {
     int id = this->getMaxId(MISSION) + 1;
@@ -195,10 +240,18 @@ int LifeDoor::addMission(boost::json::object &item)
     return id;
 }
 
-int LifeDoor::addItem(boost::json::object &item) {
-    int id = this->getMaxId(ITEM) + 1;
-    this->_items[id] = ItemBuilder::fromJson(item);
-    
+int LifeDoor::addMission(map<string, int> attr_int, map<string, string> attr_string)
+{
+    int id = this->getMaxId(MISSION) + 1;
+    auto mission = MissionBuilder()
+        .withName(attr_string["name"])
+        .withDescription(attr_string["description"]);
+    if (attr_int["is_complete"]) mission.isComplete();
+    this->_missions[id] = mission.build();
+    return id;
+}
+
+void    LifeDoor::edgeEffectAddItem(int id) {
     this->_tableDeCorrespondance[this->_items[id]->getTypeOwner()][id] = this->_items[id]->getIdOwner();
     if (this->_items[id]->getIdOwner() != 0) {
         switch (this->_items[id]->getTypeOwner())
@@ -215,6 +268,27 @@ int LifeDoor::addItem(boost::json::object &item) {
             break;
         }
     }
+}
+
+int LifeDoor::addItem(boost::json::object &item) {
+    int id = this->getMaxId(ITEM) + 1;
+    this->_items[id] = ItemBuilder::fromJson(item);
+    
+    this->edgeEffectAddItem(id);
+    return id;
+}
+
+int LifeDoor::addItem(map<string, int> attr_int, map<string, string> attr_string) {
+    int id = this->getMaxId(ITEM) + 1;
+    this->_items[id] = ItemBuilder()
+        .withName(attr_string["name"])
+        .withEffect((EFFECT)attr_int["effect"])
+        .withStat(attr_int["stat"])
+        .withOwner(attr_int["id_owner"])
+        .withType((OBJETS)attr_int["type_owner"])
+        .build();
+    
+    this->edgeEffectAddItem(id);
     return id;
 }
 
@@ -222,4 +296,12 @@ int     LifeDoor::addGrade(boost::json::object &item) {
     int id = this->getMaxId(GRADE) + 1;
     this->_grades[id] = GradeBuilder::fromJson(item);
     return id;
+}
+
+int     LifeDoor::addGrade(map<string, int> attr_int, map<string, string> attr_string) {
+    int id = this->getMaxId(GRADE) + 1;
+    this->_grades[id] = GradeBuilder()
+        .withLevel(attr_int["level"])
+        .withName(attr_string["name"])
+        .build();
 }

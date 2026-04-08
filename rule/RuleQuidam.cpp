@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 5:18:46 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 3:42:58 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -12,13 +12,12 @@
 #include    "../include/rule/RuleQuidam.hh"
 
 bool    RuleQuidam::kill(map<OBJETS, map<int, shared_ptr<AQuidam>>> &quidams) {
-    bool isOk = true;
-
-    for(auto it = quidams.begin(); it != quidams.end(); it++) {
-        isOk = this->deletePerso(it->first);
-        if (!isOk) return isOk;
+    for(auto type = quidams.begin(); type != quidams.end(); type++) {
+        for (auto q = type->second.begin(); q != type->second.end(); q++) {
+            if (!this->deletePerso(q->first)) return false;
+        }
     }
-    return isOk;
+    return true;
 }
 
 ResultRequest   RuleQuidam::fillResultRequestKill(OBJETS type, int id) {
@@ -70,4 +69,28 @@ ResultRequest   RuleQuidam::fillResultRequestPromote(int id_grade, OBJETS type_q
     this->_grades[id_grade]->addMembre(this->_quidams[type_quidam][id_quidam]);
     this->addToResultRequest(&result, type_quidam, id_quidam);
     return result;
+}
+
+void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+    if (attr_int.find("entity_type") == attr_int.end()) { result->_code = MISSING_ENTITY_TYPE_ATTRIBUT; return; }
+    if (attr_string.find("name") == attr_string.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_NAME_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_NAME_ATTRIBUT_PNJ : MISSING_NAME_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("ap") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_AP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_AP_ATTRIBUT_PNJ : MISSING_AP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("dp") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_DP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_DP_ATTRIBUT_PNJ : MISSING_DP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("hp") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_HP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_HP_ATTRIBUT_PNJ : MISSING_HP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_planet") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_PLANET_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_PLANET_ATTRIBUT_PNJ : MISSING_ID_PLANET_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_ship") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_SHIP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_SHIP_ATTRIBUT_PNJ : MISSING_ID_SHIP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_planet_origin") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_grade") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_GRADE_ATTRIBUT_PNJ : MISSING_ID_GRADE_ATTRIBUT_EVIL)); return; }
+
+    if (!this->isPlaneteExist(result, attr_int["id_planete_origin"])) return;
+    if (!this->isPlaneteExist(result, attr_int["id_planete"])) return;
+    if (!this->isSpaceshipExist(result, attr_int["is_ship"])) return;
+    if (!this->isGradeExist(result, attr_int["id_grade"])) return;
+
+    int id = this->addQuidam(attr_int, attr_string);
+    this->addToResultRequest(result, (OBJETS)attr_int["entity_type"], id);
+
+
+    
+    
 }

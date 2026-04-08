@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:29:42 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 2:28:26 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 3:42:54 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -192,4 +192,36 @@ ResultRequest   Rule::fillResultRequestGetInfos(OBJETS entity_type, int entity_i
         break;
     }
     return result;
+}
+
+void    Rule::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+
+    if (attr_int.find("entity_type") == attr_int.end()) { result->_code = MISSING_ENTITY_TYPE_ATTRIBUT; return;}
+
+    switch ((OBJETS) attr_int["entity_type"])
+    {
+    case PLANETE:
+        RulePlanete::fillResultRequestAddEntities(result, attr_int, attr_string);
+        break;
+    case HEROS:
+    case EVIL:
+    case PNJ:
+        RuleQuidam::fillResultRequestAddEntities(result, attr_int, attr_string);
+        break;
+    case MISSION:
+        RuleMission::fillResultRequestAddEntities(result, attr_int, attr_string);
+        break;
+    case SPACESHIP:
+        RuleSpaceship::fillResultRequestAddEntities(result, attr_int, attr_string);
+        break;
+    case ITEM:
+        RuleItem::fillResultRequestAddEntities(result, attr_int, attr_string);
+        break;
+    case GRADE:
+        RuleGrade::fillResultRequestAddEntities(result, attr_int, attr_string);
+        break;
+    default:
+        result->_code = UNKNOWN_ENTITY;
+        break;
+    }
 }

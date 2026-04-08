@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:26:02 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 2:19:37 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 12:16:56 pm                       *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -29,6 +29,7 @@ public:
     ResultRequest                               fillResultRequestKillEntities(OBJETS entity_type, int entity_id);
     ResultRequest                               fillResultRequestGetInventory(OBJETS entity_type, int entity_id);
     ResultRequest                               fillResultRequestGetInfos(OBJETS entity_type, int entity_id);
+    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);    
     bool                                        killEntities(ResultRequest &entities);
 };
 
