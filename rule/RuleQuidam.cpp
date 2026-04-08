@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:42:58 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 3:53:31 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -60,15 +60,14 @@ ResultRequest   RuleQuidam::fillResultRequestGetInfos(OBJETS type, int id) {
     return result;
 }
 
-ResultRequest   RuleQuidam::fillResultRequestPromote(int id_grade, OBJETS type_quidam, int id_quidam) {
-    ResultRequest   result;
+void   RuleQuidam::fillResultRequestPromote(ResultRequest *result, int id_grade, OBJETS type_quidam, int id_quidam) {
     bool            isOk = true;
 
-    if (!this->isQuidamExist(&result, type_quidam, id_quidam)) return result;
-    if (!(isOk = this->_grades[this->_quidams[type_quidam][id_quidam]->getIdGrade()]->deleteMembre(this->_quidams[type_quidam][id_quidam]))) { result._code = ERROR_DELETE_MEMBER; return result; }
+    if (find(QUIDAMS.begin(), QUIDAMS.end(), type_quidam) == QUIDAMS.end()) { result->_code = MISSING_GRADE; return; }
+    if (!this->isQuidamExist(result, type_quidam, id_quidam)) return;
+    if (!(isOk = this->_grades[this->_quidams[type_quidam][id_quidam]->getIdGrade()]->deleteMembre(this->_quidams[type_quidam][id_quidam]))) { result->_code = ERROR_DELETE_MEMBER; return; }
     this->_grades[id_grade]->addMembre(this->_quidams[type_quidam][id_quidam]);
-    this->addToResultRequest(&result, type_quidam, id_quidam);
-    return result;
+    this->addToResultRequest(result, type_quidam, id_quidam);
 }
 
 void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {

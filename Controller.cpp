@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:42:39 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 3:51:46 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -498,48 +498,14 @@ string  Controller::j_getInventory(Context &ctx) {
  */
 string  Controller::j_promote(Context &ctx) {
     boost::json::array startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
-    boost::json::array pnjs, heros, evils;
-    boost::json::object res;
-    int entity_id, id_grade;
-    OBJETS entity_type;
+    ResultRequest   result;
 
     for (size_t i = 0; i < startrek.size(); i++) {
-        entity_type = (OBJETS)startrek.at(i).as_object().at("entity_type").as_int64();
-        entity_id = startrek.at(i).as_object().at("entity_id").as_int64();
-        id_grade = startrek.at(i).as_object().at("id_grade").as_int64();
-        if (find(QUIDAMS.begin(), QUIDAMS.end(), entity_type) == QUIDAMS.end()) return List::returnJson(MISSING_GRADE);
-        if (this->_quidams[entity_type].find(entity_id) == this->_quidams[entity_type].end()) return List::returnJson((entity_type == HEROS ? UNKNOWN_HEROS : (entity_type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-        if (this->_grades.find(id_grade) == this->_grades.end()) return List::returnJson(UNKNOWN_GRADE);
-    }
-    for (size_t i = 0; i < startrek.size(); i++) {
-        entity_type = (OBJETS)startrek.at(i).as_object().at("entity_type").as_int64();
-        entity_id = startrek.at(i).as_object().at("entity_id").as_int64();
-        id_grade = startrek.at(i).as_object().at("id_grade").as_int64();
-        this->promote(id_grade, entity_id, (OBJETS) entity_type);
-        switch (entity_type)
-        {
-            case HEROS:
-                heros.push_back(this->_quidams[entity_type][entity_id]->generate(entity_id));
-                break;
-            case PNJ:
-                pnjs.push_back(this->_quidams[entity_type][entity_id]->generate(entity_id));
-                break;
-            case EVIL:
-                evils.push_back(this->_quidams[entity_type][entity_id]->generate(entity_id));
-                break;
-            default:
-                break;
-        }
+        RuleQuidam::fillResultRequestPromote(&result, startrek.at(i).as_object().at("id_grade").as_int64(), (OBJETS)startrek.at(i).as_object().at("entity_type").as_int64(), startrek.at(i).as_object().at("entity_id").as_int64());
+        if (result._code != OK) break;
     }
     this->saveJSON();
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"].as_object()["quidams"].emplace_object();
-    res["return"].as_object()["quidams"].as_object()["heros"] = heros;
-    res["return"].as_object()["quidams"].as_object()["pnjs"] = pnjs;
-    res["return"].as_object()["quidams"].as_object()["evils"] = evils;
-    return boost::json::serialize(res);
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
