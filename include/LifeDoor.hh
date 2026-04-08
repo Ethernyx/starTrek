@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:41:26 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 1:50:25 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 3:59:45 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -29,7 +29,7 @@ public:
     bool                                        deletePerso(string const name); // --> suppression du perso via son nom
     bool                                        deletePerso(int const id); // --> surcharge suppression du perso via son ID
     int                                         addQuidam(boost::json::object &item);
-    int                                         addQuidam(map<string, int> attr_int, map<string, string> attr_string)
+    int                                         addQuidam(map<string, int> attr_int, map<string, string> attr_string);
     int                                         addPnj(const string name, const int puissance, const int sante, const int dp, const int id_planet, const int id_ship, const int id_planete_origine, const int id_grade);
     
     bool                                        deletePlanete(string const name); // -> surcharge de la suppression d'une planete par son nom

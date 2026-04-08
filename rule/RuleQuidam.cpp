@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:53:31 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:51:25 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,44 +20,39 @@ bool    RuleQuidam::kill(map<OBJETS, map<int, shared_ptr<AQuidam>>> &quidams) {
     return true;
 }
 
-ResultRequest   RuleQuidam::fillResultRequestKill(OBJETS type, int id) {
-    ResultRequest result;
+void   RuleQuidam::fillResultRequestKill(ResultRequest *result, OBJETS type, int id) {
     // recuperation des ID de l'inventaire
-    if (!this->isQuidamExist(&result, type, id)) return result;
+    if (!this->isQuidamExist(result, type, id)) return;
 
     for (auto it = this->_quidams[type][id]->getInventory().begin(); it != this->_quidams[type][id]->getInventory().end(); it++)
-        RuleItem::addToResultRequest(&result, it->first);
-    this->addToResultRequest(&result, type, id);
-    return result;
+        RuleItem::addToResultRequest(result, it->first);
+    this->addToResultRequest(result, type, id);
 }
 
-ResultRequest   RuleQuidam::fillResultRequestGetInventory(OBJETS type, int id) {
+void   RuleQuidam::fillResultRequestGetInventory(ResultRequest *result, OBJETS type, int id) {
     ResultRequest   result;
 
-    if (!this->isQuidamExist(&result, type, id)) return result;
+    if (!this->isQuidamExist(result, type, id)) return;
     for (auto item : this->_tableDeCorrespondance[type]) {
         if(item.second != id) continue;
-        RuleItem::addToResultRequest(&result, item.first);
+        RuleItem::addToResultRequest(result, item.first);
     }
-    this->addToResultRequest(&result, type, id);
-    return result;
+    this->addToResultRequest(result, type, id);
 }
 
 void    RuleQuidam::addToResultRequest(ResultRequest *result, OBJETS type, int id) {
     result->_quidams[type][id] = this->_quidams[type][id];
 }
 
-ResultRequest   RuleQuidam::fillResultRequestGetInfos(OBJETS type, int id) {
-    ResultRequest   result;
+void   RuleQuidam::fillResultRequestGetInfos(ResultRequest *result, OBJETS type, int id) {
     vector<OBJETS>  types;
 
-    if (id != -1 && type != LIVING && !this->isQuidamExist(&result, type, id)) return result;
+    if (id != -1 && type != LIVING && !this->isQuidamExist(result, type, id)) return;
 
     if (type == LIVING) types = { HEROS, PNJ, EVIL };
     else types = { type };
 
-    for (auto t : types) for (auto q : this->_quidams[t]) if ((id != -1 && id == q.first) || id == -1) this->addToResultRequest(&result, t, q.first);
-    return result;
+    for (auto t : types) for (auto q : this->_quidams[t]) if ((id != -1 && id == q.first) || id == -1) this->addToResultRequest(result, t, q.first);
 }
 
 void   RuleQuidam::fillResultRequestPromote(ResultRequest *result, int id_grade, OBJETS type_quidam, int id_quidam) {
@@ -83,7 +78,7 @@ void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, map<stri
 
     if (!this->isPlaneteExist(result, attr_int["id_planete_origin"])) return;
     if (!this->isPlaneteExist(result, attr_int["id_planete"])) return;
-    if (!this->isSpaceshipExist(result, attr_int["is_ship"])) return;
+    if (!this->isSpaceshipExist(result, attr_int["id_ship"])) return;
     if (!this->isGradeExist(result, attr_int["id_grade"])) return;
 
     int id = this->addQuidam(attr_int, attr_string);

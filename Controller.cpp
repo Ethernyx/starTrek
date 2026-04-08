@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:51:46 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 4:00:53 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -420,7 +420,7 @@ string  Controller::j_kill(Context &ctx) {
     auto result = this->fillResultRequestKillEntities(entity_type, entity_id);
     string responce = this->buildResponse(result);
     this->killEntities(result);
-    this->saveJSON();
+    if (result._code == OK) this->saveJSON();
     return responce;
 }
 
@@ -448,7 +448,7 @@ string  Controller::j_add_entities(Context &ctx) {
         entitites_string.clear();
         if (result._code != OK) break;
     }
-    this->saveJSON();
+    if (result._code == OK) this->saveJSON();
     return this->buildResponse(result);
 }   
 
@@ -504,7 +504,7 @@ string  Controller::j_promote(Context &ctx) {
         RuleQuidam::fillResultRequestPromote(&result, startrek.at(i).as_object().at("id_grade").as_int64(), (OBJETS)startrek.at(i).as_object().at("entity_type").as_int64(), startrek.at(i).as_object().at("entity_id").as_int64());
         if (result._code != OK) break;
     }
-    this->saveJSON();
+    if (result._code == OK) this->saveJSON();
     return this->buildResponse(result);
 }
 

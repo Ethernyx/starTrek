@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 10:53:48 pm                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 1:57:42 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:48:37 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,24 +20,18 @@ bool    RuleMission::kill(map<int, shared_ptr<Mission>> &missions) {
     return isOk;
 }
 
-ResultRequest   RuleMission::fillResultRequestKill(int id) {
-    ResultRequest result;
-
-    if (!this->isMissionExist(&result, id)) return result;
-    this->addToResultRequest(&result, id);
-    return result;
+void   RuleMission::fillResultRequestKill(ResultRequest *result, int id) {
+    if (!this->isMissionExist(result, id)) return;
+    this->addToResultRequest(result, id);
 }
 
 void    RuleMission::addToResultRequest(ResultRequest *result, int id) {
     result->_missions[id] = this->_missions[id];
 }
 
-ResultRequest   RuleMission::fillResultRequestGetInfos(int id) {
-    ResultRequest   result;
-
-    if (id != -1 && !this->isMissionExist(&result, id)) return result;
-    for (auto m : this->_missions) if ((id != -1 && id == m.first) || id == -1) this->addToResultRequest(&result, m.first);
-    return result;
+void   RuleMission::fillResultRequestGetInfos(ResultRequest *result, int id) {
+    if (id != -1 && !this->isMissionExist(result, id)) return;
+    for (auto m : this->_missions) if ((id != -1 && id == m.first) || id == -1) this->addToResultRequest(result, m.first);
 }
 
 void    RuleMission::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {

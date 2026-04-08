@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 1:57:49 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 12:24:08 pm                       *
+ * Last Modified: Wednesday, April 8th 2026, 6:39:12 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -15,16 +15,15 @@
 #include    "RuleQuidam.hh"
 #include    "../ReturnRequest.hh"
 
-class RuleGrade : public virtual RuleQuidam
+class       RuleGrade : public virtual RuleQuidam
 {
-private:
 public:
-    bool                                        kill(map<int, shared_ptr<Grade>> &grades);
-    ResultRequest                               fillResultRequestKill(int id);
-    ResultRequest                               fillResultRequestGetHierarchy(int id);
-    ResultRequest                               fillResultRequestGetInfos(int id);
-    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
-    void                                        addToResultRequest(ResultRequest *result, int id);
+    bool    kill(map<int, shared_ptr<Grade>> &grades);
+    void    fillResultRequestKill(ResultRequest *result, int id);
+    void    fillResultRequestGetHierarchy(ResultRequest *result, int id);
+    void    fillResultRequestGetInfos(ResultRequest *result, int id);
+    void    fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
+    void    addToResultRequest(ResultRequest *result, int id);
 };
 
 

@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:26:02 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 12:16:56 pm                       *
+ * Last Modified: Wednesday, April 8th 2026, 6:34:22 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -19,18 +19,18 @@
 #include    "RuleSpaceship.hh"
 #include    "RuleItem.hh"
 
-class Rule : public RuleGrade, public RuleMission, public RulePlanete, public RuleSpaceship
+class       Rule : public RuleGrade, public RuleMission, public RulePlanete, public RuleSpaceship
 {
 public:
     int                                         attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJETS type_victime,const int id_victime);
     void                                        takeItem(int item, int id, OBJETS type);
     void                                        promote(int id_grade, int id_entity, OBJETS entity_type);
     void                                        removeGrade(int id_entity, OBJETS entity_type);
-    ResultRequest                               fillResultRequestKillEntities(OBJETS entity_type, int entity_id);
-    ResultRequest                               fillResultRequestGetInventory(OBJETS entity_type, int entity_id);
-    ResultRequest                               fillResultRequestGetInfos(OBJETS entity_type, int entity_id);
-    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);    
-    bool                                        killEntities(ResultRequest &entities);
+    void    fillResultRequestKillEntities(ResultRequest *result, OBJETS entity_type, int entity_id);
+    void    fillResultRequestGetInventory(ResultRequest *result,OBJETS entity_type, int entity_id);
+    void    fillResultRequestGetInfos(ResultRequest *result,OBJETS entity_type, int entity_id);
+    void    fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);    
+    bool    killEntities(ResultRequest &entities);
 };
 
 #endif

@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 10:45:25 pm                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:42:44 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:47:00 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -21,36 +21,28 @@ bool    RuleGrade::kill(map<int, shared_ptr<Grade>> &grades) {
     return isOk;
 }
 
-ResultRequest   RuleGrade::fillResultRequestKill(int id) {
-    ResultRequest result;
-
-    if (!this->isGradeExist(&result, id)) return result;
-    this->addToResultRequest(&result, id);
-    return result;
+void   RuleGrade::fillResultRequestKill(ResultRequest *result, int id) {
+    if (!this->isGradeExist(result, id)) return;
+    this->addToResultRequest(result, id);
 }
 
 void    RuleGrade::addToResultRequest(ResultRequest *result, int id) {
     result->_grades[id] = _grades[id];
 }
 
-ResultRequest   RuleGrade::fillResultRequestGetHierarchy(int id) {
-    ResultRequest   result;
+void   RuleGrade::fillResultRequestGetHierarchy(ResultRequest *result, int id) {
 
-    if (!this->isGradeExist(&result, id)) return result;
+    if (!this->isGradeExist(result, id)) return;
     for (auto h : this->_grades[id]->getMembre()) {
         if (!h.lock()) continue;
-        RuleQuidam::addToResultRequest(&result, h.lock()->getType(), this->getIdQuidam(h.lock()));
+        RuleQuidam::addToResultRequest(result, h.lock()->getType(), this->getIdQuidam(h.lock()));
     }
-    this->addToResultRequest(&result, id);
-    return result;
+    this->addToResultRequest(result, id);
 }
 
-ResultRequest   RuleGrade::fillResultRequestGetInfos(int id) {
-    ResultRequest   result;
-
-    if (id != -1 && !this->isGradeExist(&result, id)) return result;
-    for (auto g : this->_grades) if ((id != -1 && id == g.first) || id == -1) this->addToResultRequest(&result, g.first);
-    return result;
+void   RuleGrade::fillResultRequestGetInfos(ResultRequest *result, int id) {
+    if (id != -1 && !this->isGradeExist(result, id)) return;
+    for (auto g : this->_grades) if ((id != -1 && id == g.first) || id == -1) this->addToResultRequest(result, g.first);
 }
 
 void    RuleGrade::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {

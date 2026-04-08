@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:29:42 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:42:54 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:45:01 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -102,96 +102,87 @@ bool    Rule::killEntities(ResultRequest &entities) {
     return isOk;
 }
 
-ResultRequest  Rule::fillResultRequestKillEntities(OBJETS entity_type, int entity_id) {
-    ResultRequest   result;
+void  Rule::fillResultRequestKillEntities(ResultRequest *result, OBJETS entity_type, int entity_id) {
     switch (entity_type)
     {
     case PLANETE:
-        return RulePlanete::fillResultRequestKill(entity_id);
+        RulePlanete::fillResultRequestKill(result, entity_id);
         break;
     case HEROS:
     case PNJ:
     case EVIL:
-        return RuleQuidam::fillResultRequestKill(entity_type, entity_id);
+        RuleQuidam::fillResultRequestKill(result, entity_type, entity_id);
         break;
     case MISSION:
-        return RuleMission::fillResultRequestKill(entity_id);
+        RuleMission::fillResultRequestKill(result, entity_id);
         break;
     case SPACESHIP:
-        return RuleSpaceship::fillResultRequestKill(entity_id);
+        RuleSpaceship::fillResultRequestKill(result, entity_id);
         break;
     case GRADE:
-        return RuleGrade::fillResultRequestKill(entity_id);
+        RuleGrade::fillResultRequestKill(result, entity_id);
         break;
     case ITEM:
-        return RuleItem::fillResultRequestKill(entity_id);
+        RuleItem::fillResultRequestKill(result, entity_id);
         break;
     default:
-        result._code = UNKNOWN_ENTITY;
-        return result;
+        result->_code = UNKNOWN_ENTITY;
         break;
     }
-    result._code = UNKNOWN_ENTITY;
-    return result;
 }
 
-ResultRequest   Rule::fillResultRequestGetInventory(OBJETS entity_type, int entity_id) {
-    ResultRequest   result;
-
+void   Rule::fillResultRequestGetInventory(ResultRequest *result, OBJETS entity_type, int entity_id) {;
     switch (entity_type)
     {
     case SPACESHIP:
-        result = RuleSpaceship::fillResultRequestGetInventory(entity_id);
+        RuleSpaceship::fillResultRequestGetInventory(result, entity_id);
         break;
     case HEROS:
     case PNJ:
     case EVIL:
-        result = RuleQuidam::fillResultRequestGetInventory(entity_type, entity_id);
+        RuleQuidam::fillResultRequestGetInventory(result, entity_type, entity_id);
         break;
     case MISSION:
     case ITEM:
     case PLANETE:
     case GRADE:
-        result._code = MISSING_INVENTORY;
+        result->_code = MISSING_INVENTORY;
         break;
     default:
-        result._code = UNKNOWN_ENTITY;
+        result->_code = UNKNOWN_ENTITY;
         break;
     }
-    return result;
 }
 
-ResultRequest   Rule::fillResultRequestGetInfos(OBJETS entity_type, int entity_id) {
-    ResultRequest   result;
+void   Rule::fillResultRequestGetInfos(ResultRequest *result, OBJETS entity_type, int entity_id) {
 
     switch (entity_type)
     {
     case PLANETE:
-        result = RulePlanete::fillResultRequestGetInfos(entity_id);
+        RulePlanete::fillResultRequestGetInfos(result, entity_id);
         break;
     case LIVING:
     case HEROS:
     case EVIL:
     case PNJ:
-        result = RuleQuidam::fillResultRequestGetInfos(entity_type, entity_id);
+        RuleQuidam::fillResultRequestGetInfos(result, entity_type, entity_id);
         break;
     case MISSION:
-        result = RuleMission::fillResultRequestGetInfos(entity_id);
+        RuleMission::fillResultRequestGetInfos(result, entity_id);
         break;
     case SPACESHIP:
-        result = RuleSpaceship::fillResultRequestGetInfos(entity_id);
+        RuleSpaceship::fillResultRequestGetInfos(result, entity_id);
         break;
     case ITEM:
-        result = RuleItem::fillResultRequestGetInfos(entity_id);
+        RuleItem::fillResultRequestGetInfos(result, entity_id);
         break;
     case GRADE:
-        result = RuleGrade::fillResultRequestGetInfos(entity_id);
+        RuleGrade::fillResultRequestGetInfos(result, entity_id);
         break;
     default:
-        result._code = UNKNOWN_ENTITY;
+        result->_code = UNKNOWN_ENTITY;
         break;
     }
-    return result;
 }
 
 void    Rule::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {

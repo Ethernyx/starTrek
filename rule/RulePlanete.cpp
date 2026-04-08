@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:19:29 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 1:59:44 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:49:58 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,10 +20,8 @@ bool    RulePlanete::kill(map<int, shared_ptr<Planete>> &planetes) {
     return isOk;
 }
 
-ResultRequest   RulePlanete::fillResultRequestKill(int id) {
-    ResultRequest result;
-
-    if (!this->isPlaneteExist(&result, id)) return result;
+void   RulePlanete::fillResultRequestKill(ResultRequest *result, int id) {
+    if (!this->isPlaneteExist(result, id)) return;
     
     for (auto h = this->_planetes[id]->getHabitants().begin(); h != this->_planetes[id]->getHabitants().end(); h++)
     {
@@ -31,43 +29,38 @@ ResultRequest   RulePlanete::fillResultRequestKill(int id) {
             // je remplis mon array de perso ou pnj qui vont mourir avec la planete
             for (auto p = this->_quidams[h->lock()->getType()].begin(); p != this->_quidams[h->lock()->getType()].end(); p++) {
                 if (p->second == h->lock())
-                    RuleQuidam::addToResultRequest(&result, p->second->getType(), p->first);
+                    RuleQuidam::addToResultRequest(result, p->second->getType(), p->first);
             }
         }
 
         // recuperation des ID de l'inventaire
         for (auto i = h->lock()->getInventory().begin(); i != h->lock()->getInventory().end(); i++)
-            RuleItem::addToResultRequest(&result, i->first);
+            RuleItem::addToResultRequest(result, i->first);
     }
-    this->addToResultRequest(&result, id);
-    return result;
+    this->addToResultRequest(result, id);
 }
 
 void    RulePlanete::addToResultRequest(ResultRequest *result, int id) {
     result->_planetes[id] = this->_planetes[id];
 }
 
-ResultRequest   RulePlanete::fillResultGetHabitant(int id) {
-    ResultRequest   result;
-
-    if (!this->isPlaneteExist(&result, id)) return result;
+void   RulePlanete::fillResultGetHabitant(ResultRequest *result, int id) {
+    if (!this->isPlaneteExist(result, id)) return;
 
     for (auto h : this->_planetes[id]->getHabitants()) {
         if (!h.lock()) continue;
         for (auto p : this->_quidams[h.lock()->getType()]) if (p.second == h.lock()) {
-            RuleQuidam::addToResultRequest(&result, p.second->getType(), p.first);
+            RuleQuidam::addToResultRequest(result, p.second->getType(), p.first);
         }
     }
-    this->addToResultRequest(&result, id);
-    return result;
+    this->addToResultRequest(result, id);
 }
 
-ResultRequest   RulePlanete::fillResultRequestGetInfos(int id) {
+void   RulePlanete::fillResultRequestGetInfos(ResultRequest *result, int id) {
     ResultRequest   result;
 
-    if (id != -1 && !this->isPlaneteExist(&result, id)) return result;
-    for (auto p : this->_planetes) if ((id != -1 && id == p.first) || id == -1) this->addToResultRequest(&result, p.first);
-    return result;
+    if (id != -1 && !this->isPlaneteExist(result, id)) return;
+    for (auto p : this->_planetes) if ((id != -1 && id == p.first) || id == -1) this->addToResultRequest(result, p.first);
 }
 
 void    RulePlanete::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {

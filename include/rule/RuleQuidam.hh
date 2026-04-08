@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 1:54:08 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:49:22 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:41:47 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -16,17 +16,16 @@
 #include    "RuleGrade.hh"
 #include    "../ReturnRequest.hh"
 
-class RuleQuidam : public virtual RuleItem
+class       RuleQuidam : public virtual RuleItem
 {
-private:
 public:
-    bool                                        kill(map<OBJETS, map<int, shared_ptr<AQuidam>>> &quidams);
-    ResultRequest                               fillResultRequestKill(OBJETS type, int id);
-    ResultRequest                               fillResultRequestGetInventory(OBJETS type, int id);
-    ResultRequest                               fillResultRequestGetInfos(OBJETS type, int id);
-    void                                        fillResultRequestPromote(ResultRequest *result, int id_grade, OBJETS type, int id_quidam);
-    void                                        fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
-    void                                        addToResultRequest(ResultRequest *result, OBJETS type, int id);
+    bool    kill(map<OBJETS, map<int, shared_ptr<AQuidam>>> &quidams);
+    void    fillResultRequestKill(ResultRequest *result, OBJETS type, int id);
+    void    fillResultRequestGetInventory(ResultRequest *result, OBJETS type, int id);
+    void    fillResultRequestGetInfos(ResultRequest *result, OBJETS type, int id);
+    void    fillResultRequestPromote(ResultRequest *result, int id_grade, OBJETS type, int id_quidam);
+    void    fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
+    void    addToResultRequest(ResultRequest *result, OBJETS type, int id);
 
 };
 
