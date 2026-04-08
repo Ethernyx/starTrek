@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:03 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 4:14:02 pm                          *
+ * Last Modified: Wednesday, April 8th 2026, 8:38:33 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -198,6 +198,7 @@ typedef enum {
     UNAUTHORIZED,
     ERROR_DELETE_MEMBER,
     ERROR_ADD_MEMBER,
+    ENTITY_IS_DEATH
         
 }   CODE_ERROR;
 

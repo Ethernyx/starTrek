@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:00:46 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:43:02 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 8:34:24 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -25,6 +25,7 @@ public:
     void    fillResultRequestGetInfos(ResultRequest *result, int id);
     void    fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);
     void    addToResultRequest(ResultRequest *result, int id);
+    void    simpleAttack(ResultRequest *result, int id_def, int id_att);
 };
 
 

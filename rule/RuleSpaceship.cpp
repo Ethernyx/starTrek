@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:14:42 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:53:17 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 8:34:14 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -77,4 +77,13 @@ void    RuleSpaceship::fillResultRequestAddEntities(ResultRequest *result, map<s
 
     int id = this->addSpaceShip(attr_int, attr_string);
     this->addToResultRequest(result, id);
+}
+
+void RuleSpaceship::simpleAttack(ResultRequest *result, int id_def, int id_att) {
+    auto a = this->_flotte[id_att];
+    auto v = this->_flotte[id_def];
+
+    if (a == nullptr || v == nullptr) { result->_code = UNKNOWN_DEFENSE_OR_ATTACK; return; }
+    v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
+    this->addToResultRequest(result, id_def);
 }

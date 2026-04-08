@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:26:02 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:34:22 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 9:03:21 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -22,7 +22,6 @@
 class       Rule : public RuleGrade, public RuleMission, public RulePlanete, public RuleSpaceship
 {
 public:
-    int                                         attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJETS type_victime,const int id_victime);
     void                                        takeItem(int item, int id, OBJETS type);
     void                                        promote(int id_grade, int id_entity, OBJETS entity_type);
     void                                        removeGrade(int id_entity, OBJETS entity_type);
@@ -30,6 +29,7 @@ public:
     void    fillResultRequestGetInventory(ResultRequest *result,OBJETS entity_type, int entity_id);
     void    fillResultRequestGetInfos(ResultRequest *result,OBJETS entity_type, int entity_id);
     void    fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);    
+    void    fillResultRequestAttack(ResultRequest *result, OBJETS type_def, int id_def, OBJETS type_att, int id_att);
     bool    killEntities(ResultRequest &entities);
 };
 

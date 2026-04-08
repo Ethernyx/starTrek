@@ -4,48 +4,14 @@
  * Created Date: Su Apr 2026, 4:29:42 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:45:01 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 9:03:06 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
 
 #include    "../include/rule/Rule.hh"
+
 /*
-int Rule::attaqueSimple(OBJETS type_attaquant, const int id_attaquant, OBJETS type_victime,const int id_victime)
-{
-    switch (type_attaquant)
-    {
-        case HEROS:
-        case PNJ:
-        {
-            auto a = type_attaquant == HEROS ? this->_quidams[HEROS][id_attaquant] : this->_quidams[PNJ][id_attaquant];
-            auto v = type_victime == HEROS ? this->_quidams[HEROS][id_victime] : this->_quidams[PNJ][id_victime];
-
-            if (a == nullptr || v == nullptr)
-                return -1;
-            v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
-            if (v->getHp() <= 0)
-                return 1;
-        }
-            break;
-        case SPACESHIP:
-        {
-            auto a = this->_flotte[id_attaquant];
-            auto v = this->_flotte[id_victime];
-
-            if (a == nullptr || v == nullptr)
-                return -1;
-            v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
-            if (v->getHp() <= 0)
-                return 1;
-        }
-            break;
-        default:
-            break;
-    }
-    return 0;
-}
-
 void    Rule::takeItem(const int item, const int owner, OBJETS type) {
     switch (type)
     {
@@ -215,4 +181,30 @@ void    Rule::fillResultRequestAddEntities(ResultRequest *result, map<string, in
         result->_code = UNKNOWN_ENTITY;
         break;
     }
+}
+
+void    Rule::fillResultRequestAttack(ResultRequest *result, OBJETS type_def, int id_def, OBJETS type_att, int id_att) {
+    if (type_att != type_def && 
+        (find(QUIDAMS.begin(), QUIDAMS.end(), type_def) != QUIDAMS.end() 
+            || find(QUIDAMS.begin(), QUIDAMS.end(), type_att) != QUIDAMS.end())) { result->_code = ENTITY_OUT_RANGE; return; }
+
+    switch (type_def) {
+            case HEROS:
+            case EVIL:
+            case PNJ:
+                RuleQuidam::simpleAttack(result, type_def, id_def, type_att, id_att);
+                break;
+            case SPACESHIP:
+                RuleSpaceship::simpleAttack(result, id_def, id_att);
+                break;
+            case MISSION:
+            case GRADE:
+            case PLANETE:
+            case ITEM:
+                result->_code = UNKNOWN_ENTITY;
+                break;
+            default:
+                result->_code = UNKNOWN_ENTITY;
+                break;
+        }
 }

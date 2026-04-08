@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 4:00:53 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 9:05:24 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -279,56 +279,19 @@ string Controller::init() {
  * @return string
  */
 string  Controller::j_attack(Context &ctx) {
-    int hp = 0, dead = 0;
-    string retour = NULL;
-    boost::json::object json = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object(), defenseur, attaquant, res, node;
-    attaquant = json.at("attaquant").as_object();
-    defenseur = json.at("defenseur").as_object();
+    boost::json::object json = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
+    ResultRequest       result;
 
-    OBJETS  typeAttaquant = (OBJETS)attaquant.at("type").as_int64();
-    OBJETS  typeDefenseur = (OBJETS)defenseur.at("type").as_int64();
-
-    if(typeDefenseur == typeAttaquant 
-        || (find(QUIDAMS.begin(), QUIDAMS.end(), typeAttaquant) != QUIDAMS.end() 
-            && find(QUIDAMS.begin(), QUIDAMS.end(), typeDefenseur) != QUIDAMS.end())) {
-        switch (typeAttaquant) {
-            case HEROS:
-            case EVIL:
-            case PNJ:
-                //retourne si la victime est morte
-                //dans la generation du json, on retourne le HP du perso, donc,
-                // savoir si la victime est morte ou pas, ici, n'a aucun intérêt
-                dead = this->attaqueSimple((OBJETS)typeAttaquant, attaquant.at("id").as_int64(), (OBJETS)typeDefenseur,defenseur.at("id").as_int64());
-                if (dead == -1) return List::returnJson(UNKNOWN_DEFENSE_OR_ATTACK); // si c'est -1 ça veut dire qu'1 des 2 n'existe pas
-                hp = dead ? 0 : this->_quidams[typeDefenseur][defenseur.at("id").as_int64()]->getHp();
-                break;
-            case SPACESHIP:
-                dead = this->attaqueSimple((OBJETS)typeAttaquant, attaquant.at("id").as_int64(), (OBJETS)typeDefenseur,defenseur.at("id").as_int64());
-                if (dead == -1) return List::returnJson(UNKNOWN_DEFENSE_OR_ATTACK);
-                hp = dead ? 0 : this->_flotte[defenseur.at("id").as_int64()]->getHp();
-                break;
-            case MISSION:
-            case GRADE:
-            case PLANETE:
-            case ITEM:
-                retour = List::returnJson(UNKNOWN_ENTITY);
-                break;
-            default:
-                retour = List::returnJson(UNKNOWN_ENTITY);
-                break;
-        }
-    } else retour = List::returnJson(ENTITY_OUT_RANGE);
-
-    if (!retour.empty()) return retour;
-    node["id"] = defenseur.at("id").as_int64();
-    node["entity_type"] = defenseur.at("type").as_int64();
-    node["hp"] = hp;
-    res["statut"] = "Success";
-    res["code"] = 0;
-    res["return"].emplace_object();
-    res["return"] = node;
+    Rule::fillResultRequestAttack(&result, 
+        (OBJETS)json.at("defenseur").as_object().at("type").as_int64(), 
+        json.at("defenseur").as_object().at("id").as_int64(), 
+        (OBJETS)json.at("attaquant").as_object().at("type").as_int64(), 
+        json.at("attaquant").as_object().at("id").as_int64());
+    
+    string json = this->buildResponse(result);
+    if (result._code == ENTITY_IS_DEATH) Rule::killEntities(result);
     this->saveJSON();
-    return boost::json::serialize(res);
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -399,9 +362,12 @@ string  Controller::j_exchangeItem(Context &ctx) {
  * @return string
  */
 string  Controller::j_getInfos(Context &ctx) {
-    OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
-    int entity_id = ctx.getParam("entity_id").c_str() ? atoi(ctx.getParam("entity_id").c_str()) : -1;
-    return this->buildResponse(Rule::fillResultRequestGetInfos(entity_type, entity_id));
+    OBJETS          entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
+    int             entity_id = ctx.getParam("entity_id").c_str() ? atoi(ctx.getParam("entity_id").c_str()) : -1;
+    ResultRequest   result;
+    
+    Rule::fillResultRequestGetInfos(&result, entity_type, entity_id);
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -413,11 +379,11 @@ string  Controller::j_getInfos(Context &ctx) {
  */
 string  Controller::j_kill(Context &ctx) {
     boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object(), res;
+    auto                entity_type = (OBJETS)startrek.at("entity_type").as_int64();
+    auto                entity_id = startrek.at("entity_id").as_int64();
+    ResultRequest       result;
 
-    auto entity_type = (OBJETS)startrek.at("entity_type").as_int64();
-    auto entity_id = startrek.at("entity_id").as_int64();
-
-    auto result = this->fillResultRequestKillEntities(entity_type, entity_id);
+    this->fillResultRequestKillEntities(&result, entity_type, entity_id);
     string responce = this->buildResponse(result);
     this->killEntities(result);
     if (result._code == OK) this->saveJSON();
@@ -432,9 +398,8 @@ string  Controller::j_kill(Context &ctx) {
  * @return string
  */
 string  Controller::j_add_entities(Context &ctx) {
-    
-    ResultRequest   result;
-    boost::json::array startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
+    ResultRequest       result;
+    boost::json::array  startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
 
     for (size_t i = 0; i < startrek.size(); i++) {
         map<string, int>    entities_int;
@@ -460,8 +425,11 @@ string  Controller::j_add_entities(Context &ctx) {
  * @return string
  */
 string  Controller::j_getHabitants(Context &ctx) {
-    int id = atoi(ctx.getParam("id_planet").c_str());
-    return this->buildResponse(RulePlanete::fillResultGetHabitant(id));
+    int             id = atoi(ctx.getParam("id_planet").c_str());
+    ResultRequest   result;
+    
+    RulePlanete::fillResultGetHabitant(&result, id);
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -472,8 +440,11 @@ string  Controller::j_getHabitants(Context &ctx) {
  * @return string
  */
 string  Controller::j_getEquipage(Context &ctx) {
-    int id = atoi(ctx.getParam("id_ship").c_str());
-    return this->buildResponse(RuleSpaceship::fillResultGetEquipage(id));
+    int             id = atoi(ctx.getParam("id_ship").c_str());
+    ResultRequest   result;
+
+    RuleSpaceship::fillResultGetEquipage(&result, id);
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -484,9 +455,12 @@ string  Controller::j_getEquipage(Context &ctx) {
  * @return string
  */
 string  Controller::j_getInventory(Context &ctx) {
-    OBJETS entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
-    int entity_id = atoi(ctx.getParam("entity_id").c_str());
-    return this->buildResponse(Rule::fillResultRequestGetInventory(entity_type, entity_id));
+    OBJETS          entity_type = (OBJETS)atoi(ctx.getParam("entity_type").c_str());
+    int             entity_id = atoi(ctx.getParam("entity_id").c_str());
+    ResultRequest   result;
+    
+    Rule::fillResultRequestGetInventory(&result, entity_type, entity_id);
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */
@@ -497,8 +471,8 @@ string  Controller::j_getInventory(Context &ctx) {
  * @return string
  */
 string  Controller::j_promote(Context &ctx) {
-    boost::json::array startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
-    ResultRequest   result;
+    boost::json::array  startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
+    ResultRequest       result;
 
     for (size_t i = 0; i < startrek.size(); i++) {
         RuleQuidam::fillResultRequestPromote(&result, startrek.at(i).as_object().at("id_grade").as_int64(), (OBJETS)startrek.at(i).as_object().at("entity_type").as_int64(), startrek.at(i).as_object().at("entity_id").as_int64());
@@ -516,10 +490,11 @@ string  Controller::j_promote(Context &ctx) {
  * @return string
  */
 string  Controller::j_getHierarchy(Context &ctx) {
-    boost::json::array pnjs, heros, evils;
-    boost::json::object res;
-    int id = atoi(ctx.getParam("id_grade").c_str());
-    return this->buildResponse(RuleGrade::fillResultRequestGetHierarchy(id));
+    int             id = atoi(ctx.getParam("id_grade").c_str());
+    ResultRequest   result;
+
+    RuleGrade::fillResultRequestGetHierarchy(&result, id);
+    return this->buildResponse(result);
 }
 
 string  Controller::j_getToken(Context &ctx) {

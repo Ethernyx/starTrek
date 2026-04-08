@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:51:25 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 8:28:43 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -83,8 +83,13 @@ void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, map<stri
 
     int id = this->addQuidam(attr_int, attr_string);
     this->addToResultRequest(result, (OBJETS)attr_int["entity_type"], id);
+}
 
+void RuleQuidam::simpleAttack(ResultRequest *result, OBJETS type_def, int id_def, OBJETS type_att, int id_att) {
+    auto a = this->_quidams[type_att][id_att];
+    auto v = this->_quidams[type_def][id_def];
 
-    
-    
+    if (a == nullptr || v == nullptr) { result->_code = UNKNOWN_DEFENSE_OR_ATTACK; return; }
+    v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
+    this->addToResultRequest(result, type_def, id_def);
 }

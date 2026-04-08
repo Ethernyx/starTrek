@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:45:50 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:41:39 pm                        *
+ * Last Modified: Wednesday, April 8th 2026, 6:54:05 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -304,4 +304,5 @@ int     LifeDoor::addGrade(map<string, int> attr_int, map<string, string> attr_s
         .withLevel(attr_int["level"])
         .withName(attr_string["name"])
         .build();
+    return id;
 }
