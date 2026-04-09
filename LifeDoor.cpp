@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:45:50 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:41:51 am                        *
+ * Last Modified: Thursday, April 9th 2026, 2:19:39 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -168,6 +168,7 @@ bool    LifeDoor::deleteItem(int id) {
 }
 
 void    LifeDoor::removeItem(int idItem, string name, OBJETS type) {
+
     if (type == SPACESHIP) this->_items[idItem].swap(this->getSpaceship(name)->getInventory()[idItem]);
     else this->_items[idItem].swap(this->getPerso(name)->getInventory()[idItem]);
     /* je set le owner */

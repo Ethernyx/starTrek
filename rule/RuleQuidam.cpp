@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:09:01 am                        *
+ * Last Modified: Thursday, April 9th 2026, 2:13:42 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -90,4 +90,42 @@ void RuleQuidam::simpleAttack(ResultRequest *result, OBJETS type_def, int id_def
     if (a == nullptr || v == nullptr) { result->_code = UNKNOWN_DEFENSE_OR_ATTACK; return; }
     v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
     this->addToResultRequest(result, type_def, id_def);
+}
+
+void    RuleQuidam::fillResultRequestExchangeItem(ResultRequest *result, vector<int> &items, OBJETS type, int id, string action) {
+    for (auto item : items) {
+        if(strcmp(action.c_str(),"pull") == 0) this->takeItem(result, item, type, id);
+        else if (strcmp(action.c_str(), "push") == 0) this->giveItem(result, item, type, id);
+        else result->_code = UNKNOWN_ACTION;
+        if (result->_code != OK) return;
+    }
+}
+
+void    RuleQuidam::takeItem(ResultRequest *result, int item, OBJETS type, int quidam) {
+    /* je verifie si l'item exist et est libre et si le quidam exist et si son inventaire n'est pas déjà remplit */
+    if (!this->isItemExist(result, item)) return;
+    if (!this->isQuidamExist(result, type, quidam)) return;
+    if (this->_tableDeCorrespondance[NONE].find(item) == this->_tableDeCorrespondance[NONE].end()) { result->_code = ITEM_OCCUPY; return; }
+    if (this->_quidams[type][quidam]->getInventory().size() >= this->_quidams[type][quidam]->getMaxItem()) { result->_code = (type == HEROS ? MAX_ITEM_OVERFLOW_HEROS : (type == PNJ ? MAX_ITEM_OVERFLOW_PNJ : MAX_ITEM_OVERFLOW_EVIL)); return; }
+
+    this->_quidams[type][quidam]->addItem(this->_items[item], item);
+    this->_quidams[type][quidam]->getInventory()[item]->setOwner(quidam, type);
+
+    /* j'erase l'ancienne corespondance et j'ajoute la nouvelle */
+    this->_tableDeCorrespondance[NONE].erase(this->_tableDeCorrespondance[NONE].find(item));
+    this->_tableDeCorrespondance[type][item] = quidam;
+}
+
+void    RuleQuidam::giveItem(ResultRequest *result, int item, OBJETS type, int quidam) {
+    /* je verifie si l'item existe et apartient bien à un quidam qui existe aussi */
+    if (!this->isItemExist(result, item)) return;
+    if (!this->isQuidamExist(result, type, quidam)) return;
+    if (this->_tableDeCorrespondance[type].find(item) == this->_tableDeCorrespondance[type].end() || this->_tableDeCorrespondance[type][item] != quidam) { result->_code = (type == HEROS ? UNKNOWN_ITEM_HEROS: (type == PNJ ? UNKNOWN_ITEM_PNJ : UNKNOWN_ITEM_EVIL)); return; }
+    
+    this->_items[item].swap(this->getPerso(quidam)->getInventory()[item]);
+    this->_quidams[type][quidam]->getInventory().find(item)->second->setOwner(0, NONE);
+
+    /* j'erase l'ancienne corespondance et j'ajoute la nouvelle */
+    this->_tableDeCorrespondance[type].erase(this->_tableDeCorrespondance[type].find(item));
+    this->_tableDeCorrespondance[NONE][item] = 0;
 }

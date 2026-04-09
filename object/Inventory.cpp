@@ -1,12 +1,12 @@
-/**
- * File: Inventory.cpp
- * Project: objects
- * File Created: Sunday', 30th July 2023 6:46:05 pm
- * Author: LALIN Romain
- * -----
- * Last Modified: Sunday', 30th July 2023 6:46:05 pm
- * Modified by: LALIN Romain
- * -----
+/*
+ * File: Inventory.cpp                                                         *
+ * Project: object                                                             *
+ * Created Date: Tu May 2025, 11:12:16 am                                      *
+ * Author: LALIN Romain                                                        *
+ * -----                                                                       *
+ * Last Modified: Thursday, April 9th 2026, 2:23:11 pm                         *
+ * By: LALIN Romain                                                            *
+ * ----------	---	---------------------------------------------------------  *
 */
 
 #include    "../include/object/Inventory.hh"

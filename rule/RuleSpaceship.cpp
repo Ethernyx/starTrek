@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:14:42 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:07:29 am                        *
+ * Last Modified: Thursday, April 9th 2026, 2:10:52 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -84,4 +84,41 @@ void RuleSpaceship::simpleAttack(ResultRequest *result, int id_def, int id_att) 
     if (a == nullptr || v == nullptr) { result->_code = UNKNOWN_DEFENSE_OR_ATTACK; return; }
     v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
     this->addToResultRequest(result, id_def);
+}
+
+void    RuleSpaceship::fillResultRequestExchangeItem(ResultRequest *result, vector<int> &items, int id, string action) {
+    for (auto item : items) {
+        if(strcmp(action.c_str(),"pull") == 0) this->takeItem(result, item, id);
+        else this->giveItem(result, item, id);
+        if (result->_code != OK) return;
+    }
+}
+
+void    RuleSpaceship::takeItem(ResultRequest *result, int item, int ship) {
+    /* je verifie si l'item exist et est libre et si le ship existe et si son inventaire n'est pas déjà remplit */
+    if (!this->isItemExist(result, item)) return;
+    if (!this->isSpaceshipExist(result, ship)) return;
+    if (this->_tableDeCorrespondance[NONE].find(item) == this->_tableDeCorrespondance[NONE].end()) { result->_code = ITEM_OCCUPY; return; }
+    if (this->_flotte[ship]->getInventory().size() >= this->_flotte[ship]->getMaxItem()) { result->_code = MAX_ITEM_OVERFLOW_SPACESHIP; return; }
+
+    this->_flotte[ship]->addItem(this->_items[item], item);
+    this->_flotte[ship]->getInventory()[item]->setOwner(ship, SPACESHIP);
+
+    /* j'erase l'ancienne corespondance et j'ajoute la nouvelle */
+    this->_tableDeCorrespondance[NONE].erase(this->_tableDeCorrespondance[NONE].find(item));
+    this->_tableDeCorrespondance[SPACESHIP][item] = ship;
+}
+
+void    RuleSpaceship::giveItem(ResultRequest *result, int item, int ship) {
+    /* je verifie si l'item exist et apartient bien à un ship qui existe aussi */
+    if (!this->isItemExist(result, item)) return;
+    if (!this->isSpaceshipExist(result, ship)) return;
+    if (this->_tableDeCorrespondance[SPACESHIP].find(item) == this->_tableDeCorrespondance[SPACESHIP].end() || this->_tableDeCorrespondance[SPACESHIP][item] != ship) { result->_code = UNKNOWN_ITEM_SPACECHIP; return; }
+
+    this->_items[item].swap(this->getSpaceship(ship)->getInventory()[item]);
+    this->_items[item]->setOwner(0, NONE);
+    /* j'erase l'ancienne corespondance */
+    this->_tableDeCorrespondance[SPACESHIP].erase(this->_tableDeCorrespondance[SPACESHIP].find(item));
+    /* j'ajoute la nouvelle */
+    this->_tableDeCorrespondance[NONE][item] = 0;
 }

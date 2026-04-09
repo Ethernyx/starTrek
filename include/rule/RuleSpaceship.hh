@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:00:46 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:56:43 am                         *
+ * Last Modified: Thursday, April 9th 2026, 12:18:10 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -24,8 +24,12 @@ public:
     void    fillResultRequestGetInventory(ResultRequest *result, int id);
     void    fillResultRequestGetInfos(ResultRequest *result, int id);
     void    fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string);
+    void    fillResultRequestExchangeItem(ResultRequest *result, vector<int> &items, int id_ship, string action);
     void    addToResultRequest(ResultRequest *result, int id);
     void    simpleAttack(ResultRequest *result, int id_def, int id_att);
+    void    takeItem(ResultRequest *result, int id_item, int id_ship);
+    void    giveItem(ResultRequest *result, int id_item, int id_ship);
+
 };
 
 

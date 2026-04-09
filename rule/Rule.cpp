@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:29:42 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:33:35 am                        *
+ * Last Modified: Thursday, April 9th 2026, 2:21:24 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -12,35 +12,6 @@
 #include    "../include/rule/Rule.hh"
 
 /*
-void    Rule::takeItem(const int item, const int owner, OBJETS type) {
-    switch (type)
-    {
-        case HEROS:
-            if (this->_items[item]) this->_quidams[HEROS][owner]->addItem(this->_items[item], item);
-            this->_quidams[HEROS][owner]->getInventory()[item]->setOwner(owner, type);
-            break;
-        case PNJ:
-            this->_quidams[PNJ][owner]->addItem(this->_items[item], item);
-            this->_quidams[PNJ][owner]->getInventory()[item]->setOwner(owner, type);
-            break;
-        case SPACESHIP:
-            this->_flotte[owner]->addItem(this->_items[item], item);
-            this->_flotte[owner]->getInventory()[item]->setOwner(owner, type);
-            break;
-        default:
-            break;
-    }
-    // j'erase l'ancienne corespondance
-    this->_tableDeCorrespondance[NONE].erase(this->_tableDeCorrespondance[NONE].find(item));
-    // j'ajoute la nouvelle
-    this->_tableDeCorrespondance[type][item] = owner;
-}
-
-void    Rule::promote(int id_grade, int id_entity, OBJETS entity_type) {
-    this->_quidams[entity_type][id_entity]->setIdGrade(id_grade);
-    this->_grades[id_grade]->addMembre(this->_quidams[HEROS][id_entity]);
-}
-
 void    Rule::removeGrade(int id_entity, OBJETS entity_type) {
     switch (entity_type)
     {
@@ -68,7 +39,8 @@ bool    Rule::killEntities(ResultRequest &entities) {
     return isOk;
 }
 
-void  Rule::fillResultRequestKillEntities(ResultRequest *result, OBJETS entity_type, int entity_id) {
+void Rule::fillResultRequestKillEntities(ResultRequest *result, OBJETS entity_type, int entity_id)
+{
     switch (entity_type)
     {
     case PLANETE:
@@ -207,4 +179,27 @@ void    Rule::fillResultRequestAttack(ResultRequest *result, OBJETS type_def, in
                 result->_code = UNKNOWN_ENTITY;
                 break;
         }
+}
+
+void Rule::fillResultExchangeItem(ResultRequest *result, vector<int> &id_items, OBJETS type_entity, int id_entity, string action) {
+    switch (type_entity)
+    {
+    case SPACESHIP:
+        RuleSpaceship::fillResultRequestExchangeItem(result, id_items, id_entity, action);
+        break;
+    case HEROS:
+    case PNJ:
+    case EVIL:
+        RuleQuidam::fillResultRequestExchangeItem(result, id_items, type_entity, id_entity, action);
+        break;
+    case MISSION:
+    case GRADE:
+    case PLANETE:
+    case ITEM:
+        result->_code = MISSING_INVENTORY;
+        break;
+    default:
+        result->_code = UNKNOWN_ENTITY;
+        break;
+    }
 }

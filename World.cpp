@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:38:27 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:30:59 am                        *
+ * Last Modified: Thursday, April 9th 2026, 2:20:15 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -112,6 +112,29 @@ shared_ptr<Planete> World::getPlanete(const string name)
             return p.second;
         }
     }
+    return nullptr;
+}
+
+shared_ptr<AQuidam> World::getPerso(const int id)
+{
+    for (auto type: QUIDAMS) {
+        if (this->_quidams[type].find(id) != this->_quidams[type].end()) return this->_quidams[type][id];
+    }
+    return nullptr;
+}
+shared_ptr<Spaceship> World::getSpaceship(const int id)
+{
+    if (this->_flotte.find(id) != this->_flotte.end()) return this->_flotte[id];
+    return nullptr;
+}
+shared_ptr<Mission> World::getMission(const int id)
+{
+    if (this->_missions.find(id) != this->_missions.end()) return this->_missions[id];
+    return nullptr;
+}
+shared_ptr<Planete> World::getPlanete(const int id)
+{
+    if (this->_planetes.find(id) != this->_planetes.end()) return this->_planetes[id];
     return nullptr;
 }
 

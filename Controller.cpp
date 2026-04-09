@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:08:22 am                        *
+ * Last Modified: Thursday, April 9th 2026, 2:16:19 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -302,56 +302,21 @@ string  Controller::j_attack(Context &ctx) {
  * @return string 
  */
 string  Controller::j_exchangeItem(Context &ctx) {
-    auto startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
-    int code = 0;
+    auto            startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_array();
+    ResultRequest   result;
+    vector<int>     items;
 
     for (size_t i = 0; i < startrek.size(); i++) {
-        auto objet = startrek.at(i).as_object();
-        OBJETS type = (OBJETS)objet.at("entity_type").as_int64();
-        auto entity_id = objet.at("entity_id").as_int64();
-        auto action = objet.at("action").as_string();
-        switch (type) {
-            case HEROS:
-            case PNJ:
-            case EVIL:
-                for (size_t j = 0; j < objet.at("items").as_array().size(); j++) {
-                    auto id_item = objet.at("items").as_array().at(j).as_int64();
-                    if (this->_quidams[type].find(entity_id) == this->_quidams[type].end()) return List::returnJson((type == HEROS ? UNKNOWN_HEROS : (type == PNJ ? UNKNOWN_PNJ : UNKNOWN_EVIL)));
-                    if(strcmp(action.c_str(),"pull") == 0) {
-                        //le perso recupere les items
-                        if(this->getPerso(this->_quidams[type].find(entity_id)->second->getName())->getInventory().size() <= this->getPerso(this->_quidams[type].find(entity_id)->second->getName())->getMaxItem()) {
-                            if (this->_tableDeCorrespondance[NONE].find(id_item) == this->_tableDeCorrespondance[NONE].end()) return List::returnJson(ITEM_OCCUPY);
-                            this->takeItem(id_item, entity_id, type);
-                        } else return List::returnJson((type == HEROS ? MAX_ITEM_OVERFLOW_HEROS : (type == PNJ ? MAX_ITEM_OVERFLOW_PNJ : MAX_ITEM_OVERFLOW_EVIL)));
-                    } else if (strcmp(action.c_str(), "push") == 0) {
-                        if (!(this->_tableDeCorrespondance[type].find(id_item) != this->_tableDeCorrespondance[type].end() && this->_tableDeCorrespondance[type][id_item] == entity_id)) return List::returnJson((type == HEROS ? UNKNOWN_ITEM_HEROS : (type == PNJ ? UNKNOWN_ITEM_PNJ : UNKNOWN_ITEM_EVIL)));
-                        this->removeItem(id_item, this->_quidams[type].find(entity_id)->second->getName(), type);
-                    } else return List::returnJson(UNKNOWN_ACTION);
-                }
-                break;
-            case SPACESHIP:
-                for (size_t j = 0; j < objet.at("items").as_array().size(); j++) {
-                    auto id_item = objet.at("items").as_array().at(j).as_int64();
-                    if (this->_flotte.find(entity_id) == this->_flotte.end()) return List::returnJson(UNKNOWN_SPACESHIP);
-                    if(strcmp(action.c_str(),"pull") == 0) {
-                        //le Spaceship recupere les items
-                        if(this->getSpaceship(this->_flotte.find(entity_id)->second->getName())->getInventory().size() <= this->getSpaceship(this->_flotte.find(entity_id)->second->getName())->getMaxItem()) {
-                            if (this->_tableDeCorrespondance[NONE].find(id_item) == this->_tableDeCorrespondance[NONE].end()) return List::returnJson(ITEM_OCCUPY);
-                            this->takeItem(id_item, entity_id, type);
-                        } else return List::returnJson(MAX_ITEM_OVERFLOW_SPACESHIP);
-                    } else if (strcmp(action.c_str(), "push") == 0) {
-                        if (!(this->_tableDeCorrespondance[type].find(id_item) != this->_tableDeCorrespondance[type].end() && this->_tableDeCorrespondance[type][id_item] == entity_id)) return List::returnJson(UNKNOWN_ITEM_SPACECHIP);
-                        this->removeItem(id_item, this->_flotte.find(entity_id)->second->getName(), type);
-                    } else return List::returnJson(UNKNOWN_ACTION);
-                }
-                break;
-            default:
-                return List::returnJson(UNKNOWN_ENTITY);
-                break;
-        }
+        for (size_t it = 0; it < startrek.at(i).as_object().at("item").as_array().size(); it++) items.push_back(startrek.at(i).as_object().at("item").as_array().at(it).as_int64());
+        Rule::fillResultExchangeItem(&result, items, 
+            (OBJETS)startrek.at(i).as_object().at("entity_type").as_int64(), 
+            startrek.at(i).as_object().at("entity_id").as_int64(), 
+            startrek.at(i).as_object().at("action").as_string().c_str());
+        if (result._code != OK) break;
+        items.clear();
     }
-    this->saveJSON();
-    return List::returnJson(code);
+    if (result._code == OK) this->saveJSON();
+    return this->buildResponse(result);
 }
 
 /** Fonctions de traitement des JSON reçus par le client TCP */

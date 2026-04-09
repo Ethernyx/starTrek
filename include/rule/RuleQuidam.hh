@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 1:54:08 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:37:48 am                        *
+ * Last Modified: Thursday, April 9th 2026, 12:18:36 pm                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -26,9 +26,11 @@ public:
     void    fillResultRequestGetInfos(ResultRequest *result, OBJETS type, int id);
     void    fillResultRequestPromote(ResultRequest *result, int id_grade, OBJETS type, int id_quidam);
     void    fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string);
+    void    fillResultRequestExchangeItem(ResultRequest *result, vector<int> &items, OBJETS type_quidam, int id_quidam, string action);
     void    addToResultRequest(ResultRequest *result, OBJETS type, int id);
     void    simpleAttack(ResultRequest *result, OBJETS type_def, int id_def, OBJETS type_att, int id_att);
-
+    void    takeItem(ResultRequest *result, int id_item, OBJETS type_quidam, int id_quidam);
+    void    giveItem(ResultRequest *result, int id_item, OBJETS type_quidam, int id_quidam);
 };
 
 

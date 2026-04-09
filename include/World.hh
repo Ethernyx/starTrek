@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:33:10 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 4:53:22 pm                          *
+ * Last Modified: Thursday, April 9th 2026, 2:11:19 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -47,6 +47,10 @@ public:
     shared_ptr<Spaceship>                       getSpaceship(const string name);
     shared_ptr<Mission>                         getMission(const string name);
     shared_ptr<Planete>                         getPlanete(const string name);
+    shared_ptr<AQuidam>                         getPerso(const int id);
+    shared_ptr<Spaceship>                       getSpaceship(const int id);
+    shared_ptr<Mission>                         getMission(const int id);
+    shared_ptr<Planete>                         getPlanete(const int id);
     unique_ptr<Item>                            getItem(const int id);
     int                                         getIdQuidam(shared_ptr<AQuidam> quidam);
 
