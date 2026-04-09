@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:14:42 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 8:34:14 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 9:55:27 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -68,7 +68,7 @@ void   RuleSpaceship::fillResultRequestGetInfos(ResultRequest *result, int id) {
     for (auto s : this->_flotte) if ((id != -1 && id == s.first) || id == -1) this->addToResultRequest(result, s.first);
 }
 
-void    RuleSpaceship::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+void    RuleSpaceship::fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string) {
     if (attr_string.find("name") == attr_string.end()) { result->_code = MISSING_NAME_ATTRIBUT_SPACESHIP; return; }
     if (attr_string.find("description") == attr_string.end()) { result->_code = MISSING_DESC_ATTRIBUT_SPACESHIP; return; }
     if (attr_int.find("ap") == attr_int.end()) { result->_code = MISSING_AP_ATTRIBUT_SPACESHIP; return; }

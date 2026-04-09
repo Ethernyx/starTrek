@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 10:53:48 pm                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:48:37 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 9:55:00 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -34,7 +34,7 @@ void   RuleMission::fillResultRequestGetInfos(ResultRequest *result, int id) {
     for (auto m : this->_missions) if ((id != -1 && id == m.first) || id == -1) this->addToResultRequest(result, m.first);
 }
 
-void    RuleMission::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+void    RuleMission::fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string) {
     if (attr_int.find("is_complete") == attr_int.end()) { result->_code = MISSING_IS_COMPLETE_ATTRIBUT_MISSION; return; }
     if (attr_string.find("name") == attr_string.end()) { result->_code = MISSING_NAME_ATTRIBUT_MISSION; return; }
     if (attr_string.find("description") == attr_string.end()) { result->_code = MISSING_DESC_ATTRIBUT_MISSION; return; }

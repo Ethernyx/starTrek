@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:26:02 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 9:03:21 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 9:56:04 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -28,7 +28,7 @@ public:
     void    fillResultRequestKillEntities(ResultRequest *result, OBJETS entity_type, int entity_id);
     void    fillResultRequestGetInventory(ResultRequest *result,OBJETS entity_type, int entity_id);
     void    fillResultRequestGetInfos(ResultRequest *result,OBJETS entity_type, int entity_id);
-    void    fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string);    
+    void    fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string);    
     void    fillResultRequestAttack(ResultRequest *result, OBJETS type_def, int id_def, OBJETS type_att, int id_att);
     bool    killEntities(ResultRequest &entities);
 };

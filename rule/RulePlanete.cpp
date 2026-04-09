@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:19:29 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:49:58 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 9:55:07 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -63,7 +63,7 @@ void   RulePlanete::fillResultRequestGetInfos(ResultRequest *result, int id) {
     for (auto p : this->_planetes) if ((id != -1 && id == p.first) || id == -1) this->addToResultRequest(result, p.first);
 }
 
-void    RulePlanete::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+void    RulePlanete::fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string) {
     if (attr_string.find("name") == attr_string.end()) { result->_code = MISSING_NAME_ATTRIBUT_PLANET; return; }
     if (attr_string.find("description") == attr_string.end()) { result->_code = MISSING_DESC_ATTRIBUT_PLANET; return; }
 

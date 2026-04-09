@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 8:28:43 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 10:01:33 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -65,24 +65,24 @@ void   RuleQuidam::fillResultRequestPromote(ResultRequest *result, int id_grade,
     this->addToResultRequest(result, type_quidam, id_quidam);
 }
 
-void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string) {
     if (attr_int.find("entity_type") == attr_int.end()) { result->_code = MISSING_ENTITY_TYPE_ATTRIBUT; return; }
-    if (attr_string.find("name") == attr_string.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_NAME_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_NAME_ATTRIBUT_PNJ : MISSING_NAME_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("ap") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_AP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_AP_ATTRIBUT_PNJ : MISSING_AP_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("dp") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_DP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_DP_ATTRIBUT_PNJ : MISSING_DP_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("hp") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_HP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_HP_ATTRIBUT_PNJ : MISSING_HP_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("id_planet") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_PLANET_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_PLANET_ATTRIBUT_PNJ : MISSING_ID_PLANET_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("id_ship") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_SHIP_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_SHIP_ATTRIBUT_PNJ : MISSING_ID_SHIP_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("id_planet_origin") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL)); return; }
-    if (attr_int.find("id_grade") == attr_int.end()) { result->_code = (attr_int["entity_type"] == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS : (attr_int["entity_type"] == PNJ ? MISSING_ID_GRADE_ATTRIBUT_PNJ : MISSING_ID_GRADE_ATTRIBUT_EVIL)); return; }
+    if (attr_string.find("name") == attr_string.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_NAME_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_NAME_ATTRIBUT_PNJ : MISSING_NAME_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("ap") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_AP_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_AP_ATTRIBUT_PNJ : MISSING_AP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("dp") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_DP_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_DP_ATTRIBUT_PNJ : MISSING_DP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("hp") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_HP_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_HP_ATTRIBUT_PNJ : MISSING_HP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_planet") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_ID_PLANET_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_ID_PLANET_ATTRIBUT_PNJ : MISSING_ID_PLANET_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_ship") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_ID_SHIP_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_ID_SHIP_ATTRIBUT_PNJ : MISSING_ID_SHIP_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_planet_origin") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL)); return; }
+    if (attr_int.find("id_grade") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_ID_GRADE_ATTRIBUT_PNJ : MISSING_ID_GRADE_ATTRIBUT_EVIL)); return; }
 
-    if (!this->isPlaneteExist(result, attr_int["id_planete_origin"])) return;
-    if (!this->isPlaneteExist(result, attr_int["id_planete"])) return;
-    if (!this->isSpaceshipExist(result, attr_int["id_ship"])) return;
-    if (!this->isGradeExist(result, attr_int["id_grade"])) return;
+    if (!this->isPlaneteExist(result, attr_int.at("id_planete_origin"))) return;
+    if (!this->isPlaneteExist(result, attr_int.at("id_planete"))) return;
+    if (!this->isSpaceshipExist(result, attr_int.at("id_ship"))) return;
+    if (!this->isGradeExist(result, attr_int.at("id_grade"))) return;
 
     int id = this->addQuidam(attr_int, attr_string);
-    this->addToResultRequest(result, (OBJETS)attr_int["entity_type"], id);
+    this->addToResultRequest(result, (OBJETS)attr_int.at("entity_type"), id);
 }
 
 void RuleQuidam::simpleAttack(ResultRequest *result, OBJETS type_def, int id_def, OBJETS type_att, int id_att) {

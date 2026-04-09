@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:04:30 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 6:47:55 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 9:59:00 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -39,23 +39,23 @@ void   RuleItem::fillResultRequestGetInfos(ResultRequest *result, int id) {
     }
 }
 
-void    RuleItem::fillResultRequestAddEntities(ResultRequest *result, map<string, int> attr_int, map<string, string> attr_string) {
+void    RuleItem::fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string) {
     if (attr_int.find("stat") == attr_int.end()) { result->_code = MISSING_STAT_ATTRIBUT_ITEM; return; }
     if (attr_string.find("name") == attr_string.end()) { result->_code = MISSING_NAME_ATTRIBUT_ITEM; return; }
     if (attr_int.find("effect") == attr_int.end()) { result->_code = MISSING_EFFECT_ATTRIBUT_ITEM; return; }
     if (attr_int.find("id_owner") == attr_int.end()) { result->_code = MISSING_ID_OWNER_ATTRIBUT_ITEM; return; }
     if (attr_int.find("type_owner") == attr_int.end()) { result->_code = MISSING_TYPE_OWNER_ATTRIBUT_ITEM; return; }
 
-    if ((OBJETS)attr_int["type_owner"] != NONE) {
-        switch (attr_int["type_owner"])
+    if ((OBJETS)attr_int.at("type_owner") != NONE) {
+        switch (attr_int.at("type_owner"))
         {
         case HEROS:
         case EVIL:
         case PNJ:
-            if (!this->isQuidamExist(result, (OBJETS)attr_int["type_owner"], attr_int["id_owner"])) return;
+            if (!this->isQuidamExist(result, (OBJETS)attr_int.at("type_owner"), attr_int.at("id_owner"))) return;
             break;
         case SPACESHIP:
-            if (!this->isSpaceshipExist(result, attr_int["id_owner"])) return;
+            if (!this->isSpaceshipExist(result, attr_int.at("id_owner"))) return;
             break;
         case PLANETE:
         case MISSION:
