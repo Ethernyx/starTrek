@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:03 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 6:47:03 pm                           *
+ * Last Modified: Thursday, April 9th 2026, 10:25:09 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -19,7 +19,7 @@
 #include                                        <string>
 #include                                        <fstream>
 #include                                        "define.hh"
-#include                                        "Rule.hh"
+#include                                        "rule/Rule.hh"
 #include                                        "object/Token.hh"
 #include                                        "../lib_func/List.hh"
 #include                                        "server.hh"

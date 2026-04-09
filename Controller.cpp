@@ -4,7 +4,7 @@
  * Created Date: Tu May 2025, 11:12:38 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 9:05:24 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 10:08:22 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -279,14 +279,14 @@ string Controller::init() {
  * @return string
  */
 string  Controller::j_attack(Context &ctx) {
-    boost::json::object json = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
+    boost::json::object startrek = boost::json::parse(ctx.getRequest().body()).as_object().at("startrek").as_object();
     ResultRequest       result;
 
     Rule::fillResultRequestAttack(&result, 
-        (OBJETS)json.at("defenseur").as_object().at("type").as_int64(), 
-        json.at("defenseur").as_object().at("id").as_int64(), 
-        (OBJETS)json.at("attaquant").as_object().at("type").as_int64(), 
-        json.at("attaquant").as_object().at("id").as_int64());
+        (OBJETS)startrek.at("defenseur").as_object().at("type").as_int64(), 
+        startrek.at("defenseur").as_object().at("id").as_int64(), 
+        (OBJETS)startrek.at("attaquant").as_object().at("type").as_int64(), 
+        startrek.at("attaquant").as_object().at("id").as_int64());
     
     string json = this->buildResponse(result);
     if (result._code == ENTITY_IS_DEATH) Rule::killEntities(result);

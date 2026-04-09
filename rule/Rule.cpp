@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:29:42 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:58:24 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:33:35 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -158,7 +158,7 @@ void    Rule::fillResultRequestAddEntities(ResultRequest *result, const map<stri
     switch ((OBJETS) attr_int.at("entity_type"))
     {
     case PLANETE:
-        RulePlanete::fillResultRequestAddEntities(result, attr_int, attr_string);
+        RulePlanete::fillResultRequestAddEntities(result, attr_string);
         break;
     case HEROS:
     case EVIL:

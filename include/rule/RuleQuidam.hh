@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 1:54:08 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:56:36 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:37:48 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -12,8 +12,9 @@
 #ifndef RULE_QUIDAM_HH_
 #define RULE_QUIDAM_HH_
 
+class       RuleGrade;
+
 #include    "RuleItem.hh"
-#include    "RuleGrade.hh"
 #include    "../ReturnRequest.hh"
 
 class       RuleQuidam : public virtual RuleItem

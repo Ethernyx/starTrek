@@ -4,7 +4,7 @@
  * Created Date: Mo Apr 2026, 2:19:29 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:55:07 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:33:03 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -57,16 +57,14 @@ void   RulePlanete::fillResultGetHabitant(ResultRequest *result, int id) {
 }
 
 void   RulePlanete::fillResultRequestGetInfos(ResultRequest *result, int id) {
-    ResultRequest   result;
-
     if (id != -1 && !this->isPlaneteExist(result, id)) return;
     for (auto p : this->_planetes) if ((id != -1 && id == p.first) || id == -1) this->addToResultRequest(result, p.first);
 }
 
-void    RulePlanete::fillResultRequestAddEntities(ResultRequest *result, const map<string, int> &attr_int, const map<string, string> &attr_string) {
+void    RulePlanete::fillResultRequestAddEntities(ResultRequest *result, const map<string, string> &attr_string) {
     if (attr_string.find("name") == attr_string.end()) { result->_code = MISSING_NAME_ATTRIBUT_PLANET; return; }
     if (attr_string.find("description") == attr_string.end()) { result->_code = MISSING_DESC_ATTRIBUT_PLANET; return; }
 
-    int id = this->addPlanet(attr_int, attr_string);
+    int id = this->addPlanet(attr_string);
     this->addToResultRequest(result, id);
 }

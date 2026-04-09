@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:14:42 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:55:27 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:07:29 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -21,8 +21,6 @@ bool    RuleSpaceship::kill(map<int, shared_ptr<Spaceship>> &spaceships) {
 }
 
 void   RuleSpaceship::fillResultRequestKill(ResultRequest *result, int id) {
-    ResultRequest result;
-
     if (!this->isSpaceshipExist(result, id)) return;
     
     for (auto it = this->_flotte[id]->getEquipage().begin(); it != this->_flotte[id]->getEquipage().end(); it++) {

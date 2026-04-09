@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 4:39:47 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Tuesday, April 7th 2026, 10:36:07 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:27:44 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -20,7 +20,7 @@
 #include    "object/Grade.hh"
 #include    "define.hh"
 
-typedef struct {
+struct ResultRequest {
     map<OBJETS, map<int, shared_ptr<AQuidam>>>  _quidams;
     map<int, Item*>                             _items;
     map<int, shared_ptr<Mission>>               _missions;
@@ -29,6 +29,6 @@ typedef struct {
     map<int, shared_ptr<Grade>>                 _grades;
     CODE_ERROR                                  _code = OK;
 
-}                                               ResultRequest;
+};
 
 #endif

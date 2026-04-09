@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 10:01:33 am                        *
+ * Last Modified: Thursday, April 9th 2026, 10:09:01 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -30,8 +30,6 @@ void   RuleQuidam::fillResultRequestKill(ResultRequest *result, OBJETS type, int
 }
 
 void   RuleQuidam::fillResultRequestGetInventory(ResultRequest *result, OBJETS type, int id) {
-    ResultRequest   result;
-
     if (!this->isQuidamExist(result, type, id)) return;
     for (auto item : this->_tableDeCorrespondance[type]) {
         if(item.second != id) continue;
@@ -76,8 +74,8 @@ void    RuleQuidam::fillResultRequestAddEntities(ResultRequest *result, const ma
     if (attr_int.find("id_planet_origin") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_ID_PLANET_ORIGIN_ATTRIBUT_PNJ : MISSING_ID_PLANET_ORIGIN_ATTRIBUT_EVIL)); return; }
     if (attr_int.find("id_grade") == attr_int.end()) { result->_code = (attr_int.at("entity_type") == HEROS ? MISSING_ID_GRADE_ATTRIBUT_HEROS : (attr_int.at("entity_type") == PNJ ? MISSING_ID_GRADE_ATTRIBUT_PNJ : MISSING_ID_GRADE_ATTRIBUT_EVIL)); return; }
 
-    if (!this->isPlaneteExist(result, attr_int.at("id_planete_origin"))) return;
-    if (!this->isPlaneteExist(result, attr_int.at("id_planete"))) return;
+    if (!this->isPlaneteExist(result, attr_int.at("id_planet_origin"))) return;
+    if (!this->isPlaneteExist(result, attr_int.at("id_planet"))) return;
     if (!this->isSpaceshipExist(result, attr_int.at("id_ship"))) return;
     if (!this->isGradeExist(result, attr_int.at("id_grade"))) return;
 

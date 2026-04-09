@@ -4,12 +4,48 @@
  * Created Date: Su Apr 2026, 3:45:50 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:54:12 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:41:51 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
 
 #include    "include/LifeDoor.hh"
+
+// suppression de la planete par son nom
+// cette methode fait appel a la methode ci-dessous qui supprime une planete par son ID
+bool LifeDoor::deletePlanete(string const name)
+{
+    for (auto pl : this->_planetes)
+    {
+        if (pl.second->getName() == name)
+        {
+            this->deletePlanete(pl.first);
+            return true;
+        }
+    }
+    return false;
+}
+// surcharge de la methode de suppression
+bool LifeDoor::deletePlanete(int const id_planet)
+{
+    auto it = this->_planetes.find(id_planet);
+    if (it == this->_planetes.end())
+        return false;
+
+    for (auto p : this->_quidams[HEROS])
+    {
+        if (it->first == p.second->getIdPlanetOrigin())
+        {
+            p.second->setIdPlanetOrigin(0);
+        }
+        if (it->first == p.second->getIdPlanet())
+        {
+            deletePerso(p.first);
+        }
+    }
+    this->_planetes.erase(it);
+    return true;
+}
 
 bool LifeDoor::deleteMission(string const name)
 {
@@ -203,7 +239,7 @@ int LifeDoor::addPlanet(boost::json::object &item)
     return id;
 }
 
-int LifeDoor::addPlanet(const map<string, int> &attr_int, const map<string, string> &attr_string)
+int LifeDoor::addPlanet(const map<string, string> &attr_string)
 {
     int id = this->getMaxId(PLANETE) + 1;
     this->_planetes[id] = PlaneteBuilder()

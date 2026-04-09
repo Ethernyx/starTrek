@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:41:26 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 9:51:51 am                         *
+ * Last Modified: Thursday, April 9th 2026, 10:28:52 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -35,7 +35,7 @@ public:
     bool                                        deletePlanete(string const name); // -> surcharge de la suppression d'une planete par son nom
     bool                                        deletePlanete(int const id_planet); // -> surcharge de la suppression d'une planete par son ID
     int                                         addPlanet(boost::json::object &item);
-    int                                         addPlanet(const map<string, int> &attr_int, const map<string, string> &attr_string);
+    int                                         addPlanet(const map<string, string> &attr_string);
 
     bool                                        deleteMission(string const name);
     bool                                        deleteMission(int const id);

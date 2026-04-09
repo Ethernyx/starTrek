@@ -4,7 +4,7 @@
  * Created Date: Su Apr 2026, 3:38:27 pm                                       *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Wednesday, April 8th 2026, 3:38:05 pm                        *
+ * Last Modified: Thursday, April 9th 2026, 10:30:59 am                        *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -179,21 +179,23 @@ bool    World::isMissionExist(ResultRequest *result, int id) {
 bool    World::isItemExist(ResultRequest *result, int id) {
     for (auto type : this->_tableDeCorrespondance) {
         for (auto item : type.second) {
-            switch (type.first)
-            {
-            case HEROS:
-            case PNJ:
-            case EVIL:
-                if (!this->isQuidamExist(result, (OBJETS)type.first, item.second)) return false;
-                break;
-            case SPACESHIP:
-                if (!this->isSpaceshipExist(result, item.second)) return false;
-                break;
-                
-            default:
-                break;
+            if (item.first == id) {
+                switch (type.first)
+                {
+                case HEROS:
+                case PNJ:
+                case EVIL:
+                    if (!this->isQuidamExist(result, (OBJETS)type.first, item.second)) return false;
+                    break;
+                case SPACESHIP:
+                    if (!this->isSpaceshipExist(result, item.second)) return false;
+                    break;
+                    
+                default:
+                    break;
+                }
+                if (!this->isItemExist(result, (OBJETS)type.first, item.first)) return false;
             }
-            if (!this->isItemExist(result, (OBJETS)type.first, item.first)) return false;
         }
     }
     return true;
