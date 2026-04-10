@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:09:50 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 2:13:42 pm                         *
+ * Last Modified: Thursday, April 9th 2026, 7:05:06 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -59,6 +59,7 @@ void   RuleQuidam::fillResultRequestPromote(ResultRequest *result, int id_grade,
     if (find(QUIDAMS.begin(), QUIDAMS.end(), type_quidam) == QUIDAMS.end()) { result->_code = MISSING_GRADE; return; }
     if (!this->isQuidamExist(result, type_quidam, id_quidam)) return;
     if (!(isOk = this->_grades[this->_quidams[type_quidam][id_quidam]->getIdGrade()]->deleteMembre(this->_quidams[type_quidam][id_quidam]))) { result->_code = ERROR_DELETE_MEMBER; return; }
+    if (this->_quidams[type_quidam][id_quidam]->getIdGrade() != 0) this->_grades[this->_quidams[type_quidam][id_quidam]->getIdGrade()]->deleteMembre(this->_quidams[type_quidam][id_quidam]);
     this->_grades[id_grade]->addMembre(this->_quidams[type_quidam][id_quidam]);
     this->addToResultRequest(result, type_quidam, id_quidam);
 }
@@ -89,6 +90,7 @@ void RuleQuidam::simpleAttack(ResultRequest *result, OBJETS type_def, int id_def
 
     if (a == nullptr || v == nullptr) { result->_code = UNKNOWN_DEFENSE_OR_ATTACK; return; }
     v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
+    if (v->getHp() <= 0) result->_code = ENTITY_IS_DEATH;
     this->addToResultRequest(result, type_def, id_def);
 }
 

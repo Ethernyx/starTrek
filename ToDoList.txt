@@ -4,7 +4,7 @@
  * Created Date: Mo Nov 2024, 11:51:40 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Sunday, April 5th 2026, 12:29:30 pm                          *
+ * Last Modified: Friday, April 10th 2026, 11:03:19 am                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -29,7 +29,6 @@ X Ajout commande pour ajouter n'importe quel objects
     X gestion d'erreur du json
     X gestion d'erreur pendant la commande
 X Uniformiser les headers
-? Passer les vectors habitants, equipe, membre en map
 - ajout des test unitaire pour les commandes
     * kill
     * attack
@@ -45,9 +44,9 @@ X Uniformiser les headers
 - Passage vers une architecture REST
     * serveur
         + gestion token (50%)
-    * routes (90%)
+    X routes (100%)
         X kill
-    X CJSON --> boost (100%)
-        + message d'erreur
+    X CJSON --> boost (50%)
+        X message d'erreur
         + test
-- Eclatement de Controller
+X Eclatement de Controller

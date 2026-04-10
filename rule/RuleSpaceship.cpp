@@ -4,7 +4,7 @@
  * Created Date: Tu Apr 2026, 10:14:42 am                                      *
  * Author: LALIN Romain                                                        *
  * -----                                                                       *
- * Last Modified: Thursday, April 9th 2026, 2:10:52 pm                         *
+ * Last Modified: Thursday, April 9th 2026, 7:04:44 pm                         *
  * By: LALIN Romain                                                            *
  * ----------	---	---------------------------------------------------------  *
 */
@@ -83,6 +83,7 @@ void RuleSpaceship::simpleAttack(ResultRequest *result, int id_def, int id_att) 
 
     if (a == nullptr || v == nullptr) { result->_code = UNKNOWN_DEFENSE_OR_ATTACK; return; }
     v->setAttributs(v->getDp(), v->getHp() - (a->getAp() - v->getDp()), v->getDp()); // HP vic - (attack AP - vi DP)
+    if (v->getHp() <= 0) result->_code = ENTITY_IS_DEATH;
     this->addToResultRequest(result, id_def);
 }
 
